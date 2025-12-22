@@ -212,4 +212,37 @@ class UserService {
       return [];
     }
   }
+
+  Future<void> checkHotstreaks() async {
+    final User? user = _auth.currentUser;
+
+    if (user == null) return;
+
+    final userData = await getUserData();
+
+    final lastPost = DateTime.parse(userData['last_post']);
+    final now = DateTime.now().toUtc();
+
+    final cleanNow = DateTime(now.year, now.month, now.day);
+    final cleanLast = DateTime(lastPost.year, lastPost.month, lastPost.day);
+
+    final diff = cleanNow.difference(cleanLast).inDays;
+
+    bool isStreakLost = diff > 2;
+
+    if (isStreakLost) await updateUserData('hotstreaks', 0);
+  }
+
+  Future<void> updateHotstreaks() async {
+    final User? user = _auth.currentUser;
+
+    if (user == null) return;
+
+    final userData = await getUserData();
+
+    final hotstreaks = userData['hotstreaks'];
+    final newHotstreaks = hotstreaks + 1;
+
+    await updateUserData('hotstreaks', newHotstreaks);
+  }
 }

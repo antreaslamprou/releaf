@@ -60,7 +60,12 @@ class _SavedPostsPageState extends State<SavedPostsPage> {
           child: isLoading
               ? const CircularProgressIndicator()
               : savedPosts.isEmpty
-              ? Text('There are no saved posts!')
+              ? Column(
+                  children: [
+                    SizedBox(height: 30),
+                    Text('There are no saved posts!'),
+                  ],
+                )
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: savedPosts

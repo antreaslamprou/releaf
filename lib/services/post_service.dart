@@ -104,6 +104,7 @@ class PostService {
 
         await _userService.updateUserData('last_post', date);
         await _userService.updatePoints();
+        await _userService.updateHotstreaks();
 
         return "Post created!";
       } catch (e) {

@@ -3,15 +3,15 @@ import 'package:releaf/services/user_service.dart';
 
 class DailyPostProvider extends ChangeNotifier {
   final userService = UserService();
-  late bool isDailyPosted;
+  bool isDailyPosted = false;
 
   Future<void> loadDailyPost() async {
     Map<String, dynamic> userData = await userService.getUserData();
 
     if (userData['last_post'] == null || userData['last_post'] == '') {
       isDailyPosted = false;
-
-      return notifyListeners();
+      notifyListeners();
+      return;
     }
 
     final lastPost = DateTime.parse(userData['last_post']);

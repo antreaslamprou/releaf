@@ -24,6 +24,8 @@ class _SplashPageState extends State<SplashPage> {
     final uid = userService.getUserUID();
 
     if (uid != '') {
+      await userService.checkHotstreaks();
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       Navigator.pushReplacementNamed(context, '/login');
