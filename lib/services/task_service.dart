@@ -21,4 +21,17 @@ class TaskService {
     final dailyTaskKey = taskKeys[random.nextInt(taskKeys.length)];
     return snapshot.child(dailyTaskKey).value as Map;
   }
+
+  Future<Map<dynamic, dynamic>> getTaskByTitle(String title) async {
+    final snapshot = await _database
+        .ref('tasks')
+        .orderByChild('title')
+        .equalTo(title)
+        .get();
+
+    if (!snapshot.exists) return {};
+
+    final task = snapshot.children.first;
+    return task.value as Map;
+  }
 }

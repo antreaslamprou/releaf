@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/components/friends_posts.dart';
 import 'package:releaf/components/post.dart';
+import 'package:releaf/pages/task_page.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/services/user_service.dart';
@@ -84,6 +85,19 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            TaskPage(taskTitle: dailyTask!['title']),
+                      ),
+                    ),
+                    child: Text(
+                      'Learn more about this SDG here!',
+                      style: TextStyle(color: Colors.green),
+                    ),
                   ),
                   SizedBox(height: 10),
                   postData.isEmpty

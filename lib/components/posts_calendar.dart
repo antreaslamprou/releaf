@@ -100,6 +100,7 @@ class PostsCalendarState extends State<PostsCalendar> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
+                  postKey++;
                 });
               },
               enabledDayPredicate: (day) {
