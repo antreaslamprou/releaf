@@ -194,4 +194,22 @@ class UserService {
       return false;
     }
   }
+
+  Future<List<dynamic>> getSavedPosts() async {
+    final User? user = _auth.currentUser;
+
+    if (user == null) return [];
+
+    final String currentUID = user.uid;
+    final snapshot = await _database
+        .ref('users/$currentUID/saved_posts/')
+        .get();
+
+    if (snapshot.exists) {
+      final value = snapshot.value as Map;
+      return value.keys.toList();
+    } else {
+      return [];
+    }
+  }
 }

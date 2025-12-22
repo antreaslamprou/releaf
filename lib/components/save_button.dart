@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/services/post_service.dart';
+import 'package:releaf/utils/snackbar.dart';
 
 class SaveButton extends StatefulWidget {
-  const SaveButton({
-    super.key,
-    required this.postId,
-    required this.initiallySaved,
-  });
+  const SaveButton({super.key, required this.postId});
 
   final String postId;
-  final bool initiallySaved;
 
   @override
   State<SaveButton> createState() => _SaveButtonState();
@@ -17,19 +13,33 @@ class SaveButton extends StatefulWidget {
 
 class _SaveButtonState extends State<SaveButton> {
   PostService postService = PostService();
-  late bool saved;
+  bool saved = false;
 
   @override
   void initState() {
     super.initState();
-    saved = widget.initiallySaved;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getSavedStatus();
+    });
+  }
+
+  void getSavedStatus() async {
+    final isSavedTemp = await postService.getUserSaved(widget.postId);
+    setState(() {
+      saved = isSavedTemp;
+    });
   }
 
   void toggleSave() async {
-    setState(() {
-      saved = !saved;
-    });
-    // Save post onto account
+    if (await postService.savePost(widget.postId)) {
+      setState(() {
+        saved = !saved;
+      });
+      return;
+    }
+    if (!mounted) return;
+    Snackbar.show(context, 'Error with liking this post!');
   }
 
   @override

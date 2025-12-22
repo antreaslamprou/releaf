@@ -22,6 +22,23 @@ class PostService {
     return null;
   }
 
+  Future<Map<dynamic, dynamic>> getPostById(String id) async {
+    String? uid = _userService.getUserUID();
+
+    if (uid != '') {
+      final userId = id.split('_')[0];
+      final postDate = id.split('_')[1];
+
+      final snpashot = await _database.ref('posts/$userId/$postDate').get();
+
+      if (!snpashot.exists) return {};
+
+      return snpashot.value as Map;
+    }
+
+    return {};
+  }
+
   Future<Map<String, dynamic>> getDailyPost({String? date}) async {
     String? uid = _userService.getUserUID();
 
@@ -83,7 +100,6 @@ class PostService {
           'id': '${uid}_$date',
           'image': base64img,
           'description': descritpion,
-          'likes': {uid: true},
         });
 
         await _userService.updateUserData('last_post', date);
@@ -98,7 +114,7 @@ class PostService {
     return "Error: Invalid User";
   }
 
-  Future<String> updatePost(String postId) async {
+  Future<bool> likePost(String postId) async {
     try {
       String currentUID = _userService.getUserUID();
 
@@ -115,9 +131,9 @@ class PostService {
         await likeRef.set(true);
       }
 
-      return 'Success';
+      return true;
     } catch (e) {
-      return 'Error: $e';
+      return false;
     }
   }
 
@@ -131,6 +147,44 @@ class PostService {
       final likeRef = _database.ref('posts/$userUID/$date/likes/$currentUID');
 
       final snapshot = await likeRef.get();
+
+      if (snapshot.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> savePost(String postId) async {
+    try {
+      String userUID = _userService.getUserUID();
+
+      final saveRef = _database.ref('users/$userUID/saved_posts/$postId');
+
+      final snapshot = await saveRef.get();
+
+      if (snapshot.exists) {
+        await saveRef.remove();
+      } else {
+        await saveRef.set(true);
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> getUserSaved(String postId) async {
+    try {
+      String userUID = _userService.getUserUID();
+
+      final saveRef = _database.ref('users/$userUID/saved_posts/$postId');
+
+      final snapshot = await saveRef.get();
 
       if (snapshot.exists) {
         return true;

@@ -9,13 +9,11 @@ class Post extends StatefulWidget {
   const Post({
     super.key,
     required this.postData,
-    required this.userId,
     this.isEditable = true,
     this.isSaveable = true,
   });
 
   final Map<dynamic, dynamic> postData;
-  final String userId;
   final bool isEditable;
   final bool isSaveable;
 
@@ -29,7 +27,6 @@ class _PostState extends State<Post> {
 
   int likeKey = 0;
   bool isLiked = false;
-  bool isSaved = false;
 
   Map<dynamic, dynamic>? userData;
 
@@ -39,50 +36,28 @@ class _PostState extends State<Post> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getData();
-      if (widget.isEditable) {
-        getLikeStatus();
-      }
-
-      if (widget.isSaveable) {
-        getSaveStatus();
-      }
     });
   }
 
   void getData() async {
-    final userDataTemp = await userService.getUserDataById(widget.userId);
+    final userDataTemp = await userService.getUserDataById(
+      widget.postData['id'].split('_')[0],
+    );
 
     setState(() {
       userData = userDataTemp;
     });
   }
 
-  void getLikeStatus() async {
-    final isLikedTemp = await postService.getUserLiked(widget.postData['id']);
-
-    setState(() {
-      likeKey++;
-      isLiked = isLikedTemp;
-    });
-  }
-
-  void getSaveStatus() async {
-    final isSavedTemp = false; // TODO
-
-    setState(() {
-      isSaved = isSavedTemp;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: userData == null
-            ? const CircularProgressIndicator()
-            : Column(
+    return userData == null
+        ? const CircularProgressIndicator()
+        : Card(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -119,21 +94,16 @@ class _PostState extends State<Post> {
                     children: [
                       LikeButton(
                         key: ValueKey('${widget.postData['id']}-$likeKey'),
-                        initialLikes: widget.postData['likes'].length ?? 0,
-                        initiallyLiked: isLiked,
                         postId: widget.postData['id'],
                         isEditable: widget.isEditable,
                       ),
                       if (widget.isSaveable)
-                        SaveButton(
-                          postId: widget.postData['id'],
-                          initiallySaved: isSaved,
-                        ),
+                        SaveButton(postId: widget.postData['id']),
                     ],
                   ),
                 ],
               ),
-      ),
-    );
+            ),
+          );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
@@ -24,7 +25,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
 
-    loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
   }
 
   void loadData() async {
@@ -53,9 +56,17 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+            Spacer(),
+            GestureDetector(
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SavedPostsPage())),
+              child: Icon(Icons.bookmark_rounded),
+            ),
+          ],
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -83,11 +94,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 IconButton(
                   onPressed: Provider.of<AvatarProvider>(context).deleteAvatar,
                   icon: Icon(Icons.person_remove),
-                ),
-                SizedBox(width: 10),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.bookmark_rounded),
                 ),
               ],
             ),

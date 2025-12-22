@@ -23,7 +23,6 @@ class _PostTaskHomeState extends State<PostTaskHome> {
   TaskService taskService = TaskService();
 
   Map<String, dynamic> postData = {};
-  String? userId;
   bool isLoading = true;
   var date = '';
   Map<dynamic, dynamic>? dailyTask;
@@ -54,7 +53,6 @@ class _PostTaskHomeState extends State<PostTaskHome> {
 
     if (!mounted) return;
     setState(() {
-      userId = userService.getUserUID();
       postData = postDataTemp;
       date = dateTemp;
       dailyTask = dailyTaskTemp;
@@ -102,11 +100,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                   SizedBox(height: 10),
                   postData.isEmpty
                       ? Text('You have no post for this date!')
-                      : Post(
-                          postData: postData,
-                          userId: userId!,
-                          isEditable: false,
-                        ),
+                      : Post(postData: postData, isEditable: false),
                   Padding(
                     padding: EdgeInsetsGeometry.all(10),
                     child: Divider(),

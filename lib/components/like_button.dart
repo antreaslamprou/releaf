@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/services/post_service.dart';
+import 'package:releaf/utils/snackbar.dart';
 
 class LikeButton extends StatefulWidget {
-  const LikeButton({
-    super.key,
-    required this.postId,
-    required this.initialLikes,
-    required this.initiallyLiked,
-    this.isEditable = true,
-  });
+  const LikeButton({super.key, required this.postId, this.isEditable = true});
 
   final String postId;
-  final int initialLikes;
-  final bool initiallyLiked;
   final bool isEditable;
 
   @override
@@ -21,23 +14,39 @@ class LikeButton extends StatefulWidget {
 
 class _LikeButtonState extends State<LikeButton> {
   PostService postService = PostService();
-  late bool liked;
-  late int likes;
+  bool liked = false;
+  int likes = 0;
 
   @override
   void initState() {
     super.initState();
-    
-    liked = widget.initiallyLiked;
-    likes = widget.initialLikes;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getLikeStatus();
+    });
+  }
+
+  void getLikeStatus() async {
+    final isLikedTemp = await postService.getUserLiked(widget.postId);
+    final postData = await postService.getPostById(widget.postId);
+    final likesTemp = postData['likes'] != null ? postData['likes'].length : 0;
+
+    setState(() {
+      liked = isLikedTemp;
+      likes = likesTemp;
+    });
   }
 
   void toggleLike() async {
-    setState(() {
-      liked = !liked;
-      likes += liked ? 1 : -1;
-    });
-    await postService.updatePost(widget.postId);
+    if (await postService.likePost(widget.postId)) {
+      setState(() {
+        liked = !liked;
+        likes += liked ? 1 : -1;
+      });
+      return;
+    }
+    if (!mounted) return;
+    Snackbar.show(context, 'Error with liking this post!');
   }
 
   @override

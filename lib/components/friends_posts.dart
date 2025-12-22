@@ -60,7 +60,6 @@ class _FriendsPostsState extends State<FriendsPosts> {
                       (post) => Post(
                         key: ValueKey(post['id']),
                         postData: post,
-                        userId: post['id'].split('_')[0],
                         isEditable: widget.isEditable,
                       ),
                     )
