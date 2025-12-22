@@ -1,0 +1,116 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/services/user_service.dart';
+import 'package:releaf/utils/conversions.dart';
+
+class LeaderboardPage extends StatefulWidget {
+  const LeaderboardPage({super.key});
+
+  @override
+  State<LeaderboardPage> createState() => _LeaderboardPageState();
+}
+
+class _LeaderboardPageState extends State<LeaderboardPage> {
+  final userService = UserService();
+  List<Map<dynamic, dynamic>>? _leaderboard;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateDailyPost();
+    });
+  }
+
+  Future<void> getData() async {
+    final leaderboard = await userService.getLeaderboard();
+
+    setState(() {
+      _leaderboard = leaderboard;
+      isLoading = false;
+    });
+  }
+
+  void updateDailyPost() {
+    final provider = Provider.of<DailyPostProvider>(context, listen: false);
+
+    void listener() {
+      getData();
+
+      provider.removeListener(listener);
+    }
+
+    provider.addListener(listener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: getData,
+      child: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.separated(
+              padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
+              shrinkWrap: true,
+              itemCount: _leaderboard!.length,
+              itemBuilder: (context, index) {
+                final user = _leaderboard![index];
+                return Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 15),
+                  child: Row(
+                    children: [
+                      Stack(
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            color: index + 1 == 1
+                                ? const Color.fromARGB(255, 255, 215, 0)
+                                : index + 1 == 2
+                                ? const Color.fromARGB(255, 192, 192, 192)
+                                : index + 1 == 3
+                                ? const Color.fromARGB(255, 205, 127, 50)
+                                : const Color.fromARGB(255, 19, 167, 0),
+                          ),
+                          Positioned(
+                            top: 2,
+                            left: index + 1 >= 10 ? 4 : 8,
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 10),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: MemoryImage(
+                          Conversions.baseToImage(
+                            isLoading
+                                ? Conversions.getDefaultAvatarBase()
+                                : user['avatar'],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(user['username']),
+                      const Spacer(),
+                      Text(user['points'].toString()),
+                    ],
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) =>
+                  const Divider(height: 1, color: Colors.grey),
+            ),
+    );
+  }
+}

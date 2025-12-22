@@ -1,0 +1,177 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/providers/avatar_provider.dart';
+import 'package:releaf/services/post_service.dart';
+import 'package:releaf/services/user_service.dart';
+import 'package:releaf/utils/snackbar.dart';
+
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final userService = UserService();
+  final postService = PostService();
+
+  Map<String, dynamic>? userData;
+  int totalPosts = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadData();
+  }
+
+  void loadData() async {
+    final data = await userService.getUserData();
+    final postsNumber = await postService.getTotalPosts();
+
+    setState(() {
+      userData = data;
+      totalPosts = postsNumber;
+    });
+  }
+
+  void logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/login');
+
+      Snackbar.show(context, 'Logged out successfully.');
+    } catch (e) {
+      Snackbar.show(context, 'Error With Logging Out: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Profile',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: context.watch<AvatarProvider>().imageProvider,
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: Provider.of<AvatarProvider>(context).uploadAvatar,
+                  icon: Icon(Icons.person_add_alt_1),
+                ),
+                SizedBox(width: 10),
+                IconButton(
+                  onPressed: Provider.of<AvatarProvider>(context).deleteAvatar,
+                  icon: Icon(Icons.person_remove),
+                ),
+                SizedBox(width: 10),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.bookmark_rounded),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(vertical: 10),
+              child: Divider(thickness: 2),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Full Name',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(userData?['full_name'] ?? 'User'),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(userData?['username'] ?? '@Username'),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  userService.getUserEmail().toString() != ''
+                      ? userService.getUserEmail().toString()
+                      : 'N/A',
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Hot Streaks',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(userData?['hotstreaks'].toString() ?? '0'),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Posts', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(totalPosts.toString()),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Friends', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(((userData?['friends'] as Map?)?.length ?? 0).toString()),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Points', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(userData?['points'].toString() ?? '0'),
+              ],
+            ),
+            SizedBox(height: 50),
+            ElevatedButton(
+              onPressed: logout,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.black,
+              ),
+              child: Text('Logout'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
