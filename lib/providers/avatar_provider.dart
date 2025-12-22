@@ -8,6 +8,7 @@ import 'package:releaf/utils/conversions.dart';
 class AvatarProvider extends ChangeNotifier {
   final userService = UserService();
   String avatarImage = '';
+  bool _isPickingImage = false;
 
   ImageProvider get imageProvider {
     return MemoryImage(Conversions.baseToImage(avatarImage));
@@ -24,10 +25,16 @@ class AvatarProvider extends ChangeNotifier {
   }
 
   Future<void> uploadAvatar() async {
+    if (_isPickingImage) return;
+    _isPickingImage = true;
+
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
 
-    if (picked == null) return;
+    if (picked == null) {
+      _isPickingImage = false;
+      return;
+    }
 
     avatarImage = await Conversions.imageToBase(
       File(picked.path),
@@ -36,6 +43,8 @@ class AvatarProvider extends ChangeNotifier {
 
     String uid = userService.getUserUID();
     await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarImage);
+
+    _isPickingImage = false;
 
     notifyListeners();
   }

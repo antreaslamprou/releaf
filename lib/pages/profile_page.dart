@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/show_bottom_actions.dart';
 import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/services/post_service.dart';
@@ -60,11 +61,11 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
             Spacer(),
-            GestureDetector(
-              onTap: () => Navigator.of(
+            IconButton(
+              onPressed: () => Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (_) => const SavedPostsPage())),
-              child: Icon(Icons.bookmark_rounded),
+              icon: Icon(Icons.bookmark_rounded),
             ),
           ],
         ),
@@ -78,29 +79,53 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: context.watch<AvatarProvider>().imageProvider,
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Stack(
+              clipBehavior: Clip.none,
               children: [
-                IconButton(
-                  onPressed: Provider.of<AvatarProvider>(context).uploadAvatar,
-                  icon: Icon(Icons.person_add_alt_1),
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: context
+                      .watch<AvatarProvider>()
+                      .imageProvider,
                 ),
-                SizedBox(width: 10),
-                IconButton(
-                  onPressed: Provider.of<AvatarProvider>(context).deleteAvatar,
-                  icon: Icon(Icons.person_remove),
+                Positioned(
+                  bottom: -10,
+                  right: -10,
+                  child: CircleAvatar(
+                    radius: 19,
+                    child: IconButton(
+                      icon: const Icon(Icons.create),
+                      onPressed: () => showBottomActions(
+                        context,
+                        onEdit: Provider.of<AvatarProvider>(
+                          context,
+                          listen: false,
+                        ).uploadAvatar,
+                        onDelete: Provider.of<AvatarProvider>(
+                          context,
+                          listen: false,
+                        ).deleteAvatar,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(vertical: 10),
-              child: Divider(thickness: 2),
-            ),
+            SizedBox(height: 55),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     IconButton(
+            //       onPressed: Provider.of<AvatarProvider>(context).uploadAvatar,
+            //       icon: Icon(Icons.person_add_alt_1),
+            //     ),
+            //     SizedBox(width: 10),
+            //     IconButton(
+            //       onPressed: Provider.of<AvatarProvider>(context).deleteAvatar,
+            //       icon: Icon(Icons.person_remove),
+            //     ),
+            //   ],
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
