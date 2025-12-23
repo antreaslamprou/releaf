@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/services/user_service.dart';
@@ -26,13 +27,19 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> init() async {
     final uid = userService.getUserUID();
-    final textScaleProvider = TextScaleProvider();
-    final themeProvider = ThemeProvider();
-    final dailyPostProvider = DailyPostProvider();
-    final avatarProvider = AvatarProvider();
+
+    final textScaleProvider = Provider.of<TextScaleProvider>(
+      context,
+      listen: false,
+    );
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final dailyPostProvider = Provider.of<DailyPostProvider>(
+      context,
+      listen: false,
+    );
+    final avatarProvider = Provider.of<AvatarProvider>(context, listen: false);
 
     if (uid == '') {
-      if (!mounted) return;
       textScaleProvider.reset();
       themeProvider.reset();
       dailyPostProvider.reset();
@@ -42,19 +49,12 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    await userService.checkHotstreaks();
-
-    if (!mounted) return;
     await textScaleProvider.loadTextScale();
-
-    if (!mounted) return;
     await themeProvider.loadTheme();
-
-    if (!mounted) return;
     await dailyPostProvider.loadDailyPost();
-
-    if (!mounted) return;
     await avatarProvider.loadAvatar();
+
+    await userService.checkHotstreaks();
 
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');

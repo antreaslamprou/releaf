@@ -9,12 +9,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DailyPostProvider>(
-      builder: (context, provider, _) {
-        return Center(
-          child: provider.isDailyPosted ? PostTaskHome() : PreTaskHome(),
-        );
-      },
+    return Center(
+      child: context.watch<DailyPostProvider>().isDailyPosted
+          ? PostTaskHome()
+          : PreTaskHome(),
     );
   }
 }

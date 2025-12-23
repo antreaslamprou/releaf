@@ -26,6 +26,7 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> loadTheme() async {
     final userData = await userService.getUserData();
+
     if (userData.isEmpty) {
       themeData = getSystemTheme();
       notifyListeners();

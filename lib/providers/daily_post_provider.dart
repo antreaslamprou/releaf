@@ -5,15 +5,12 @@ import 'package:releaf/utils/conversions.dart';
 class DailyPostProvider extends ChangeNotifier {
   final userService = UserService();
   bool isDailyPosted = false;
-  bool isLoading = true;
 
   Future<void> loadDailyPost() async {
     Map<String, dynamic> userData = await userService.getUserData();
 
     if (userData['last_post'] == null || userData['last_post'] == '') {
       isDailyPosted = false;
-      isLoading = false;
-
       notifyListeners();
       return;
     }
@@ -27,7 +24,6 @@ class DailyPostProvider extends ChangeNotifier {
     final diff = cleanNow.difference(cleanLast).inDays;
 
     isDailyPosted = diff < 1;
-    isLoading = false;
 
     notifyListeners();
   }
@@ -39,7 +35,6 @@ class DailyPostProvider extends ChangeNotifier {
 
   void reset() {
     isDailyPosted = false;
-    isLoading = true;
     notifyListeners();
   }
 }

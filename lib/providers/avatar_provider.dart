@@ -7,7 +7,7 @@ import 'package:releaf/utils/conversions.dart';
 
 class AvatarProvider extends ChangeNotifier {
   final userService = UserService();
-  String avatarImage = '';
+  String avatarImage = Conversions.getDefaultAvatarBase();
   bool _isPickingImage = false;
 
   ImageProvider get imageProvider {
@@ -17,7 +17,12 @@ class AvatarProvider extends ChangeNotifier {
   Future<void> loadAvatar() async {
     Map<String, dynamic>? userData = await userService.getUserData();
 
-    if (userData.isEmpty) return;
+    if (userData.isEmpty) {
+      avatarImage = Conversions.getDefaultAvatarBase();
+
+      notifyListeners();
+      return;
+    }
 
     avatarImage = userData['avatar'];
 
@@ -59,7 +64,7 @@ class AvatarProvider extends ChangeNotifier {
   }
 
   void reset() {
-    avatarImage = '';
+    avatarImage = Conversions.getDefaultAvatarBase();
     notifyListeners();
   }
 }
