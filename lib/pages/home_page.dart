@@ -12,11 +12,7 @@ class HomePage extends StatelessWidget {
     return Consumer<DailyPostProvider>(
       builder: (context, provider, _) {
         return Center(
-          child: provider.isLoading
-              ? const CircularProgressIndicator()
-              : provider.isDailyPosted
-              ? PostTaskHome()
-              : PreTaskHome(),
+          child: provider.isDailyPosted ? PostTaskHome() : PreTaskHome(),
         );
       },
     );

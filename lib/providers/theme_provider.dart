@@ -17,17 +17,17 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Brightness getSystemBrightness() {
-    return SchedulerBinding.instance.platformDispatcher.platformBrightness;
+  ThemeData getSystemTheme() {
+    return SchedulerBinding.instance.platformDispatcher.platformBrightness ==
+            Brightness.dark
+        ? darkMode
+        : lightMode;
   }
 
   Future<void> loadTheme() async {
     final userData = await userService.getUserData();
     if (userData.isEmpty) {
-      final system =
-          SchedulerBinding.instance.platformDispatcher.platformBrightness;
-      themeData = system == Brightness.dark ? darkMode : lightMode;
-
+      themeData = getSystemTheme();
       notifyListeners();
       return;
     }
@@ -35,6 +35,11 @@ class ThemeProvider extends ChangeNotifier {
 
     themeData = isDark ? darkMode : lightMode;
 
+    notifyListeners();
+  }
+
+  void reset() {
+    themeData = getSystemTheme();
     notifyListeners();
   }
 }

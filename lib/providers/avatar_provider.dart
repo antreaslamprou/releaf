@@ -57,4 +57,9 @@ class AvatarProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void reset() {
+    avatarImage = '';
+    notifyListeners();
+  }
 }

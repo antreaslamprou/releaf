@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:releaf/providers/avatar_provider.dart';
-import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
@@ -46,12 +43,6 @@ class _LoginPageState extends State<LoginPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
-
-        if (!mounted) return;
-        await Provider.of<ThemeProvider>(context, listen: false).loadTheme();
-
-        if (!mounted) return;
-        await Provider.of<AvatarProvider>(context, listen: false).loadAvatar();
 
         if (!mounted) return;
         Snackbar.show(context, 'Login Successful!');

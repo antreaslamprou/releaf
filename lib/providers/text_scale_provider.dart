@@ -26,4 +26,9 @@ class TextScaleProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void reset() {
+    textScale = TextScaler.linear(1);
+    notifyListeners();
+  }
 }

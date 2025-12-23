@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/services/user_service.dart';
+import 'package:releaf/providers/avatar_provider.dart';
+import 'package:releaf/providers/theme_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -11,7 +14,6 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final userService = UserService();
-  final dailyPostProvider = DailyPostProvider();
 
   @override
   void initState() {
@@ -24,16 +26,38 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> init() async {
     final uid = userService.getUserUID();
+    final textScaleProvider = TextScaleProvider();
+    final themeProvider = ThemeProvider();
+    final dailyPostProvider = DailyPostProvider();
+    final avatarProvider = AvatarProvider();
 
-    if (uid != '') {
-      await userService.checkHotstreaks();
-      print('***************** Calling From Splash *****************');
-      await dailyPostProvider.loadDailyPost();
+    if (uid == '') {
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
+      textScaleProvider.reset();
+      themeProvider.reset();
+      dailyPostProvider.reset();
+      avatarProvider.reset();
+
       Navigator.pushReplacementNamed(context, '/login');
+      return;
     }
+
+    await userService.checkHotstreaks();
+
+    if (!mounted) return;
+    await textScaleProvider.loadTextScale();
+
+    if (!mounted) return;
+    await themeProvider.loadTheme();
+
+    if (!mounted) return;
+    await dailyPostProvider.loadDailyPost();
+
+    if (!mounted) return;
+    await avatarProvider.loadAvatar();
+
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

@@ -8,13 +8,12 @@ class DailyPostProvider extends ChangeNotifier {
   bool isLoading = true;
 
   Future<void> loadDailyPost() async {
-    print('loadDailyPost called');
     Map<String, dynamic> userData = await userService.getUserData();
 
     if (userData['last_post'] == null || userData['last_post'] == '') {
       isDailyPosted = false;
       isLoading = false;
-      print('isDailyPosted = false due to invalidity');
+
       notifyListeners();
       return;
     }
@@ -29,14 +28,18 @@ class DailyPostProvider extends ChangeNotifier {
 
     isDailyPosted = diff < 1;
     isLoading = false;
-    print('isDailyPosted = $isDailyPosted');
 
     notifyListeners();
   }
 
   Future<void> completeDailyPost() async {
     isDailyPosted = true;
+    notifyListeners();
+  }
 
+  void reset() {
+    isDailyPosted = false;
+    isLoading = true;
     notifyListeners();
   }
 }
