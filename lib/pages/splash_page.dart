@@ -28,6 +28,11 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> init() async {
     final uid = userService.getUserUID();
 
+    if (uid == '') {
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
     final textScaleProvider = Provider.of<TextScaleProvider>(
       context,
       listen: false,
@@ -38,16 +43,6 @@ class _SplashPageState extends State<SplashPage> {
       listen: false,
     );
     final avatarProvider = Provider.of<AvatarProvider>(context, listen: false);
-
-    if (uid == '') {
-      textScaleProvider.reset();
-      themeProvider.reset();
-      dailyPostProvider.reset();
-      avatarProvider.reset();
-
-      Navigator.pushReplacementNamed(context, '/login');
-      return;
-    }
 
     await textScaleProvider.loadTextScale();
     await themeProvider.loadTheme();

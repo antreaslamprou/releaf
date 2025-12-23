@@ -13,15 +13,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        textScaler: Provider.of<TextScaleProvider>(
-          context,
-          listen: false,
-        ).textScale,
-      ),
+      data: MediaQuery.of(
+        context,
+      ).copyWith(textScaler: Provider.of<TextScaleProvider>(context).textScale),
       child: MaterialApp(
         title: 'ReLeaf',
-        theme: Provider.of<ThemeProvider>(context, listen: false).themeData,
+        theme: Provider.of<ThemeProvider>(context).themeData,
         initialRoute: '/splash',
         routes: {
           '/splash': (context) => const SplashPage(),

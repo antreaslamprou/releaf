@@ -45,6 +45,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
   Future<void> getDailyTask() async {
     final dailyTaskTemp = await taskService.getDailyTask();
 
+    if (!mounted) return;
     setState(() {
       dailyTask = dailyTaskTemp;
     });

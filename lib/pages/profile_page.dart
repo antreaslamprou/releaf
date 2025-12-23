@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:releaf/components/show_bottom_actions.dart';
 import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
+import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/providers/text_scale_provider.dart';
+import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
@@ -44,10 +47,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void logout() async {
     try {
+      Provider.of<DailyPostProvider>(context, listen: false).reset();
+      Provider.of<TextScaleProvider>(context, listen: false).reset();
+
       await FirebaseAuth.instance.signOut();
 
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, '/splash', (route) => false);
+
+      Provider.of<AvatarProvider>(context, listen: false).reset();
+      Provider.of<ThemeProvider>(context, listen: false).reset();
 
       Snackbar.show(context, 'Logged out successfully.');
     } catch (e) {
