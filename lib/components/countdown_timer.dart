@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class CountdownTimer extends StatefulWidget {
   const CountdownTimer({super.key});
@@ -56,10 +57,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        formatRemaining(_remaining),
-        style: Theme.of(context).textTheme.displayMedium,
-      ),
+      child: Text(formatRemaining(_remaining), style: context.text.titleLarge),
     );
   }
 }

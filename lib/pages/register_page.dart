@@ -5,6 +5,7 @@ import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -66,6 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
               'hotstreaks': 0,
               'points': 0,
               'last_post': '',
+              'text_scale': 1,
               'is_dark_mode': false,
             });
 
@@ -128,13 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(height: 20),
-                    const Text(
-                      'ReLeaf',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text('ReLeaf', style: context.text.titleMedium),
                     SizedBox(height: 20),
                     Form(
                       key: _formKey,
@@ -195,9 +191,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       onTap: () {
                         Navigator.pushReplacementNamed(context, '/login');
                       },
-                      child: const Text(
+                      child: Text(
                         'Already a member? Log in here!',
-                        style: TextStyle(color: Colors.green),
+                        style: context.text.labelMedium,
                       ),
                     ),
                   ],

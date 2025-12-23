@@ -84,7 +84,7 @@ class PostsCalendarState extends State<PostsCalendar> {
     return RefreshIndicator(
       onRefresh: init,
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.only(top: 10),
         child: Column(
           children: [
             TableCalendar(

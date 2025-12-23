@@ -3,6 +3,7 @@ import 'package:releaf/components/add_friend.dart';
 import 'package:releaf/components/friend_list.dart';
 import 'package:releaf/components/incoming_friend_requests.dart';
 import 'package:releaf/components/outgoing_friend_requests.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -23,20 +24,14 @@ class _FriendsPageState extends State<FriendsPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsGeometry.only(top: 20),
+      padding: EdgeInsetsGeometry.only(top: 10),
       child: _page == 'List'
           ? Column(
               children: [
                 Row(
                   children: [
                     SizedBox(width: 5),
-                    Text(
-                      'Friend List',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text('Friend List', style: context.text.titleSmall),
                     SizedBox(width: 10),
                     IconButton(
                       onPressed: () => setPage('Add'),

@@ -7,6 +7,7 @@ import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -59,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Profile', style: context.text.titleSmall),
             Spacer(),
             IconButton(
               onPressed: () => Navigator.of(
@@ -112,20 +113,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             SizedBox(height: 55),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     IconButton(
-            //       onPressed: Provider.of<AvatarProvider>(context).uploadAvatar,
-            //       icon: Icon(Icons.person_add_alt_1),
-            //     ),
-            //     SizedBox(width: 10),
-            //     IconButton(
-            //       onPressed: Provider.of<AvatarProvider>(context).deleteAvatar,
-            //       icon: Icon(Icons.person_remove),
-            //     ),
-            //   ],
-            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

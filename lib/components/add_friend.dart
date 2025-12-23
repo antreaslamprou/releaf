@@ -3,6 +3,7 @@ import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class AddFriend extends StatefulWidget {
   const AddFriend({super.key, required this.backFunction});
@@ -81,10 +82,7 @@ class _AddFriendState extends State<AddFriend> {
               onPressed: widget.backFunction,
               icon: Icon(Icons.arrow_back),
             ),
-            Text(
-              'Add Friend',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
+            Text('Add Friend', style: context.text.titleSmall),
           ],
         ),
         Padding(

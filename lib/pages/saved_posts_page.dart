@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:releaf/components/post.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class SavedPostsPage extends StatefulWidget {
   const SavedPostsPage({super.key});
@@ -45,10 +46,7 @@ class _SavedPostsPageState extends State<SavedPostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Saved Posts',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text('Saved Posts', style: context.text.titleSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),

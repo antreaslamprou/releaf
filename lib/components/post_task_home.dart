@@ -6,6 +6,7 @@ import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class PostTaskHome extends StatefulWidget {
   const PostTaskHome({super.key, this.date, this.isEditable = true});
@@ -75,13 +76,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                     children: [
                       Icon(Icons.task_alt_rounded, size: 25),
                       SizedBox(width: 10),
-                      Text(
-                        dailyTask!['title'],
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text(dailyTask!['title'], style: context.text.titleSmall),
                     ],
                   ),
                   SizedBox(height: 10),
@@ -94,7 +89,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                     ),
                     child: Text(
                       'Learn more about this SDG here!',
-                      style: TextStyle(color: Colors.green),
+                      style: context.text.labelMedium,
                     ),
                   ),
                   SizedBox(height: 10),

@@ -3,6 +3,7 @@ import 'package:releaf/components/friend_widget.dart';
 import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class IncomingFriendRequests extends StatefulWidget {
   const IncomingFriendRequests({super.key, required this.backFunction});
@@ -83,10 +84,7 @@ class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
                 onPressed: widget.backFunction,
                 icon: Icon(Icons.arrow_back),
               ),
-              Text(
-                'Incoming Requests',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
+              Text('Incoming Requests', style: context.text.titleSmall),
             ],
           ),
           isLoading

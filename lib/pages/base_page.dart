@@ -7,6 +7,7 @@ import 'package:releaf/pages/home_page.dart';
 import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/pages/settings_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
@@ -61,7 +62,7 @@ class _BasePageState extends State<BasePage> {
           children: [
             Text(
               navItems[_currentIndex]['label'],
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: context.text.titleSmall,
             ),
             Spacer(),
             GestureDetector(
@@ -88,12 +89,14 @@ class _BasePageState extends State<BasePage> {
             .toList(),
       ),
       bottomNavigationBar: NavigationBar(
-        height: 65,
+        // height: 65,
+        height: 55,
         destinations: navItems.map((item) {
           return NavigationDestination(
             icon: Icon(item['icon']),
             selectedIcon: Icon(item['selectedIcon']),
-            label: item['label'],
+            label: '',
+            // label: item['label'],
           );
         }).toList(),
         selectedIndex: _currentIndex,

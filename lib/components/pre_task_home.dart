@@ -8,6 +8,7 @@ import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class PreTaskHome extends StatefulWidget {
   const PreTaskHome({super.key});
@@ -112,13 +113,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                   children: [
                     Icon(Icons.pending_actions_rounded, size: 25),
                     SizedBox(width: 10),
-                    Text(
-                      dailyTask!['title'],
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text(dailyTask!['title'], style: context.text.titleSmall),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -130,14 +125,13 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                   ),
                   child: Text(
                     'Learn more about this SDG here!',
-                    style: TextStyle(color: Colors.green),
+                    style: context.text.labelMedium,
                   ),
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 SizedBox(height: 25),
                 ElevatedButton(
@@ -175,18 +169,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: _openCamera,
-                      child: Row(
-                        children: [
-                          Icon(Icons.refresh_rounded),
-                          SizedBox(width: 5),
-                          Text('Retake'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: _submitImage,
                       child: Row(

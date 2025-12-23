@@ -6,6 +6,7 @@ import 'package:releaf/utils/theme.dart';
 import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -89,10 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Adjust your preferences below:',
-            style: TextStyle(fontSize: 16),
-          ),
+          Text('Adjust your preferences below:'),
           SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,10 +123,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   onTap: () {
                     sendEmail();
                   },
-                  child: const Text(
+                  child: Text(
                     'Have a suggestion for a potential task?\nSend us an email throught this link!',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.green),
+                    style: context.text.labelMedium,
                   ),
                 ),
                 SizedBox(height: 15),

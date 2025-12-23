@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/services/task_service.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key, required this.taskTitle});
@@ -37,10 +38,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Task',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text('Task', style: context.text.titleSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -60,22 +58,17 @@ class _TaskPageState extends State<TaskPage> {
                     Text(
                       task['title'],
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.text.titleSmall,
                     ),
+                    SizedBox(height: 10),
                     Text(
                       task['sdg'],
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.text.titleSmall,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     Text(task['description'], textAlign: TextAlign.center),
-                    SizedBox(height: 10),
+                    SizedBox(height: 5),
                     Text(task['reflection'], textAlign: TextAlign.center),
                   ],
                 ),

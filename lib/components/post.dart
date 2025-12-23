@@ -69,13 +69,7 @@ class _PostState extends State<Post> {
                         radius: 20,
                       ),
                       SizedBox(width: 15),
-                      Text(
-                        userData!["full_name"],
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text(userData!["full_name"]),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -84,11 +78,7 @@ class _PostState extends State<Post> {
                     fit: BoxFit.cover,
                   ),
                   const SizedBox(height: 15),
-                  Text(
-                    widget.postData['description'] ?? '',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 4),
+                  Text(widget.postData['description'] ?? ''),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

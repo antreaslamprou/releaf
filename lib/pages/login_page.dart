@@ -5,6 +5,7 @@ import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -95,13 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(height: 20),
-                    const Text(
-                      'ReLeaf',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text('ReLeaf', style: context.text.titleMedium),
                     SizedBox(height: 20),
                     Form(
                       key: _formKey,
@@ -122,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: handleLogin,
-                            child: const Text('Log in'),
+                            child: Text('Log in'),
                           ),
                         ],
                       ),
@@ -132,9 +127,9 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         Navigator.pushReplacementNamed(context, '/register');
                       },
-                      child: const Text(
+                      child: Text(
                         'New to ReLeaf? Register here!',
-                        style: TextStyle(color: Colors.green),
+                        style: context.text.labelMedium,
                       ),
                     ),
                   ],

@@ -55,7 +55,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       child: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
-              padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
+              padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
               shrinkWrap: true,
               itemCount: _leaderboard!.length,
               itemBuilder: (context, index) {
@@ -67,6 +67,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                       Stack(
                         children: [
                           Icon(
+                            size: 30,
                             Icons.circle,
                             color: index + 1 == 1
                                 ? const Color.fromARGB(255, 255, 215, 0)
@@ -77,13 +78,15 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                                 : const Color.fromARGB(255, 19, 167, 0),
                           ),
                           Positioned(
-                            top: 2,
-                            left: index + 1 >= 10 ? 4 : 8,
-                            child: Text(
-                              '${index + 1}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                            width: 30,
+                            height: 30,
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
