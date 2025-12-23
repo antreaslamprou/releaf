@@ -14,7 +14,6 @@ class LeaderboardPage extends StatefulWidget {
 class _LeaderboardPageState extends State<LeaderboardPage> {
   final userService = UserService();
   List<Map<dynamic, dynamic>>? _leaderboard;
-  bool isLoading = true;
 
   @override
   void initState() {
@@ -31,7 +30,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
     setState(() {
       _leaderboard = leaderboard;
-      isLoading = false;
     });
   }
 
@@ -51,7 +49,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: getData,
-      child: isLoading
+      child: _leaderboard == null
           ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
               padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
@@ -97,11 +95,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                       CircleAvatar(
                         radius: 20,
                         backgroundImage: MemoryImage(
-                          Conversions.baseToImage(
-                            isLoading
-                                ? Conversions.getDefaultAvatarBase()
-                                : user['avatar'],
-                          ),
+                          Conversions.baseToImage(user['avatar']),
                         ),
                       ),
                       SizedBox(width: 10),

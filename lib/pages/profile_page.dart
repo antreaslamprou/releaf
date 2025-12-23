@@ -24,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final postService = PostService();
 
   Map<String, dynamic>? userData;
+  String userEmail = '';
   int totalPosts = 0;
 
   @override
@@ -38,10 +39,12 @@ class _ProfilePageState extends State<ProfilePage> {
   void loadData() async {
     final data = await userService.getUserData();
     final postsNumber = await postService.getTotalPosts();
+    final email = userService.getUserEmail().toString();
 
     setState(() {
       userData = data;
       totalPosts = postsNumber;
+      userEmail = email;
     });
   }
 
@@ -146,11 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(
-                  userService.getUserEmail().toString() != ''
-                      ? userService.getUserEmail().toString()
-                      : 'N/A',
-                ),
+                Text(userEmail),
               ],
             ),
             SizedBox(height: 10),
