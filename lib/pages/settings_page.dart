@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/providers/text_scale.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/theme.dart';
 import 'package:releaf/providers/theme_provider.dart';
@@ -20,6 +21,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void toggleTheme(bool value) {
     Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+  }
+
+  void toggleTextScale(bool value) {
+    Provider.of<TextScaleProvider>(context, listen: false).setTextScale();
   }
 
   Future<void> showDeleteAccountDialog() async {
@@ -100,16 +105,37 @@ class _SettingsPageState extends State<SettingsPage> {
                 value:
                     Provider.of<ThemeProvider>(context).themeData == darkMode,
                 activeIcon: Icon(Icons.nightlight_round, color: Colors.black),
-                activeText: 'Dark',
                 activeColor: Colors.green.shade900,
                 activeTextColor: Colors.white,
+                activeText: 'Dark',
                 inactiveIcon: Icon(Icons.wb_sunny),
                 inactiveColor: Colors.green.shade300,
-                inactiveText: 'Light',
                 inactiveTextColor: Colors.black,
+                inactiveText: 'Light',
                 showOnOff: true,
                 width: 80,
                 onToggle: toggleTheme,
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Large Text', style: TextStyle(fontWeight: FontWeight.bold)),
+              FlutterSwitch(
+                value: Provider.of<TextScaleProvider>(context).scaleFactor != 1,
+                activeIcon: Icon(Icons.check, color: Colors.black),
+                activeColor: Colors.green.shade900,
+                activeTextColor: Colors.white,
+                activeText: 'On',
+                inactiveIcon: Icon(Icons.close, color: Colors.black),
+                inactiveColor: Colors.green.shade300,
+                inactiveTextColor: Colors.black,
+                inactiveText: 'Off',
+                showOnOff: true,
+                width: 80,
+                onToggle: toggleTextScale,
               ),
             ],
           ),

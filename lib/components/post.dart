@@ -69,7 +69,10 @@ class _PostState extends State<Post> {
                         radius: 20,
                       ),
                       SizedBox(width: 15),
-                      Text(userData!["full_name"]),
+                      Text(
+                        userData!["full_name"],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                   SizedBox(height: 20),
