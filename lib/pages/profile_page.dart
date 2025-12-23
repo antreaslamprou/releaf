@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
       await FirebaseAuth.instance.signOut();
 
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/splash');
+      Navigator.pushNamedAndRemoveUntil(context, '/splash', (route) => false);
 
       Snackbar.show(context, 'Logged out successfully.');
     } catch (e) {

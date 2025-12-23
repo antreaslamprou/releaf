@@ -20,9 +20,8 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   void initState() {
     super.initState();
 
-    getData();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getData();
       updateDailyPost();
     });
   }
