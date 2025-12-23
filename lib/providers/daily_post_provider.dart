@@ -4,7 +4,7 @@ import 'package:releaf/utils/conversions.dart';
 
 class DailyPostProvider extends ChangeNotifier {
   final userService = UserService();
-  late bool isDailyPosted;
+  bool isDailyPosted = false;
   bool isLoading = true;
 
   Future<void> loadDailyPost() async {
