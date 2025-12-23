@@ -53,17 +53,16 @@ class _LikeButtonState extends State<LikeButton> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('Likes: '),
-        Text(' $likes'),
-        widget.isEditable
-            ? IconButton(
-                icon: Icon(
-                  liked ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.red,
-                ),
-                onPressed: toggleLike,
-              )
-            : SizedBox(height: 50),
+        Text('Likes:  $likes'),
+        const SizedBox(width: 5),
+        if (widget.isEditable)
+          IconButton(
+            icon: Icon(
+              liked ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
+            ),
+            onPressed: toggleLike,
+          ),
       ],
     );
   }

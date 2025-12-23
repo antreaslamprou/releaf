@@ -147,6 +147,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text('Points', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(userData?['points'].toString() ?? '0'),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text(
                   'Hot Streaks',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -174,8 +182,11 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Points', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(userData?['points'].toString() ?? '0'),
+                Text(
+                  'Last Activity (UTC)',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(userData?['last_post'] ?? 'N/A'),
               ],
             ),
             SizedBox(height: 50),

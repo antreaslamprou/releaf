@@ -75,7 +75,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                                 ? const Color.fromARGB(255, 192, 192, 192)
                                 : index + 1 == 3
                                 ? const Color.fromARGB(255, 205, 127, 50)
-                                : const Color.fromARGB(255, 19, 167, 0),
+                                : const Color.fromARGB(0, 0, 0, 0),
                           ),
                           Positioned(
                             width: 30,
@@ -85,7 +85,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                                 '${index + 1}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: index + 1 >= 1 && index + 1 <= 3
+                                      ? Colors.black
+                                      : null,
                                 ),
                               ),
                             ),

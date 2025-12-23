@@ -80,8 +80,14 @@ class _PostState extends State<Post> {
                     Conversions.baseToImage(widget.postData['image']),
                     fit: BoxFit.cover,
                   ),
-                  const SizedBox(height: 15),
-                  Text(widget.postData['description'] ?? ''),
+                  const SizedBox(height: 5),
+                  if (widget.postData['description'] != '')
+                    Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        Text(widget.postData['description'] ?? ''),
+                      ],
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
