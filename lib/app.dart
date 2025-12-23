@@ -4,7 +4,7 @@ import 'package:releaf/pages/base_page.dart';
 import 'package:releaf/pages/login_page.dart';
 import 'package:releaf/pages/register_page.dart';
 import 'package:releaf/pages/splash_page.dart';
-import 'package:releaf/providers/text_scale.dart';
+import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
 
 class App extends StatelessWidget {

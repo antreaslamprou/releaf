@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/services/user_service.dart';
 
 class SplashPage extends StatefulWidget {
@@ -10,6 +11,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final userService = UserService();
+  final dailyPostProvider = DailyPostProvider();
 
   @override
   void initState() {
@@ -25,6 +27,8 @@ class _SplashPageState extends State<SplashPage> {
 
     if (uid != '') {
       await userService.checkHotstreaks();
+      print('***************** Calling From Splash *****************');
+      await dailyPostProvider.loadDailyPost();
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } else {

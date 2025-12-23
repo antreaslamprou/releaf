@@ -17,7 +17,7 @@ class PostsCalendar extends StatefulWidget {
 class PostsCalendarState extends State<PostsCalendar> {
   final PostService postService = PostService();
   final UserService userService = UserService();
-  final now = DateTime.now().toUtc();
+  final now = Conversions.getNow();
 
   Map<DateTime, List<Map<String, dynamic>>> events = {};
 
@@ -105,7 +105,7 @@ class PostsCalendarState extends State<PostsCalendar> {
               },
               enabledDayPredicate: (day) {
                 return day.isBefore(
-                  DateTime.now().toUtc().add(const Duration(days: 1)),
+                  Conversions.getNow().add(const Duration(days: 1)),
                 );
               },
               eventLoader: (day) {

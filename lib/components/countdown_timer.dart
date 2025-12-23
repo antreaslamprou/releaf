@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/utils/conversions.dart';
 
 class CountdownTimer extends StatefulWidget {
   const CountdownTimer({super.key});
@@ -36,7 +37,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
   }
 
   void _updateRemaining() {
-    final now = DateTime.now().toUtc();
+    final now = Conversions.getNow();
 
     DateTime target = DateTime(now.year, now.month, now.day, 23, 59, 59);
 

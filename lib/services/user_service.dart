@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/utils/conversions.dart';
 
 class UserService {
   final _auth = FirebaseAuth.instance;
@@ -220,8 +221,12 @@ class UserService {
 
     final userData = await getUserData();
 
-    final lastPost = DateTime.parse(userData['last_post']);
-    final now = DateTime.now().toUtc();
+    final lastPostString = userData['last_post'] != ''
+        ? userData['last_post']
+        : '2000-01-01';
+
+    final lastPost = DateTime.parse(lastPostString);
+    final now = Conversions.getNow();
 
     final cleanNow = DateTime(now.year, now.month, now.day);
     final cleanLast = DateTime(lastPost.year, lastPost.month, lastPost.day);

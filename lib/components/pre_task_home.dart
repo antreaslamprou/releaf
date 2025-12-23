@@ -7,6 +7,7 @@ import 'package:releaf/pages/task_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
+import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -20,6 +21,8 @@ class PreTaskHome extends StatefulWidget {
 class _PreTaskHomeState extends State<PreTaskHome> {
   final postService = PostService();
   final taskService = TaskService();
+
+  bool isPosting = false;
 
   late TextEditingController _postDescriptionController;
 
@@ -73,6 +76,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
   }
 
   void _submitImage() async {
+    setState(() {
+      isPosting = true;
+    });
+
     String message = await postService.createPost(
       _image!,
       _postDescriptionController.text.trim(),
@@ -81,6 +88,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     if (message.contains('Error')) {
       if (!mounted) return;
       Snackbar.show(context, message);
+
+      setState(() {
+        isPosting = false;
+      });
     } else {
       setState(() {
         _image = null;
@@ -94,6 +105,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
 
       if (!mounted) return;
       Snackbar.show(context, message);
+
+      setState(() {
+        isPosting = false;
+      });
     }
   }
 
@@ -120,7 +135,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => TaskPage(taskTitle: dailyTask!['title']),
+                      builder: (_) => TaskPage(
+                        taskTitle: dailyTask!['title'],
+                        date: Conversions.getNowString(),
+                      ),
                     ),
                   ),
                   child: Text(
@@ -160,7 +178,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: _deleteImage,
+                      onPressed: isPosting ? null : _deleteImage,
                       child: Row(
                         children: [
                           Icon(Icons.clear_rounded),
@@ -171,10 +189,18 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                     ),
                     SizedBox(width: 20),
                     ElevatedButton(
-                      onPressed: _submitImage,
+                      onPressed: isPosting ? null : _submitImage,
                       child: Row(
                         children: [
-                          Icon(Icons.check_rounded),
+                          isPosting
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Icon(Icons.check_rounded),
                           SizedBox(width: 5),
                           Text('Submit'),
                         ],

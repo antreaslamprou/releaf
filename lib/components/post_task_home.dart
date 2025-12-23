@@ -43,7 +43,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
     Map<dynamic, dynamic> dailyTaskTemp = {};
 
     if (widget.date == '' || widget.date == null) {
-      dateTemp = Conversions.dateToString(DateTime.now().toUtc());
+      dateTemp = Conversions.getNowString();
       postDataTemp = await postService.getDailyPost();
       dailyTaskTemp = await taskService.getDailyTask();
     } else {
@@ -83,8 +83,10 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) =>
-                            TaskPage(taskTitle: dailyTask!['title']),
+                        builder: (_) => TaskPage(
+                          taskTitle: dailyTask!['title'],
+                          date: Conversions.getNowString(),
+                        ),
                       ),
                     ),
                     child: Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/providers/text_scale.dart';
+import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/theme.dart';
 import 'package:releaf/providers/theme_provider.dart';

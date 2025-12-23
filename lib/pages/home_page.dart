@@ -9,7 +9,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTaskCompleted = context.watch<DailyPostProvider>().isDailyPosted;
-    return Center(child: isTaskCompleted ? PostTaskHome() : PreTaskHome());
+    return Consumer<DailyPostProvider>(
+      builder: (context, provider, _) {
+        return Center(
+          child: provider.isLoading
+              ? const CircularProgressIndicator()
+              : provider.isDailyPosted
+              ? PostTaskHome()
+              : PreTaskHome(),
+        );
+      },
+    );
   }
 }

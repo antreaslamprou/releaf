@@ -1,11 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/services/stats_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'dart:io';
-import 'package:intl/intl.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class PostService {
   final _userService = UserService();
+  final _statsService = StatsService();
   final _database = FirebaseDatabase.instance;
 
   Future<Map<String, dynamic>?> getPosts() async {
@@ -44,8 +45,7 @@ class PostService {
 
     String postDate = '';
     if (date == '' || date == null) {
-      DateTime now = DateTime.now().toUtc();
-      postDate = Conversions.dateToString(now);
+      postDate = Conversions.getNowString();
     } else {
       postDate = date;
     }
@@ -90,8 +90,7 @@ class PostService {
 
   Future<String> createPost(File image, String descritpion) async {
     String? uid = _userService.getUserUID();
-    DateTime now = DateTime.now().toUtc();
-    String date = DateFormat('yyyy-MM-dd').format(now);
+    String date = Conversions.getNowString();
 
     if (uid != '') {
       try {
@@ -105,6 +104,7 @@ class PostService {
         await _userService.updateUserData('last_post', date);
         await _userService.updatePoints();
         await _userService.updateHotstreaks();
+        await _statsService.addPostCount();
 
         return "Post created!";
       } catch (e) {
@@ -128,8 +128,10 @@ class PostService {
 
       if (snapshot.exists) {
         await likeRef.remove();
+        await _statsService.editLikeCount(-1);
       } else {
         await likeRef.set(true);
+        await _statsService.editLikeCount(1);
       }
 
       return true;

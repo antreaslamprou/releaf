@@ -35,4 +35,12 @@ class Conversions {
 
     return '$year-$month-$day';
   }
+
+  static DateTime getNow() {
+    return DateTime.now().toUtc();
+  }
+
+  static String getNowString() {
+    return dateToString(getNow());
+  }
 }

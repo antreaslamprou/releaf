@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/services/stats_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({super.key, required this.taskTitle});
+  const TaskPage({super.key, required this.taskTitle, required this.date});
 
   final String taskTitle;
+  final String date;
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -13,7 +15,12 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
   final taskService = TaskService();
+  final statsService = StatsService();
+
   late Map<dynamic, dynamic> task;
+  late int totalLikes;
+  late int totalPosts;
+
   bool isLoading = true;
 
   @override
@@ -21,15 +28,19 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getTask();
+      getData();
     });
   }
 
-  void getTask() async {
+  void getData() async {
     final taskTemp = await taskService.getTaskByTitle(widget.taskTitle);
+    final totalLikesTemp = await statsService.getTotalLikes(widget.date);
+    final totalPostsTemp = await statsService.getTotalPosts(widget.date);
 
     setState(() {
       task = taskTemp;
+      totalLikes = totalLikesTemp;
+      totalPosts = totalPostsTemp;
       isLoading = false;
     });
   }
@@ -38,7 +49,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task', style: context.text.titleSmall),
+        title: Text('Task ${widget.date}', style: context.text.titleSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -70,6 +81,19 @@ class _TaskPageState extends State<TaskPage> {
                     Text(task['description'], textAlign: TextAlign.center),
                     SizedBox(height: 5),
                     Text(task['reflection'], textAlign: TextAlign.center),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.favorite, color: Colors.red),
+                        SizedBox(width: 5),
+                        Text('$totalLikes'),
+                        SizedBox(width: 20),
+                        Icon(Icons.task_alt_rounded),
+                        SizedBox(width: 5),
+                        Text('$totalPosts'),
+                      ],
+                    ),
                   ],
                 ),
         ),

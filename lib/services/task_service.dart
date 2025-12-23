@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/utils/conversions.dart';
 
 class TaskService {
   final _database = FirebaseDatabase.instance;
@@ -13,7 +14,7 @@ class TaskService {
     final taskKeys = snapshot.children.map((e) => e.key!).toList();
 
     final today = date == '' || date == null
-        ? DateTime.now().toUtc()
+        ? Conversions.getNow()
         : DateTime.parse(date);
     final seed = today.year * 10000 + today.month * 100 + today.day;
     final random = Random(seed);
