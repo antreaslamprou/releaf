@@ -36,7 +36,7 @@ class NoNetworkPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 15),
-            Text('Oppsie...', style: context.text.headlineLarge),
+            Text('Oopsie ...', style: context.text.headlineLarge),
             SizedBox(height: 5),
             Text(
               'Seems like you are not connected to the internet!',
@@ -45,7 +45,7 @@ class NoNetworkPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'If you want to continue, please connect to the internet first and then retry!',
+              'If you want to continue, please connect to the internet first and try again!',
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
