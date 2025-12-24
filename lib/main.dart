@@ -12,15 +12,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Create and initialize all providers
+  // Create all providers
   final themeProvider = ThemeProvider();
-  await themeProvider.loadTheme();
   final textScaleProvider = TextScaleProvider();
-  await textScaleProvider.loadTextScale();
   final avatarProvider = AvatarProvider();
-  await avatarProvider.loadAvatar();
   final dailyPostProvider = DailyPostProvider();
-  await dailyPostProvider.loadDailyPost();
 
   // Run app wrapped in the providers values
   runApp(
