@@ -5,6 +5,7 @@ import 'package:releaf/utils/snackbar.dart';
 class LikeButton extends StatefulWidget {
   const LikeButton({super.key, required this.postId, this.isEditable = true});
 
+  // Widget variable with the post id and the show/hide of like button
   final String postId;
   final bool isEditable;
 
@@ -13,7 +14,10 @@ class LikeButton extends StatefulWidget {
 }
 
 class _LikeButtonState extends State<LikeButton> {
-  PostService postService = PostService();
+  // Get important user defined services for fetching/altering post data
+  final PostService _postService = PostService();
+
+  // Data holders
   bool liked = false;
   int likes = 0;
 
@@ -26,9 +30,11 @@ class _LikeButtonState extends State<LikeButton> {
     });
   }
 
+  // Get wether the current user has already liked or not the current post and
+  // the likes
   void getLikeStatus() async {
-    final isLikedTemp = await postService.getUserLiked(widget.postId);
-    final postData = await postService.getPostById(widget.postId);
+    final isLikedTemp = await _postService.getUserLiked(widget.postId);
+    final postData = await _postService.getPostById(widget.postId);
     final likesTemp = postData['likes'] != null ? postData['likes'].length : 0;
 
     setState(() {
@@ -37,8 +43,10 @@ class _LikeButtonState extends State<LikeButton> {
     });
   }
 
+  // Toogles the like functionality to show the changes visually and update the
+  // database
   void toggleLike() async {
-    if (await postService.likePost(widget.postId)) {
+    if (await _postService.likePost(widget.postId)) {
       setState(() {
         liked = !liked;
         likes += liked ? 1 : -1;
@@ -49,6 +57,8 @@ class _LikeButtonState extends State<LikeButton> {
     Snackbar.show(context, 'Error with liking this post!');
   }
 
+  // Shows the likes and the like button depending on the widget variable
+  // provided by the parent
   @override
   Widget build(BuildContext context) {
     return Row(

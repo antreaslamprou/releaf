@@ -2,8 +2,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class StatsService {
+  // Get important firebase services for public data
   final _database = FirebaseDatabase.instance;
 
+  // Add to the total posts for the current date
   Future<void> addPostCount() async {
     final date = Conversions.getNowString();
 
@@ -20,6 +22,7 @@ class StatsService {
     }
   }
 
+  // Add or reduct to the total posts likes for the current date
   Future<void> editLikeCount(int value) async {
     final date = Conversions.getNowString();
 
@@ -36,6 +39,7 @@ class StatsService {
     }
   }
 
+  // Get total likes for the provided date
   Future<int> getTotalLikes(String date) async {
     int totalLikes = 0;
     try {
@@ -48,6 +52,7 @@ class StatsService {
     }
   }
 
+  // Get total posts for the provided date
   Future<int> getTotalPosts(String date) async {
     int totalPosts = 0;
     try {

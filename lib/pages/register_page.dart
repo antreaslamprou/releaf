@@ -15,20 +15,21 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  // Data holders and state variables
   final _formKey = GlobalKey<FormState>();
-
   late TextEditingController _nameController;
   late TextEditingController _usernameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
-
-  bool isLoading = false;
   String? _usernameError;
+  bool isLoading = false;
 
+  // Initialize all text controllers
   @override
   void initState() {
     super.initState();
+
     _nameController = TextEditingController();
     _usernameController = TextEditingController();
     _emailController = TextEditingController();
@@ -36,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _confirmPasswordController = TextEditingController();
   }
 
+  // Dispose all text controllers
   @override
   void dispose() {
     _nameController.dispose();
@@ -43,9 +45,12 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
     super.dispose();
   }
 
+  // Function called on register, to check all fields are valid, register user
+  // and navigate them to the login it insert their credentials to log in
   void handleRegister() async {
     setState(() {
       isLoading = true;
@@ -89,6 +94,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  // Checks the username on each character change in the username field,
+  // informing the user if the currently inserted username is available
   Future<void> checkUsername(String value) async {
     UserService userService = UserService();
 
@@ -112,6 +119,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  // Shows the register page which consist of the register form, on submit a 
+  // loader appears till the page changes or the error message appears
   @override
   Widget build(BuildContext context) {
     return Scaffold(

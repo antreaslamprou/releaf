@@ -19,18 +19,18 @@ class PreTaskHome extends StatefulWidget {
 }
 
 class _PreTaskHomeState extends State<PreTaskHome> {
-  final postService = PostService();
-  final taskService = TaskService();
+  // Get important user defined services for fetching/altering post and task data
+  final _postService = PostService();
+  final _taskService = TaskService();
 
-  bool isPosting = false;
-
-  late TextEditingController _postDescriptionController;
-
+  // Data holders
+  Map<dynamic, dynamic>? dailyTask;
   final ImagePicker _picker = ImagePicker();
   File? _image;
+  late TextEditingController _postDescriptionController;
+  bool isPosting = false;
 
-  Map<dynamic, dynamic>? dailyTask;
-
+  // Initialize the text controller and get the daily task
   @override
   void initState() {
     super.initState();
@@ -42,8 +42,17 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     });
   }
 
+  // Dispose the text controller
+  @override
+  void dispose() {
+    _postDescriptionController.dispose();
+
+    super.dispose();
+  }
+
+  // Fetches the daily task
   Future<void> getDailyTask() async {
-    final dailyTaskTemp = await taskService.getDailyTask();
+    final dailyTaskTemp = await _taskService.getDailyTask();
 
     if (!mounted) return;
     setState(() {
@@ -69,6 +78,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     }
   }
 
+  // Removes the saved image
   void _deleteImage() {
     setState(() {
       _image = null;
@@ -76,12 +86,15 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     Snackbar.show(context, 'Image deleted.');
   }
 
+  // Creates a post using the saved image and the provided description, on
+  // submit the buttons become null and there is a loader showing on the submit
+  // button
   void _submitImage() async {
     setState(() {
       isPosting = true;
     });
 
-    String message = await postService.createPost(
+    String message = await _postService.createPost(
       _image!,
       _postDescriptionController.text.trim(),
     );
@@ -113,6 +126,11 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     }
   }
 
+  // Shows a loader till the daily task is fetched, on take image button click,
+  // the camera opens and after the user selects the image, they see the image,
+  // the description text field and the cancel and submit buttons for the post.
+  // The widget change happends depending on wether an image is saved to the
+  // local variable or not.
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

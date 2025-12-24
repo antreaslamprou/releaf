@@ -3,64 +3,30 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class UserService {
+  // Get important firebase services for public ans sensitive data
   final _auth = FirebaseAuth.instance;
   final _database = FirebaseDatabase.instance;
 
-  Future<bool> deleteUser() async {
+  // Returns the current user's id, if available, from auth
+  String getUserUID() {
     final User? user = _auth.currentUser;
 
-    if (user == null) return false;
+    if (user == null) return '';
 
-    final String uid = user.uid;
-
-    await _database.ref('users/$uid').remove();
-    FirebaseAuth.instance.currentUser!.delete();
-    await FirebaseAuth.instance.signOut();
-
-    return true;
+    return user.uid;
   }
 
-  Future<List<Map<dynamic, dynamic>>> getLeaderboard() async {
-    final snapshot = await _database
-        .ref('users')
-        .orderByChild('points')
-        .limitToLast(10)
-        .get();
-
-    if (!snapshot.exists) return [];
-
-    final dataMap = snapshot.value as Map<dynamic, dynamic>;
-
-    final topUsers =
-        dataMap.values.map((e) => e as Map<dynamic, dynamic>).toList()
-          ..sort((a, b) => (b['points'] as int).compareTo(a['points'] as int));
-
-    return topUsers;
-  }
-
-  Future<Map<String, dynamic>> getUserData() async {
+  // Returns the current user's email, if available, from auth
+  String getUserEmail() {
     final User? user = _auth.currentUser;
 
-    if (user == null) return {};
+    if (user == null) return '';
 
-    final String uid = user.uid;
-    final userRef = _database.ref('users/$uid');
-    final DataSnapshot snapshot = await userRef.get();
-
-    if (!snapshot.exists) return {};
-
-    return Map<String, dynamic>.from(snapshot.value as Map);
+    return user.email!;
   }
 
-  Future<Map<String, dynamic>?> getUserDataById(String userId) async {
-    final userRef = _database.ref('users/$userId');
-    final DataSnapshot snapshot = await userRef.get();
-
-    if (!snapshot.exists) return null;
-
-    return Map<String, dynamic>.from(snapshot.value as Map);
-  }
-
+  // Checks if a username is already taken, and returns wether the username is
+  // available or not
   Future<bool> checkUsernameAvailability(String username) async {
     final snapshot = await _database
         .ref('users')
@@ -73,6 +39,33 @@ class UserService {
     return true;
   }
 
+  // Get all data stored in firebase realtime database regarding the current user
+  Future<Map<String, dynamic>> getUserData() async {
+    final String uid = getUserUID();
+    if (uid.isEmpty) return {};
+
+    final userRef = _database.ref('users/$uid');
+    final DataSnapshot snapshot = await userRef.get();
+
+    if (!snapshot.exists) return {};
+
+    return Map<String, dynamic>.from(snapshot.value as Map);
+  }
+
+  // Get all data stored in firebase realtime database regarding a user from UID
+  Future<Map<String, dynamic>> getUserDataById(String userId) async {
+    final String uid = getUserUID();
+    if (uid.isEmpty) return {};
+
+    final userRef = _database.ref('users/$userId');
+    final DataSnapshot snapshot = await userRef.get();
+
+    if (!snapshot.exists) return {};
+
+    return Map<String, dynamic>.from(snapshot.value as Map);
+  }
+
+  // Get the user UID from the user username
   Future<String> getUserUIDFromUsername(String username) async {
     final snapshot = await _database
         .ref('users')
@@ -86,6 +79,7 @@ class UserService {
     return user.key ?? '';
   }
 
+  // Get the user username from the user UID
   Future<String> getUsernameFromUID(String uid) async {
     final snapshot = await _database.ref('users/$uid').get();
 
@@ -95,29 +89,42 @@ class UserService {
     return data['username'] as String;
   }
 
-  String getUserUID() {
-    final User? user = _auth.currentUser;
+  // Deletes the user from the database and auth system
+  Future<bool> deleteUser() async {
+    final String uid = getUserUID();
+    if (uid.isEmpty) return false;
 
-    if (user == null) return '';
+    await _database.ref('users/$uid').remove();
+    FirebaseAuth.instance.currentUser!.delete();
+    await FirebaseAuth.instance.signOut();
 
-    return user.uid;
+    return true;
   }
 
-  String getUserEmail() {
-    final User? user = _auth.currentUser;
+  // Gets the first 10 users ordered by points
+  Future<List<Map<dynamic, dynamic>>> getLeaderboard() async {
+    final snapshot = await _database
+        .ref('users')
+        .orderByChild('points')
+        .limitToLast(10)
+        .get();
 
-    if (user == null) return '';
+    if (!snapshot.exists) return [];
+    final dataMap = snapshot.value as Map<dynamic, dynamic>;
+    final topUsers =
+        dataMap.values.map((e) => e as Map<dynamic, dynamic>).toList()
+          ..sort((a, b) => (b['points'] as int).compareTo(a['points'] as int));
 
-    return user.email!;
+    return topUsers;
   }
 
+  // Updates any data for the current user, by providing the key of the data and
+  // the value of the data
   Future<bool> updateUserData(String key, dynamic value) async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return false;
+    final String uid = getUserUID();
+    if (uid.isEmpty) return false;
 
     try {
-      final String uid = user.uid;
       await _database.ref('users/$uid').update({key: value});
       return true;
     } catch (e) {
@@ -125,36 +132,32 @@ class UserService {
     }
   }
 
+  // Updates the current user points based on the hotstreaks
   Future<bool> updatePoints() async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return false;
+    final String uid = getUserUID();
+    if (uid.isEmpty) return false;
 
     try {
-      final uid = user.uid;
-
       final pointsSnap = await _database.ref('users/$uid/points').get();
       final hotstreakSnap = await _database.ref('users/$uid/hotstreaks').get();
-
       final int points = (pointsSnap.value as int?) ?? 0;
       final int hotstreak = (hotstreakSnap.value as int?) ?? 0;
 
       final newPoints = points + hotstreak + 1;
-
       await _database.ref('users/$uid/points').set(newPoints);
+
       return true;
     } catch (e) {
       return false;
     }
   }
 
+  // Returns the current user's friends keys
   Future<List<dynamic>> getFriends() async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return [];
+    final String uid = getUserUID();
+    if (uid.isEmpty) return [];
 
     try {
-      final String uid = user.uid;
       final snapshot = await _database.ref('users/$uid/friends').get();
       final friendsMap = snapshot.value as Map<dynamic, dynamic>?;
 
@@ -166,45 +169,40 @@ class UserService {
     }
   }
 
-  Future<bool> addFriend(String uid) async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return false;
+  // Create the connection on both users when they become friends
+  Future<bool> addFriend(String friendUID) async {
+    final String uid = getUserUID();
+    if (uid.isEmpty) return false;
 
     try {
-      final String currentUID = user.uid;
-      await _database.ref('users/$currentUID/friends/$uid').set(true);
-      await _database.ref('users/$uid/friends/$currentUID').set(true);
+      await _database.ref('users/$uid/friends/$friendUID').set(true);
+      await _database.ref('users/$friendUID/friends/$uid').set(true);
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  Future<bool> removeFriend(String uid) async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return false;
+  // Remove the connection on both users when they unfriend
+  Future<bool> removeFriend(String friendUID) async {
+    final String uid = getUserUID();
+    if (uid.isEmpty) return false;
 
     try {
-      final String currentUID = user.uid;
-      await _database.ref('users/$currentUID/friends/$uid').remove();
-      await _database.ref('users/$uid/friends/$currentUID').remove();
+      await _database.ref('users/$uid/friends/$friendUID').remove();
+      await _database.ref('users/$friendUID/friends/$uid').remove();
       return true;
     } catch (e) {
       return false;
     }
   }
 
+  // Get all saved post ids
   Future<List<dynamic>> getSavedPosts() async {
-    final User? user = _auth.currentUser;
+    final String uid = getUserUID();
+    if (uid.isEmpty) return [];
 
-    if (user == null) return [];
-
-    final String currentUID = user.uid;
-    final snapshot = await _database
-        .ref('users/$currentUID/saved_posts/')
-        .get();
+    final snapshot = await _database.ref('users/$uid/saved_posts/').get();
 
     if (snapshot.exists) {
       final value = snapshot.value as Map;
@@ -214,13 +212,14 @@ class UserService {
     }
   }
 
+  // Check wether the current user should lost its streaks if the last time they
+  // posted were two days or more (since if its one day, they can still post and
+  // keep up with their streak)
   Future<void> checkHotstreaks() async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return;
+    final String uid = getUserUID();
+    if (uid.isEmpty) return;
 
     final userData = await getUserData();
-
     final lastPostString = userData['last_post'] != ''
         ? userData['last_post']
         : '2000-01-01';
@@ -238,10 +237,10 @@ class UserService {
     if (isStreakLost) await updateUserData('hotstreaks', 0);
   }
 
+  // Update the current user's hotstreaks approprietly
   Future<void> updateHotstreaks() async {
-    final User? user = _auth.currentUser;
-
-    if (user == null) return;
+    final String uid = getUserUID();
+    if (uid.isEmpty) return;
 
     final userData = await getUserData();
 

@@ -10,6 +10,8 @@ import 'package:releaf/providers/theme_provider.dart';
 class App extends StatelessWidget {
   const App({super.key});
 
+  // Return the widget based on the route, and the size of the text besed on
+  // the text scaler provider multiplier
   @override
   Widget build(BuildContext context) {
     return MediaQuery(

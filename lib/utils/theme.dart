@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+// Light theme
 ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
   textTheme: normalTextTheme,
+  // Edit bottom navbar text to be hidden
   navigationBarTheme: NavigationBarThemeData(
     labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
       // final base = normalTextTheme.labelSmall!;
@@ -13,6 +15,8 @@ ThemeData lightMode = ThemeData(
       return normalTextTheme.labelSmall!;
     }),
   ),
+  // Create a dark theme mode color scheme with base color green and background
+  // color greyish white
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.light,
     seedColor: Colors.green,
@@ -20,9 +24,11 @@ ThemeData lightMode = ThemeData(
   ),
 );
 
+// Dark theme
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   textTheme: normalTextTheme,
+  // Edit bottom navbar text to be hidden
   navigationBarTheme: NavigationBarThemeData(
     labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
       // final base = normalTextTheme.labelSmall!;
@@ -33,12 +39,14 @@ ThemeData darkMode = ThemeData(
       return normalTextTheme.labelSmall!;
     }),
   ),
+  // Create a dark theme mode color scheme with base color green
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
     seedColor: Colors.green,
   ),
 );
 
+// Normal text size theme
 TextTheme normalTextTheme = TextTheme(
   labelSmall: TextStyle(
     fontSize: 12,

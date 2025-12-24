@@ -17,8 +17,10 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
+  // State variable
   int _currentIndex = 0;
 
+  // Data holder regarding the pages and navigation
   final List<Map<String, dynamic>> navItems = [
     {
       "icon": Icons.home_outlined,
@@ -52,6 +54,9 @@ class _BasePageState extends State<BasePage> {
     },
   ];
 
+  // Template for all base pages that are visible during the login of a user,
+  // with the widget change happening without rebuilding each widget (each
+  // widget keeps it state)
   @override
   Widget build(BuildContext context) {
     return Scaffold(

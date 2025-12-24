@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/providers/avatar_provider.dart';
+import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/theme.dart';
@@ -17,16 +19,21 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final userService = UserService();
+  // Get important user defined services for fetching/altering user data
+  final _userService = UserService();
 
+  // Call the toogle theme on switch tap
   void toggleTheme(bool value) {
     Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
   }
 
+  // Call the toogle text scale on switch tap
   void toggleTextScale(bool value) {
-    Provider.of<TextScaleProvider>(context, listen: false).setTextScale();
+    Provider.of<TextScaleProvider>(context, listen: false).toogleTextScale();
   }
 
+  // Shows a dialog with the delete account warning, gives the option to proceed
+  // or cancel
   Future<void> showDeleteAccountDialog() async {
     return showDialog<void>(
       context: context,
@@ -62,16 +69,24 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  // Deletes all user related data and resets the providers
   void deleteAccount() async {
-    final isOkay = await userService.deleteUser();
+    final isOkay = await _userService.deleteUser();
 
     if (!mounted) return;
+    Provider.of<DailyPostProvider>(context, listen: false).reset();
+    Provider.of<TextScaleProvider>(context, listen: false).reset();
+    Provider.of<AvatarProvider>(context, listen: false).reset();
+    Provider.of<ThemeProvider>(context, listen: false).reset();
+
     if (!isOkay) return Snackbar.show(context, 'Error With Deleting Account');
 
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacementNamed(context, '/splash');
     Snackbar.show(context, 'Account deleted.');
   }
 
+  // Navigates the user to their default email application with the receiver
+  // email and subject already filled
   void sendEmail() async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
@@ -87,6 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  // Shows the settings page
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

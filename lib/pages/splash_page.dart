@@ -14,7 +14,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final userService = UserService();
+  // Get important user defined services for fetching/altering user data
+  final _userService = UserService();
 
   @override
   void initState() {
@@ -25,14 +26,18 @@ class _SplashPageState extends State<SplashPage> {
     });
   }
 
+  // Redirect to the correct path depending on wether the user is logged in or
+  // not, if the user is logged in, initialize the providers
   Future<void> init() async {
-    final uid = userService.getUserUID();
+    final uid = _userService.getUserUID();
 
-    if (uid == '') {
+    // User comes from log out or user didnt log in yet
+    if (uid.isEmpty) {
       Navigator.pushReplacementNamed(context, '/login');
       return;
     }
 
+    // User comes from log in
     final textScaleProvider = Provider.of<TextScaleProvider>(
       context,
       listen: false,
@@ -49,12 +54,13 @@ class _SplashPageState extends State<SplashPage> {
     await dailyPostProvider.loadDailyPost();
     await avatarProvider.loadAvatar();
 
-    await userService.checkHotstreaks();
+    await _userService.checkHotstreaks();
 
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');
   }
 
+  // Show the ReLeaf logo while the process is done in the background
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/components/post.dart';
 import 'package:releaf/services/post_service.dart';
-import 'package:releaf/services/user_service.dart';
 
 class FriendsPosts extends StatefulWidget {
   const FriendsPosts({super.key, required this.date, this.isEditable = true});
 
+  // Widget parameters used to fetch correctly the post data from a data and to
+  // show/hide post actions
   final String date;
   final bool isEditable;
 
@@ -14,11 +15,11 @@ class FriendsPosts extends StatefulWidget {
 }
 
 class _FriendsPostsState extends State<FriendsPosts> {
-  UserService userService = UserService();
-  PostService postService = PostService();
+  // Get important user defined services for fetching/altering post data
+  final PostService _postService = PostService();
 
+  // Data holders and state variables
   List<Map<dynamic, dynamic>> postData = [];
-
   bool isLoading = true;
 
   @override
@@ -30,8 +31,9 @@ class _FriendsPostsState extends State<FriendsPosts> {
     });
   }
 
+  // Fetches all friends posts
   void init() async {
-    final tempList = await postService.getFriendsPosts(widget.date);
+    final tempList = await _postService.getFriendsPosts(widget.date);
 
     setState(() {
       postData = tempList;
@@ -39,6 +41,8 @@ class _FriendsPostsState extends State<FriendsPosts> {
     });
   }
 
+  // After the data are fetched, the loader is removed and the friends posts for
+  // a defined date are shown, otherwise a message
   @override
   Widget build(BuildContext context) {
     return Column(

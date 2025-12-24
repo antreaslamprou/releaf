@@ -13,14 +13,19 @@ class FriendsPage extends StatefulWidget {
 }
 
 class _FriendsPageState extends State<FriendsPage> {
+  // Data holder
   String _page = 'List';
 
+  // Changes the visible widget
   void setPage(String page) {
     setState(() {
       _page = page;
     });
   }
 
+  // Shows the friends page which consist of one active widget of the friends
+  // list, add friend, incoming and outgoing requests. The widget change is done
+  // using a local variable
   @override
   Widget build(BuildContext context) {
     return Padding(

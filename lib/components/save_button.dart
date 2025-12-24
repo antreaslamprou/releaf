@@ -5,6 +5,7 @@ import 'package:releaf/utils/snackbar.dart';
 class SaveButton extends StatefulWidget {
   const SaveButton({super.key, required this.postId});
 
+  // Widget variable with the post id
   final String postId;
 
   @override
@@ -12,7 +13,10 @@ class SaveButton extends StatefulWidget {
 }
 
 class _SaveButtonState extends State<SaveButton> {
-  PostService postService = PostService();
+  // Get important user defined services for fetching/altering post data
+  final PostService _postService = PostService();
+
+  // Initial value of save status
   bool saved = false;
 
   @override
@@ -24,15 +28,18 @@ class _SaveButtonState extends State<SaveButton> {
     });
   }
 
+  // Fetches whether the user already saved the post or not
   void getSavedStatus() async {
-    final isSavedTemp = await postService.getUserSaved(widget.postId);
+    final isSavedTemp = await _postService.getUserSaved(widget.postId);
     setState(() {
       saved = isSavedTemp;
     });
   }
 
+  // Toogles the save functionality to show the changes visually and update the
+  // database
   void toggleSave() async {
-    if (await postService.savePost(widget.postId)) {
+    if (await _postService.savePost(widget.postId)) {
       setState(() {
         saved = !saved;
       });
@@ -42,6 +49,7 @@ class _SaveButtonState extends State<SaveButton> {
     Snackbar.show(context, 'Error with liking this post!');
   }
 
+  // Shows the save button
   @override
   Widget build(BuildContext context) {
     return IconButton(

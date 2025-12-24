@@ -11,8 +11,10 @@ class FriendList extends StatefulWidget {
 }
 
 class _FriendListState extends State<FriendList> {
-  final userService = UserService();
+  // Get important user defined services for fetching/altering post data
+  final _userService = UserService();
 
+  // Data holder and state variables
   List<dynamic> _friendList = [];
   bool isLoading = true;
 
@@ -20,18 +22,14 @@ class _FriendListState extends State<FriendList> {
   void initState() {
     super.initState();
 
-    getFriends();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getFriends();
+    });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    getFriends();
-  }
-
+  // Fetches the friends
   Future<void> getFriends() async {
-    final friendsList = await userService.getFriends();
+    final friendsList = await _userService.getFriends();
 
     setState(() {
       _friendList = friendsList;
@@ -39,6 +37,8 @@ class _FriendListState extends State<FriendList> {
     });
   }
 
+  // Shows a dialog with the unfriend warning, gives the option to proceed
+  // or cancel
   Future<void> showUnfriendDialog(String friendId) async {
     return showDialog<void>(
       context: context,
@@ -74,8 +74,9 @@ class _FriendListState extends State<FriendList> {
     );
   }
 
+  // Removed the friend from both the users
   void unfriend(String friendId) async {
-    final isOkay = await userService.removeFriend(friendId);
+    final isOkay = await _userService.removeFriend(friendId);
 
     if (!mounted) return;
     if (!isOkay) return Snackbar.show(context, 'Could not remove friend!');
@@ -84,6 +85,8 @@ class _FriendListState extends State<FriendList> {
     return Snackbar.show(context, 'Friend removed!');
   }
 
+  // Once the data are fetched, the loader is removed and a list of friends or a
+  // message is shown depending on wether the current user has friends
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(

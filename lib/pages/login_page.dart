@@ -12,27 +12,32 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Data holders and state variables
   final _formKey = GlobalKey<FormState>();
-
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
-
   bool isLoading = false;
 
+  // Initialize all text controllers
   @override
   void initState() {
     super.initState();
+
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
   }
 
+  // Dispose all text controllers
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
+  // Function called on login, to check all fields are valid, login the user
+  // and navigate them to the splash screen (which will take them to home)
   void handleLogin() async {
     setState(() {
       isLoading = true;
@@ -69,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Shows the login page which consist of the login form, on submit a
+  // loader appears till the page changes or the error message appears
   @override
   Widget build(BuildContext context) {
     return Scaffold(

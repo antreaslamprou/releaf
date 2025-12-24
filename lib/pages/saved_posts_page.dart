@@ -12,9 +12,11 @@ class SavedPostsPage extends StatefulWidget {
 }
 
 class _SavedPostsPageState extends State<SavedPostsPage> {
-  final userService = UserService();
-  final postService = PostService();
+  // Get important user defined services for fetching/altering user and post data
+  final _userService = UserService();
+  final _postService = PostService();
 
+  // Data holders and state variables
   late List<Map<dynamic, dynamic>> savedPosts;
   bool isLoading = true;
 
@@ -27,12 +29,13 @@ class _SavedPostsPageState extends State<SavedPostsPage> {
     });
   }
 
+  // Loads the user saved posts
   void loadData() async {
     List<Map<dynamic, dynamic>> listTemp = [];
-    final savedPostsKeys = await userService.getSavedPosts();
+    final savedPostsKeys = await _userService.getSavedPosts();
 
     for (final postId in savedPostsKeys) {
-      final post = await postService.getPostById(postId);
+      final post = await _postService.getPostById(postId);
       listTemp.add(post);
     }
 
@@ -42,6 +45,7 @@ class _SavedPostsPageState extends State<SavedPostsPage> {
     });
   }
 
+  // Shows the saved posts if available, otherwise a warning message
   @override
   Widget build(BuildContext context) {
     return Scaffold(

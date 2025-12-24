@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/components/like_button.dart';
 import 'package:releaf/components/save_button.dart';
-import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
@@ -13,6 +12,7 @@ class Post extends StatefulWidget {
     this.isSaveable = true,
   });
 
+  // Widget parameters for the post, like and save button
   final Map<dynamic, dynamic> postData;
   final bool isEditable;
   final bool isSaveable;
@@ -22,13 +22,12 @@ class Post extends StatefulWidget {
 }
 
 class _PostState extends State<Post> {
-  final userService = UserService();
-  final postService = PostService();
+  // Get important user defined services for fetching/altering user and post data
+  final _userService = UserService();
 
-  int likeKey = 0;
-  bool isLiked = false;
-
+  // Data holders
   Map<dynamic, dynamic>? userData;
+  int likeKey = 0;
 
   @override
   void initState() {
@@ -39,8 +38,9 @@ class _PostState extends State<Post> {
     });
   }
 
+  // Fetches the user's data to show on the post
   void getData() async {
-    final userDataTemp = await userService.getUserDataById(
+    final userDataTemp = await _userService.getUserDataById(
       widget.postData['id'].split('_')[0],
     );
 
@@ -49,10 +49,13 @@ class _PostState extends State<Post> {
     });
   }
 
+  // When the data is fethced, the post is shown, which contains the user's
+  // avatar and name, the image, the post description, the likes and depending
+  // on the page, the like and save buttons
   @override
   Widget build(BuildContext context) {
     return userData == null
-        ? const CircularProgressIndicator()
+        ? SizedBox()
         : Card(
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: Padding(

@@ -3,8 +3,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class TaskService {
+  // Get important firebase services for public data
   final _database = FirebaseDatabase.instance;
 
+  // Fetches the task for the provided date (if no date is provided, fetches the
+  // current daily task) based randomly on the date
   Future<Map<dynamic, dynamic>> getDailyTask({String? date}) async {
     final DatabaseReference taskRef = _database.ref('tasks');
     final DataSnapshot snapshot = await taskRef.get();
@@ -23,6 +26,7 @@ class TaskService {
     return snapshot.child(dailyTaskKey).value as Map;
   }
 
+  // Fetches the task details based on title
   Future<Map<dynamic, dynamic>> getTaskByTitle(String title) async {
     final snapshot = await _database
         .ref('tasks')

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
@@ -12,6 +11,8 @@ class FriendWidget extends StatefulWidget {
     this.onExtraButtonClick,
   });
 
+  // Widget parameters used to show and connect this widget with data and
+  // functionality
   final String userUID;
   final String type;
   final VoidCallback onButtonClick;
@@ -22,27 +23,30 @@ class FriendWidget extends StatefulWidget {
 }
 
 class _FriendWidgetState extends State<FriendWidget> {
+  // Get important user defined services for fetching/altering user data
   final UserService _userService = UserService();
-  final friendRequestService = FriendRequestService();
 
+  // Data holders and state variables
   String? avatar;
   String? username;
-
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
 
-    _loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
   }
 
-  void _loadData() async {
+  // Fetches the user data
+  void loadData() async {
     Map<String, dynamic>? userData = await _userService.getUserDataById(
       widget.userUID,
     );
 
-    if (userData == null) return;
+    if (userData.isEmpty) return;
 
     setState(() {
       avatar = userData['avatar'];
@@ -51,6 +55,7 @@ class _FriendWidgetState extends State<FriendWidget> {
     });
   }
 
+  // Once the user data are fetched, the user widget used in lists is available
   @override
   Widget build(BuildContext context) {
     return Padding(

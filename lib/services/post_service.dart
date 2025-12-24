@@ -5,67 +5,66 @@ import 'dart:io';
 import 'package:releaf/utils/conversions.dart';
 
 class PostService {
+  // Get important user defined services for altering user and stats/total-posts
+  // data
   final _userService = UserService();
   final _statsService = StatsService();
+
+  // Get important firebase services for public data
   final _database = FirebaseDatabase.instance;
 
+  // Get all posts from the current user
   Future<Map<String, dynamic>?> getPosts() async {
-    String? uid = _userService.getUserUID();
+    String uid = _userService.getUserUID();
+    if (uid.isEmpty) return null;
 
-    if (uid != '') {
-      final DatabaseReference postRef = _database.ref('posts/$uid');
-      final DataSnapshot snapshot = await postRef.get();
-      if (snapshot.exists) {
-        return Map<String, dynamic>.from(snapshot.value as Map);
-      }
-    }
+    final DatabaseReference postRef = _database.ref('posts/$uid');
+    final DataSnapshot snapshot = await postRef.get();
 
-    return null;
+    if (!snapshot.exists) return null;
+
+    return Map<String, dynamic>.from(snapshot.value as Map);
   }
 
+  // Get a posts from post id
   Future<Map<dynamic, dynamic>> getPostById(String id) async {
-    String? uid = _userService.getUserUID();
+    String uid = _userService.getUserUID();
+    if (uid.isEmpty) return {};
 
-    if (uid != '') {
-      final userId = id.split('_')[0];
-      final postDate = id.split('_')[1];
+    final userId = id.split('_')[0];
+    final postDate = id.split('_')[1];
 
-      final snpashot = await _database.ref('posts/$userId/$postDate').get();
+    final snpashot = await _database.ref('posts/$userId/$postDate').get();
 
-      if (!snpashot.exists) return {};
+    if (!snpashot.exists) return {};
 
-      return snpashot.value as Map;
-    }
-
-    return {};
+    return snpashot.value as Map;
   }
 
+  // Get daily post of current user for the date provided, if no date, the current
+  // date is checked
   Future<Map<String, dynamic>> getDailyPost({String? date}) async {
-    String? uid = _userService.getUserUID();
+    String uid = _userService.getUserUID();
+    if (uid.isEmpty) return {};
 
-    String postDate = '';
-    if (date == '' || date == null) {
-      postDate = Conversions.getNowString();
-    } else {
-      postDate = date;
-    }
+    String postDate = date == null || date.isEmpty
+        ? Conversions.getNowString()
+        : date;
 
-    if (uid != '') {
-      final DatabaseReference postRef = _database.ref('posts/$uid/$postDate');
-      final DataSnapshot snapshot = await postRef.get();
-      if (snapshot.exists) {
-        return Map<String, dynamic>.from(snapshot.value as Map);
-      }
-    }
+    final DatabaseReference postRef = _database.ref('posts/$uid/$postDate');
+    final DataSnapshot snapshot = await postRef.get();
+    if (!snapshot.exists) return {};
 
-    return {};
+    return Map<String, dynamic>.from(snapshot.value as Map);
   }
 
+  // Return all friends posts to the current user based on the date provided
   Future<List<Map<dynamic, dynamic>>> getFriendsPosts(String date) async {
     final uid = _userService.getUserUID();
-    final friends = await _userService.getFriends();
+    if (uid.isEmpty) return [];
 
-    if (uid == '' || friends.isEmpty) return [];
+    final friends = await _userService.getFriends();
+    if (friends.isEmpty) return [];
 
     List<Map<dynamic, dynamic>> list = [];
 
@@ -81,6 +80,7 @@ class PostService {
     return list;
   }
 
+  // Get the current user's total post count
   Future<int> getTotalPosts() async {
     Map<String, dynamic>? posts = await getPosts();
 
@@ -88,44 +88,50 @@ class PostService {
     return posts.length;
   }
 
+  // Create a post in the database for the current user, parameters of the image
+  // and description need to be provided
   Future<String> createPost(File image, String descritpion) async {
-    String? uid = _userService.getUserUID();
+    final uid = _userService.getUserUID();
+    if (uid.isEmpty) return "Error: Invalid User";
+
     String date = Conversions.getNowString();
 
-    if (uid != '') {
-      try {
-        final base64img = await Conversions.imageToBase(image);
-        await _database.ref('posts/$uid/$date').set({
-          'id': '${uid}_$date',
-          'image': base64img,
-          'description': descritpion,
-        });
+    try {
+      final base64img = await Conversions.imageToBase(image);
+      await _database.ref('posts/$uid/$date').set({
+        'id': '${uid}_$date',
+        'image': base64img,
+        'description': descritpion,
+      });
 
-        await _userService.updateUserData('last_post', date);
-        await _userService.updatePoints();
-        await _userService.updateHotstreaks();
-        await _statsService.addPostCount();
+      // Update the all related data like users last post, hotstreaks, points
+      // and total post count/stats
+      await _userService.updateUserData('last_post', date);
+      await _userService.updatePoints();
+      await _userService.updateHotstreaks();
+      await _statsService.addPostCount();
 
-        return "Post created!";
-      } catch (e) {
-        return "Error: $e";
-      }
+      return "Post created!";
+    } catch (e) {
+      return "Error: $e";
     }
-
-    return "Error: Invalid User";
   }
 
+  // Add or remove a like depending on the action, post id need to be provided
   Future<bool> likePost(String postId) async {
     try {
-      String currentUID = _userService.getUserUID();
+      final currentUID = _userService.getUserUID();
+      if (currentUID.isEmpty) return false;
 
-      String userUID = postId.split('_')[0];
+      String friendUID = postId.split('_')[0];
       String date = postId.split('_')[1];
 
-      final likeRef = _database.ref('posts/$userUID/$date/likes/$currentUID');
+      final likeRef = _database.ref('posts/$friendUID/$date/likes/$currentUID');
 
       final snapshot = await likeRef.get();
 
+      // If the post is already liked, remove the like, otherwise add it (update
+      // the total likes/stats respectively)
       if (snapshot.exists) {
         await likeRef.remove();
         await _statsService.editLikeCount(-1);
@@ -140,14 +146,17 @@ class PostService {
     }
   }
 
+  // Check the initial like status for the current user and a post, post id is
+  // needed
   Future<bool> getUserLiked(String postId) async {
     try {
-      String currentUID = _userService.getUserUID();
+      final currentUID = _userService.getUserUID();
+      if (currentUID.isEmpty) return false;
 
-      String userUID = postId.split('_')[0];
+      String friendUID = postId.split('_')[0];
       String date = postId.split('_')[1];
 
-      final likeRef = _database.ref('posts/$userUID/$date/likes/$currentUID');
+      final likeRef = _database.ref('posts/$friendUID/$date/likes/$currentUID');
 
       final snapshot = await likeRef.get();
 
@@ -161,14 +170,19 @@ class PostService {
     }
   }
 
+  // Add or remove a post from the saved postst depending on the action, post id
+  // need to be provided
   Future<bool> savePost(String postId) async {
     try {
-      String userUID = _userService.getUserUID();
+      final uid = _userService.getUserUID();
+      if (uid.isEmpty) return false;
 
-      final saveRef = _database.ref('users/$userUID/saved_posts/$postId');
+      final saveRef = _database.ref('users/$uid/saved_posts/$postId');
 
       final snapshot = await saveRef.get();
 
+      // If the post is already saved, remove it from saved posts, otherwise add
+      // it to the saved postst
       if (snapshot.exists) {
         await saveRef.remove();
       } else {
@@ -181,11 +195,14 @@ class PostService {
     }
   }
 
+  // Check the initial save status for the current user and a post, post id is
+  // needed
   Future<bool> getUserSaved(String postId) async {
     try {
-      String userUID = _userService.getUserUID();
+      final uid = _userService.getUserUID();
+      if (uid.isEmpty) return false;
 
-      final saveRef = _database.ref('users/$userUID/saved_posts/$postId');
+      final saveRef = _database.ref('users/$uid/saved_posts/$postId');
 
       final snapshot = await saveRef.get();
 

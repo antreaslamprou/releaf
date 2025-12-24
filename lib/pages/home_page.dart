@@ -7,6 +7,8 @@ import 'package:releaf/providers/daily_post_provider.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  // Shows the correct widget depending on wether the user completed their daily
+  // task
   @override
   Widget build(BuildContext context) {
     return Center(

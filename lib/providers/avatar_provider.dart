@@ -6,16 +6,22 @@ import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class AvatarProvider extends ChangeNotifier {
-  final userService = UserService();
+  // Get important user defined services for fetching/altering user data
+  final _userService = UserService();
+
+  // Default values, the avatar is set to the default avatar and the pick image
+  // to false
   String avatarImage = Conversions.getDefaultAvatarBase();
   bool _isPickingImage = false;
 
+  // Returns the avatar as a Widget/Image
   ImageProvider get imageProvider {
     return MemoryImage(Conversions.baseToImage(avatarImage));
   }
 
+  // Initialization function to get if the user avatar
   Future<void> loadAvatar() async {
-    Map<String, dynamic>? userData = await userService.getUserData();
+    Map<String, dynamic>? userData = await _userService.getUserData();
 
     if (userData.isEmpty) {
       avatarImage = Conversions.getDefaultAvatarBase();
@@ -29,6 +35,8 @@ class AvatarProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // If the user is not already picking, changes the avatar, and updates the
+  // database
   Future<void> uploadAvatar() async {
     if (_isPickingImage) return;
     _isPickingImage = true;
@@ -46,7 +54,7 @@ class AvatarProvider extends ChangeNotifier {
       minWidth: 100,
     );
 
-    String uid = userService.getUserUID();
+    String uid = _userService.getUserUID();
     await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarImage);
 
     _isPickingImage = false;
@@ -54,15 +62,17 @@ class AvatarProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Changes the avatar to the default avatar, and updates the database
   Future<void> deleteAvatar() async {
     avatarImage = Conversions.getDefaultAvatarBase();
 
-    String uid = userService.getUserUID();
+    String uid = _userService.getUserUID();
     await FirebaseDatabase.instance.ref('users/$uid/avatar').set('');
 
     notifyListeners();
   }
 
+  // Resets the avatar to the default avatar
   void reset() {
     avatarImage = Conversions.getDefaultAvatarBase();
     notifyListeners();

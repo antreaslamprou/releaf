@@ -14,13 +14,15 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final taskService = TaskService();
-  final statsService = StatsService();
+  // Get important user defined services for fetching/altering user data and
+  // total posts/stats
+  final _taskService = TaskService();
+  final _statsService = StatsService();
 
+  // Data holders and state variables
   late Map<dynamic, dynamic> task;
   late int totalLikes;
   late int totalPosts;
-
   bool isLoading = true;
 
   @override
@@ -32,10 +34,11 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
+  // Fetches all task related data
   void getData() async {
-    final taskTemp = await taskService.getTaskByTitle(widget.taskTitle);
-    final totalLikesTemp = await statsService.getTotalLikes(widget.date);
-    final totalPostsTemp = await statsService.getTotalPosts(widget.date);
+    final taskTemp = await _taskService.getTaskByTitle(widget.taskTitle);
+    final totalLikesTemp = await _statsService.getTotalLikes(widget.date);
+    final totalPostsTemp = await _statsService.getTotalPosts(widget.date);
 
     setState(() {
       task = taskTemp;
@@ -45,6 +48,8 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
+  // If its loading show loader or if the task didnt return anything show
+  // an error message, otherwise show the task page with the data
   @override
   Widget build(BuildContext context) {
     return Scaffold(

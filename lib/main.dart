@@ -8,22 +8,21 @@ import 'package:releaf/providers/theme_provider.dart';
 import 'app.dart';
 
 void main() async {
+  // Ensures Firebase initializes first
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
 
+  // Create and initialize all providers
   final themeProvider = ThemeProvider();
   await themeProvider.loadTheme();
-
   final textScaleProvider = TextScaleProvider();
   await textScaleProvider.loadTextScale();
-
   final avatarProvider = AvatarProvider();
   await avatarProvider.loadAvatar();
-
   final dailyPostProvider = DailyPostProvider();
   await dailyPostProvider.loadDailyPost();
 
+  // Run app wrapped in the providers values
   runApp(
     MultiProvider(
       providers: [

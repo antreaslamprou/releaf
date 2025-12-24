@@ -8,6 +8,7 @@ import 'package:releaf/extensions/text_theme_x.dart';
 class AddFriend extends StatefulWidget {
   const AddFriend({super.key, required this.backFunction});
 
+  // Function to show the parent widget
   final VoidCallback backFunction;
 
   @override
@@ -15,12 +16,16 @@ class AddFriend extends StatefulWidget {
 }
 
 class _AddFriendState extends State<AddFriend> {
-  final userService = UserService();
-  final friendRequestService = FriendRequestService();
+  // Get important user defined services for fetching/altering user data and
+  // friend requests
+  final _userService = UserService();
+  final _friendRequestService = FriendRequestService();
 
+  // Data holders
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _usernameController;
 
+  // Initializes the text controller
   @override
   void initState() {
     super.initState();
@@ -28,9 +33,19 @@ class _AddFriendState extends State<AddFriend> {
     _usernameController = TextEditingController();
   }
 
+  // Dispose the text controller
+  @override
+  void dispose() {
+    _usernameController.dispose();
+
+    super.dispose();
+  }
+
+  // Creates the friend request between the current user and the user with the
+  // username provided in the text field
   void createFriendRequest() async {
     if (_formKey.currentState!.validate()) {
-      final usernameNotValid = await userService.checkUsernameAvailability(
+      final usernameNotValid = await _userService.checkUsernameAvailability(
         _usernameController.text,
       );
 
@@ -40,7 +55,7 @@ class _AddFriendState extends State<AddFriend> {
         return;
       }
 
-      final status = await friendRequestService.sendFriendRequest(
+      final status = await _friendRequestService.sendFriendRequest(
         _usernameController.text,
       );
 
@@ -71,6 +86,7 @@ class _AddFriendState extends State<AddFriend> {
     }
   }
 
+  // Shows the add friend page
   @override
   Widget build(BuildContext context) {
     return Column(

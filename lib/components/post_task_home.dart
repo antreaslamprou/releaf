@@ -4,13 +4,14 @@ import 'package:releaf/components/post.dart';
 import 'package:releaf/pages/task_page.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
-import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
 class PostTaskHome extends StatefulWidget {
   const PostTaskHome({super.key, this.date, this.isEditable = true});
 
+  // Widget parameters used to fetch correctly the post data from a data and to
+  // show/hide post actions
   final String? date;
   final bool isEditable;
 
@@ -19,14 +20,15 @@ class PostTaskHome extends StatefulWidget {
 }
 
 class _PostTaskHomeState extends State<PostTaskHome> {
-  UserService userService = UserService();
+  // Get important user defined services for fetching/altering post and task data
   PostService postService = PostService();
   TaskService taskService = TaskService();
 
+  // Data holders and state variables
   Map<String, dynamic> postData = {};
-  bool isLoading = true;
-  var date = '';
   Map<dynamic, dynamic>? dailyTask;
+  var date = '';
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
     });
   }
 
+  // Fetches all data regarding the current user post and the task
   Future<void> init() async {
     String dateTemp = '';
     Map<String, dynamic> postDataTemp = {};
@@ -54,13 +57,15 @@ class _PostTaskHomeState extends State<PostTaskHome> {
 
     if (!mounted) return;
     setState(() {
-      postData = postDataTemp;
       date = dateTemp;
+      postData = postDataTemp;
       dailyTask = dailyTaskTemp;
       isLoading = false;
     });
   }
 
+  // Shows the after completion task page, which has the daily task on top, the
+  // current user's post and then their friends posts
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(

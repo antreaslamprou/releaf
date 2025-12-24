@@ -8,6 +8,7 @@ import 'package:releaf/extensions/text_theme_x.dart';
 class IncomingFriendRequests extends StatefulWidget {
   const IncomingFriendRequests({super.key, required this.backFunction});
 
+  // Function to show the parent widget
   final VoidCallback backFunction;
 
   @override
@@ -15,9 +16,12 @@ class IncomingFriendRequests extends StatefulWidget {
 }
 
 class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
-  final userService = UserService();
-  final friendRequestService = FriendRequestService();
+  // Get important user defined services for fetching/altering user data and
+  // friend requests
+  final _userService = UserService();
+  final _friendRequestService = FriendRequestService();
 
+  // Data holder and state variable
   List<dynamic> _incoming = [];
   bool isLoading = true;
 
@@ -25,18 +29,14 @@ class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
   void initState() {
     super.initState();
 
-    getIncomingRequests();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getIncomingRequests();
+    });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    getIncomingRequests();
-  }
-
+  // Fetches friend requests received from current user
   Future<void> getIncomingRequests() async {
-    final requestsList = await friendRequestService.getIncomingFriendRequest();
+    final requestsList = await _friendRequestService.getIncomingFriendRequest();
 
     if (requestsList.isEmpty) {
       setState(() {
@@ -52,16 +52,18 @@ class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
     });
   }
 
+  // Deletes a friend request, and then refetches the incoming requests
   void removeIncoming(String senderId, {bool showSnackbar = true}) async {
-    await friendRequestService.cancelOutgoingRequest(senderId: senderId);
+    await _friendRequestService.deleteRequest(senderId: senderId);
     getIncomingRequests();
     if (showSnackbar && mounted) {
       Snackbar.show(context, 'Friend request rejected!');
     }
   }
 
+  // Adds the friend in both users in the database and removes the friend request
   void acceptIncoming(String senderId) async {
-    final isOkay = await userService.addFriend(senderId);
+    final isOkay = await _userService.addFriend(senderId);
     if (!mounted) return;
     if (isOkay) {
       removeIncoming(senderId, showSnackbar: false);
@@ -71,6 +73,9 @@ class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
     }
   }
 
+  // Once the requests are fetched, the loader is removed and depending on
+  // wether there are incoming requests or not a message or the requests
+  // will be shown
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(

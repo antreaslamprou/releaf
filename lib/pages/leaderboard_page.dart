@@ -12,7 +12,10 @@ class LeaderboardPage extends StatefulWidget {
 }
 
 class _LeaderboardPageState extends State<LeaderboardPage> {
-  final userService = UserService();
+  // Get important user defined services for fetching/altering user data
+  final _userService = UserService();
+
+  // Data holder
   List<Map<dynamic, dynamic>>? _leaderboard;
 
   @override
@@ -25,14 +28,16 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     });
   }
 
+  // Fetches the leaderboard data
   Future<void> getData() async {
-    final leaderboard = await userService.getLeaderboard();
+    final leaderboard = await _userService.getLeaderboard();
 
     setState(() {
       _leaderboard = leaderboard;
     });
   }
 
+  // If the user posts for the day, the leaderboard will refetch the data
   void updateDailyPost() {
     final provider = Provider.of<DailyPostProvider>(context, listen: false);
 
@@ -45,6 +50,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     provider.addListener(listener);
   }
 
+  // Shows the leaderboard page
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(

@@ -11,6 +11,7 @@ class CountdownTimer extends StatefulWidget {
 }
 
 class _CountdownTimerState extends State<CountdownTimer> {
+  // Data holders
   Timer? _timer;
   Duration _remaining = Duration.zero;
 
@@ -18,7 +19,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
   void initState() {
     super.initState();
 
-    _startCountdown();
+    startCountdown();
   }
 
   @override
@@ -28,15 +29,17 @@ class _CountdownTimerState extends State<CountdownTimer> {
     super.dispose();
   }
 
-  void _startCountdown() {
-    _updateRemaining();
+  // Starts the countdown timer and every second calls the update function
+  void startCountdown() {
+    updateRemaining();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateRemaining();
+      updateRemaining();
     });
   }
 
-  void _updateRemaining() {
+  // Checks for the remaining time and updates the timer
+  void updateRemaining() {
     final now = Conversions.getNow();
 
     DateTime target = DateTime(now.year, now.month, now.day, 23, 59, 59);
@@ -50,11 +53,13 @@ class _CountdownTimerState extends State<CountdownTimer> {
     });
   }
 
+  // Shows the timer with a clear and readable format
   String formatRemaining(Duration duration) {
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(duration.inHours)}:${two(duration.inMinutes % 60)}:${two(duration.inSeconds % 60)}';
   }
 
+  // Shows the remaining timer
   @override
   Widget build(BuildContext context) {
     return Center(
