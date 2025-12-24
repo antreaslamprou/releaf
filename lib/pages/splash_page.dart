@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
@@ -26,18 +27,36 @@ class _SplashPageState extends State<SplashPage> {
     });
   }
 
+  Future<bool> hasInternet() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
   // Redirect to the correct path depending on wether the user is logged in or
   // not, if the user is logged in, initialize the providers
   Future<void> init() async {
-    final uid = _userService.getUserUID();
+    // App doesnt have access to network
+    bool isNetworkConnected = await hasInternet();
+    if (!isNetworkConnected) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/no-network');
+      return;
+    }
 
     // User comes from log out or user didnt log in yet
+    final uid = _userService.getUserUID();
     if (uid.isEmpty) {
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/login');
       return;
     }
 
     // User comes from log in
+    if (!mounted) return;
     final textScaleProvider = Provider.of<TextScaleProvider>(
       context,
       listen: false,
