@@ -77,6 +77,9 @@ class _AddFriendState extends State<AddFriend> {
           );
           return;
         case 'ok':
+          setState(() {
+            _usernameController.clear();
+          });
           Snackbar.show(context, 'Friend request sent!');
           return;
         case _:

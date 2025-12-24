@@ -8,6 +8,7 @@ class DailyPostProvider extends ChangeNotifier {
 
   // Default value of the daily post is set to false
   bool isDailyPosted = false;
+  bool isLoading = true;
 
   // Initialization function to get if the user completed their daily task
   // it sets the text scale to 1
@@ -23,7 +24,7 @@ class DailyPostProvider extends ChangeNotifier {
     final diff = cleanNow.difference(cleanLast).inDays;
 
     isDailyPosted = diff < 1;
-
+    isLoading = false;
     notifyListeners();
   }
 
@@ -37,6 +38,7 @@ class DailyPostProvider extends ChangeNotifier {
   // Resets the value of the daily post to false
   void reset() {
     isDailyPosted = false;
+    isLoading = true;
     notifyListeners();
   }
 }

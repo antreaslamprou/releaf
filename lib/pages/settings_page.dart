@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/providers/avatar_provider.dart';
-import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/theme.dart';
@@ -74,11 +72,6 @@ class _SettingsPageState extends State<SettingsPage> {
     final isOkay = await _userService.deleteUser();
 
     if (!mounted) return;
-    Provider.of<DailyPostProvider>(context, listen: false).reset();
-    Provider.of<TextScaleProvider>(context, listen: false).reset();
-    Provider.of<AvatarProvider>(context, listen: false).reset();
-    Provider.of<ThemeProvider>(context, listen: false).reset();
-
     if (!isOkay) return Snackbar.show(context, 'Error With Deleting Account');
 
     Navigator.pushReplacementNamed(context, '/splash');
