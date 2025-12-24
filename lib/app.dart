@@ -21,6 +21,7 @@ class App extends StatelessWidget {
       ).copyWith(textScaler: Provider.of<TextScaleProvider>(context).textScale),
       child: MaterialApp(
         title: 'ReLeaf',
+        debugShowCheckedModeBanner: false,
         theme: Provider.of<ThemeProvider>(context).themeData,
         initialRoute: '/splash',
         routes: {
