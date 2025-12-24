@@ -43,6 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final postsNumber = await _postService.getTotalPosts();
     final email = _userService.getUserEmail().toString();
 
+    if (data['last_post'] == '2000-01-01') data['last_post'] = 'N/A';
+
     setState(() {
       userData = data;
       totalPosts = postsNumber;

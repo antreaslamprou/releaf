@@ -71,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
               'username': _usernameController.text.trim().toLowerCase(),
               'hotstreaks': 0,
               'points': 0,
-              'last_post': '',
+              'last_post': '2000-01-01',
               'text_scale': 1,
               'is_dark_mode': false,
             });
@@ -119,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  // Shows the register page which consist of the register form, on submit a 
+  // Shows the register page which consist of the register form, on submit a
   // loader appears till the page changes or the error message appears
   @override
   Widget build(BuildContext context) {
