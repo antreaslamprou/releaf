@@ -215,4 +215,49 @@ class PostService {
       return false;
     }
   }
+
+  Future<bool> postComment(String postId, String comment) async {
+    try {
+      final uid = _userService.getUserUID();
+      if (uid.isEmpty) return false;
+
+      String friendUID = postId.split('_')[0];
+      String date = postId.split('_')[1];
+
+      final commentId = '${uid}_${DateTime.now().millisecondsSinceEpoch}';
+
+      await _database.ref('posts/$friendUID/$date/comments/').update({
+        commentId: comment,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<List<Map<dynamic, dynamic>>> getComments(String postId) async {
+    try {
+      String postUserUID = postId.split('_')[0];
+      String date = postId.split('_')[1];
+
+      final commentsRef = _database.ref('posts/$postUserUID/$date/comments');
+
+      final snapshot = await commentsRef.get();
+
+      if (snapshot.exists) {
+        if (snapshot.value is Map<dynamic, dynamic>) {
+          final singleComment = snapshot.value as Map<dynamic, dynamic>;
+          return singleComment.entries
+              .map((entry) => {entry.key: entry.value})
+              .toList();
+        }
+
+        return snapshot.value as List<Map<dynamic, dynamic>>;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
 }

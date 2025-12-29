@@ -15,6 +15,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  // Get important user defined services for fetching/altering user data
+  final _userService = UserService();
+
   // Data holders and state variables
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
@@ -97,14 +100,12 @@ class _RegisterPageState extends State<RegisterPage> {
   // Checks the username on each character change in the username field,
   // informing the user if the currently inserted username is available
   Future<void> checkUsername(String value) async {
-    UserService userService = UserService();
-
     if (value.isEmpty) {
       setState(() => _usernameError = 'Please enter a username');
       return;
     }
 
-    bool usernameIsAvailable = await userService.checkUsernameAvailability(
+    bool usernameIsAvailable = await _userService.checkUsernameAvailability(
       value,
     );
 

@@ -16,7 +16,7 @@ class FriendsPosts extends StatefulWidget {
 
 class _FriendsPostsState extends State<FriendsPosts> {
   // Get important user defined services for fetching/altering post data
-  final PostService _postService = PostService();
+  final _postService = PostService();
 
   // Data holders and state variables
   List<Map<dynamic, dynamic>> postData = [];

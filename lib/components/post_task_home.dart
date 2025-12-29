@@ -21,8 +21,8 @@ class PostTaskHome extends StatefulWidget {
 
 class _PostTaskHomeState extends State<PostTaskHome> {
   // Get important user defined services for fetching/altering post and task data
-  PostService postService = PostService();
-  TaskService taskService = TaskService();
+  final _postService = PostService();
+  final _taskService = TaskService();
 
   // Data holders and state variables
   Map<String, dynamic> postData = {};
@@ -47,12 +47,12 @@ class _PostTaskHomeState extends State<PostTaskHome> {
 
     if (widget.date == '' || widget.date == null) {
       dateTemp = Conversions.getNowString();
-      postDataTemp = await postService.getDailyPost();
-      dailyTaskTemp = await taskService.getDailyTask();
+      postDataTemp = await _postService.getDailyPost();
+      dailyTaskTemp = await _taskService.getDailyTask();
     } else {
       dateTemp = widget.date!;
-      postDataTemp = await postService.getDailyPost(date: widget.date!);
-      dailyTaskTemp = await taskService.getDailyTask(date: widget.date!);
+      postDataTemp = await _postService.getDailyPost(date: widget.date!);
+      dailyTaskTemp = await _taskService.getDailyTask(date: widget.date!);
     }
 
     if (!mounted) return;

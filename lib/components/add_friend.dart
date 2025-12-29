@@ -73,7 +73,7 @@ class _AddFriendState extends State<AddFriend> {
         case 'pending-incoming-request':
           Snackbar.show(
             context,
-            'There is a pending incoming reques from that user!',
+            'There is a pending incoming request from that user!',
           );
           return;
         case 'ok':

@@ -16,7 +16,7 @@ class OutgoingFriendRequests extends StatefulWidget {
 
 class _OutgoingFriendRequestsState extends State<OutgoingFriendRequests> {
   // Get important user defined services for fetching/altering friend requests
-  final friendRequestService = FriendRequestService();
+  final _friendRequestService = FriendRequestService();
 
   // Data holder and state variable
   List<dynamic> _outgoing = [];
@@ -33,7 +33,7 @@ class _OutgoingFriendRequestsState extends State<OutgoingFriendRequests> {
 
   // Fetches friend requests sent from current user
   Future<void> getOutgoingRequests() async {
-    final requestsList = await friendRequestService.getOutgoingFriendRequest();
+    final requestsList = await _friendRequestService.getOutgoingFriendRequest();
 
     if (requestsList.isEmpty) {
       setState(() {
@@ -51,7 +51,7 @@ class _OutgoingFriendRequestsState extends State<OutgoingFriendRequests> {
 
   // Deletes a friend request, and then refetches the outgoind requests
   void removeOutgoingRequest(String receiverId) async {
-    await friendRequestService.deleteRequest(receiverId: receiverId);
+    await _friendRequestService.deleteRequest(receiverId: receiverId);
     getOutgoingRequests();
     if (!mounted) return;
     Snackbar.show(context, 'Friend request cancelled!');

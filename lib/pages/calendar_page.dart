@@ -16,8 +16,8 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   // Get important user defined services for fetching/altering user and post data
-  final PostService _postService = PostService();
-  final UserService _userService = UserService();
+  final _postService = PostService();
+  final _userService = UserService();
 
   // Data holders
   final now = Conversions.getNow();

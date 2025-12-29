@@ -24,7 +24,7 @@ class FriendWidget extends StatefulWidget {
 
 class _FriendWidgetState extends State<FriendWidget> {
   // Get important user defined services for fetching/altering user data
-  final UserService _userService = UserService();
+  final _userService = UserService();
 
   // Data holders and state variables
   String? avatar;
