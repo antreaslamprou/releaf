@@ -145,7 +145,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              user['full_name'],
+                                              user['username'],
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),

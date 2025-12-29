@@ -129,7 +129,7 @@ class _PostState extends State<Post> {
                           ),
                           SizedBox(width: 15),
                           Text(
-                            userData!["full_name"],
+                            userData!["username"],
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -199,7 +199,7 @@ class _PostState extends State<Post> {
                                           : Icons.comment_outlined,
                                     ),
                                     SizedBox(width: 5),
-                                    Text('Comment'),
+                                    Text('Comments'),
                                   ],
                                 ),
                               );
