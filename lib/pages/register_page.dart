@@ -189,9 +189,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: handleRegister,
-                            child: const Text('Register'),
+                          FractionallySizedBox(
+                            widthFactor: 1,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              onPressed: handleRegister,
+                              child: const Text('REGISTER'),
+                            ),
                           ),
                         ],
                       ),

@@ -174,7 +174,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                       TextField(
                         controller: _commentController,
                         decoration: InputDecoration(
-                          labelText: 'Comment',
+                          labelText: 'Add Comment',
                           suffixIcon: IconButton(
                             onPressed: addComment,
                             icon: Icon(Icons.send),

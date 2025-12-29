@@ -113,9 +113,17 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: InputDecoration(labelText: 'Password'),
                           ),
                           SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: handleLogin,
-                            child: Text('Log in'),
+                          FractionallySizedBox(
+                            widthFactor: 1,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              onPressed: handleLogin,
+                              child: Text('LOGIN'),
+                            ),
                           ),
                         ],
                       ),

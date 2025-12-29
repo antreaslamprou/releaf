@@ -43,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ListBody(
               children: <Widget>[
                 Text('Are you sure you want to delete your account?'),
-                Text('This action cannot be undone.'),
+                Text('This action cannot be reverted.'),
               ],
             ),
           ),
@@ -55,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             TextButton(
-              child: Text('Delete'),
+              child: Text('Delete', style: TextStyle(color: Colors.redAccent)),
               onPressed: () {
                 Navigator.of(context).pop();
                 deleteAccount();
@@ -168,10 +168,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 ElevatedButton(
                   onPressed: showDeleteAccountDialog,
                   style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     backgroundColor: Colors.redAccent,
                     foregroundColor: Colors.black,
                   ),
-                  child: Text('Delete Account'),
+                  child: Text('DELETE ACCOUNT'),
                 ),
               ],
             ),

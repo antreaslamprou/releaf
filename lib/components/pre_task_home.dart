@@ -172,10 +172,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                 ),
                 SizedBox(height: 25),
                 ElevatedButton(
-                  onPressed: _openCamera,
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
+                  onPressed: _openCamera,
                   child: Icon(Icons.camera_alt, size: 30),
                 ),
               ],
@@ -189,39 +189,52 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                   controller: _postDescriptionController,
                   decoration: InputDecoration(
                     hintText: "Anything to share with your friends?",
-                    labelText: 'Post Description',
+                    labelText: 'Add Description',
                   ),
                 ),
                 SizedBox(height: 15),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
                       onPressed: isPosting ? null : _deleteImage,
                       child: Row(
                         children: [
                           Icon(Icons.clear_rounded),
                           SizedBox(width: 5),
-                          Text('Cancel'),
+                          Text('CANCEL'),
                         ],
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 10),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
                       onPressed: isPosting ? null : _submitImage,
                       child: Row(
                         children: [
                           isPosting
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 24,
                                   height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   ),
                                 )
                               : Icon(Icons.check_rounded),
                           SizedBox(width: 5),
-                          Text('Submit'),
+                          Text('POST'),
                         ],
                       ),
                     ),

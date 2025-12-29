@@ -119,6 +119,12 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Text('Profile', style: context.text.titleSmall),
             Spacer(),
+            Icon(Icons.local_fire_department),
+            const SizedBox(width: 2),
+            Text(
+              userData?['hotstreaks'].toString() ?? '0',
+              style: context.text.bodyMedium,
+            ),
             IconButton(
               onPressed: () => Navigator.of(
                 context,
@@ -141,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
               clipBehavior: Clip.none,
               children: [
                 CircleAvatar(
-                  radius: 50,
+                  radius: 55,
                   backgroundImage: context
                       .watch<AvatarProvider>()
                       .imageProvider,
@@ -150,106 +156,84 @@ class _ProfilePageState extends State<ProfilePage> {
                   bottom: -10,
                   right: -10,
                   child: CircleAvatar(
-                    radius: 19,
-                    child: IconButton(
-                      icon: const Icon(Icons.create),
-                      onPressed: () => showBottomActions(
-                        context,
-                        onEdit: Provider.of<AvatarProvider>(
+                    radius: 18,
+                    child: Center(
+                      child: IconButton(
+                        icon: const Icon(Icons.create, size: 22),
+                        onPressed: () => showBottomActions(
                           context,
-                          listen: false,
-                        ).uploadAvatar,
-                        onDelete: Provider.of<AvatarProvider>(
-                          context,
-                          listen: false,
-                        ).deleteAvatar,
+                          onEdit: Provider.of<AvatarProvider>(
+                            context,
+                            listen: false,
+                          ).uploadAvatar,
+                          onDelete: Provider.of<AvatarProvider>(
+                            context,
+                            listen: false,
+                          ).deleteAvatar,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 55),
+            SizedBox(height: 25),
+            Text(
+              userData?['full_name'] ?? 'User',
+              style: context.text.titleSmall,
+            ),
+            Text('@${userData?['username'] ?? 'Username'}'),
+            SizedBox(height: 30),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
+            //     Text(userEmail),
+            //   ],
+            // ),
+            // SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  'Full Name',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  children: [
+                    Text(totalPosts.toString(), style: context.text.titleSmall),
+                    Text('Posts'),
+                  ],
                 ),
-                Text(userData?['full_name'] ?? 'User'),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(userData?['username'] ?? '@Username'),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(userEmail),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Points', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(userData?['points'].toString() ?? '0'),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Hot Streaks',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  children: [
+                    Text(
+                      userData?['points'].toString() ?? '0',
+                      style: context.text.titleSmall,
+                    ),
+                    Text('Points'),
+                  ],
                 ),
-                Text(userData?['hotstreaks'].toString() ?? '0'),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Posts', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(totalPosts.toString()),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Friends', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(((userData?['friends'] as Map?)?.length ?? 0).toString()),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Last Activity (UTC)',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ((userData?['friends'] as Map?)?.length ?? 0).toString(),
+                      style: context.text.titleSmall,
+                    ),
+                    Text('Friends'),
+                  ],
                 ),
-                Text(userData?['last_post'] ?? 'N/A'),
               ],
             ),
+
             SizedBox(height: 50),
             ElevatedButton(
               onPressed: logout,
               style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 backgroundColor: Colors.redAccent,
                 foregroundColor: Colors.black,
               ),
-              child: Text('Logout'),
+              child: Text('LOGOUT'),
             ),
           ],
         ),
