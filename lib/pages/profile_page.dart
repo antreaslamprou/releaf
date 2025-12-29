@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/pages/edit_profile_page.dart';
 import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/services/post_service.dart';
@@ -22,7 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Data holders
   Map<String, dynamic>? userData;
-  String userEmail = 'username@email.com';
   int totalPosts = 0;
 
   @override
@@ -38,61 +38,11 @@ class _ProfilePageState extends State<ProfilePage> {
   void loadData() async {
     final data = await _userService.getUserData();
     final postsNumber = await _postService.getTotalPosts();
-    final email = _userService.getUserEmail().toString();
-
-    if (data['last_post'] == '2000-01-01') data['last_post'] = 'N/A';
 
     setState(() {
       userData = data;
       totalPosts = postsNumber;
-      userEmail = email;
     });
-  }
-
-  // Shows the bottom modal sheet when users click on the edit avatar, giving
-  // them the options to edit the avatar, delete the avatar or cancel the actions
-  void showBottomActions(
-    BuildContext context, {
-    required VoidCallback onEdit,
-    required VoidCallback onDelete,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 15),
-              ListTile(
-                leading: const Icon(Icons.edit),
-                title: const Text('Edit'),
-                onTap: () {
-                  Navigator.pop(context);
-                  onEdit();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  onDelete();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.close),
-                title: const Text('Cancel'),
-                onTap: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   // Resets the providers values and navigates to the splash screen to check if
@@ -108,6 +58,34 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       Snackbar.show(context, 'Error With Logging Out: $e');
     }
+  }
+
+  //
+  void showPointsDetails(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 15),
+                Text(
+                  'How to obtain?',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Current Points + Hotstreaks + 1',
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // Show the profile page which contains the current user data
@@ -143,39 +121,9 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                CircleAvatar(
-                  radius: 55,
-                  backgroundImage: context
-                      .watch<AvatarProvider>()
-                      .imageProvider,
-                ),
-                Positioned(
-                  bottom: -10,
-                  right: -10,
-                  child: CircleAvatar(
-                    radius: 18,
-                    child: Center(
-                      child: IconButton(
-                        icon: const Icon(Icons.create, size: 22),
-                        onPressed: () => showBottomActions(
-                          context,
-                          onEdit: Provider.of<AvatarProvider>(
-                            context,
-                            listen: false,
-                          ).uploadAvatar,
-                          onDelete: Provider.of<AvatarProvider>(
-                            context,
-                            listen: false,
-                          ).deleteAvatar,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            CircleAvatar(
+              radius: 55,
+              backgroundImage: context.watch<AvatarProvider>().imageProvider,
             ),
             SizedBox(height: 25),
             Text(
@@ -184,14 +132,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Text('@${userData?['username'] ?? 'Username'}'),
             SizedBox(height: 30),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
-            //     Text(userEmail),
-            //   ],
-            // ),
-            // SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -207,7 +147,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       userData?['points'].toString() ?? '0',
                       style: context.text.titleSmall,
                     ),
-                    Text('Points'),
+                    Row(
+                      children: [
+                        Text('Points'),
+                        GestureDetector(
+                          onTap: () => showPointsDetails(context),
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(5),
+                            child: Icon(Icons.info_outline, size: 15),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Column(
@@ -222,18 +173,34 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-
             SizedBox(height: 50),
-            ElevatedButton(
-              onPressed: logout,
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const EditProfilePage()),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Text('EDIT PROFILE'),
                 ),
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.black,
-              ),
-              child: Text('LOGOUT'),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: logout,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.black,
+                  ),
+                  child: Text('LOGOUT'),
+                ),
+              ],
             ),
           ],
         ),
