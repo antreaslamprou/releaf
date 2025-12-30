@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/pages/edit_data_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
-import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -13,52 +13,30 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  // Get important user defined services for fetching/altering user and post data
+  // Get important user defined services for fetching/altering user data
   final _userService = UserService();
-  final _postService = PostService();
 
   // Data holders
   Map<String, dynamic>? userData;
+  bool isUpdated = false;
   String userEmail = 'username@email.com';
-  int totalPosts = 0;
-
-  late TextEditingController _nameController;
-  late TextEditingController _usernameController;
-  late TextEditingController _emailController;
 
   @override
   void initState() {
     super.initState();
-
-    _nameController = TextEditingController(text: 'Full Name');
-    _usernameController = TextEditingController(text: 'Username');
-    _emailController = TextEditingController(text: 'user@email.com');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loadData();
     });
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-
-    super.dispose();
-  }
-
   // Loads the data for the current user
   void loadData() async {
     final data = await _userService.getUserData();
-    final postsNumber = await _postService.getTotalPosts();
     final email = _userService.getUserEmail().toString();
-
-    _nameController.text = data['full_name'] ?? '';
-    _usernameController.text = data['username'] ?? 'Username';
-    _emailController.text = email;
 
     setState(() {
       userData = data;
-      totalPosts = postsNumber;
       userEmail = email;
     });
   }
@@ -109,7 +87,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  // Show the profile page which contains the current user data
+  // Navigates to the edit data page and if any change on data is done, the
+  // current page refreshes the data
+  Future<void> goToEdit(String page) async {
+    final updated = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => EditDataPage(page: page)));
+
+    if (updated == true) {
+      isUpdated = true;
+      loadData();
+    }
+  }
+
+  // Show the edit profile page with the current user data
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,11 +108,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
         title: Text('Edit Profile', style: context.text.titleSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop(isUpdated),
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -168,39 +159,64 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 20),
-                Expanded(child: TextField(controller: _nameController)),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => goToEdit('Full Name'),
+                    child: ListTile(
+                      title: Text(userData?['full_name'] ?? 'Full Name'),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                    ),
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(width: 20),
-                Expanded(child: TextField(controller: _usernameController)),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => goToEdit('Username'),
+                    child: ListTile(
+                      title: Text(userData?['username'] ?? '@Username'),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                    ),
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 20),
-                Expanded(child: TextField(controller: _emailController)),
-              ],
-            ),
-            SizedBox(height: 50),
-            FractionallySizedBox(
-              widthFactor: 1,
-              child: ElevatedButton(
-                onPressed: () => {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+                SizedBox(width: 50),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => goToEdit('Email'),
+                    child: ListTile(
+                      title: Text(userEmail),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                    ),
                   ),
                 ),
-                child: Text('SAVE'),
-              ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Password', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(width: 25),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => goToEdit('Password'),
+                    child: ListTile(
+                      title: Text('**********'),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

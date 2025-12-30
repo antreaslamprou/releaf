@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  //
+  // Shows the bottom modal with information regarding the points system
   void showPointsDetails(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -86,6 +86,18 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
+  }
+
+  // Navigates to the edit profile page and if any change on data is done, the
+  // current page refreshes the data
+  Future<void> goToEdit() async {
+    final updated = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => EditProfilePage()));
+
+    if (updated == true) {
+      loadData();
+    }
   }
 
   // Show the profile page which contains the current user data
@@ -117,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -178,9 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const EditProfilePage()),
-                  ),
+                  onPressed: goToEdit,
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),

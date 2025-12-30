@@ -132,6 +132,32 @@ class UserService {
     }
   }
 
+  // Updates the email of the current user
+  Future<bool> updateUserEmail(String value) async {
+    final User? user = _auth.currentUser;
+    if (user == null) return false;
+
+    try {
+      await user.verifyBeforeUpdateEmail(value);
+      return true;
+    } on FirebaseAuthException {
+      return false;
+    }
+  }
+
+  // Updates the password of the current user
+  Future<bool> updateUserPassword(String value) async {
+    final User? user = _auth.currentUser;
+    if (user == null) return false;
+
+    try {
+      await user.updatePassword(value);
+      return true;
+    } on FirebaseAuthException {
+      return false;
+    }
+  }
+
   // Updates the current user points based on the hotstreaks
   Future<bool> updatePoints() async {
     final String uid = getUserUID();
