@@ -102,12 +102,20 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                   SizedBox(height: 10),
                   postData.isEmpty
                       ? Text('You have no post for this date!')
-                      : Post(postData: postData, isEditable: false),
+                      : Post(
+                          key: UniqueKey(),
+                          postData: postData,
+                          isEditable: false,
+                        ),
                   Padding(
                     padding: EdgeInsetsGeometry.all(10),
                     child: Divider(),
                   ),
-                  FriendsPosts(date: date, isEditable: widget.isEditable),
+                  FriendsPosts(
+                    key: UniqueKey(),
+                    date: date,
+                    isEditable: widget.isEditable,
+                  ),
                 ],
               ),
       ),

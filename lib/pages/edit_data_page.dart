@@ -97,32 +97,38 @@ class _EditDataPageState extends State<EditDataPage> {
     });
     if (_formKey.currentState!.validate()) {
       try {
+        bool isOkay = false;
         switch (widget.page) {
           case 'Full Name':
-            await _userService.updateUserData(
+            isOkay = await _userService.updateUserData(
               'full_name',
               _firstFieldController.text.trim(),
             );
             break;
           case 'Username':
-            await _userService.updateUserData(
+            isOkay = await _userService.updateUserData(
               'username',
               _firstFieldController.text.trim(),
             );
             break;
           case 'Email':
-            await _userService.updateUserEmail(
+            isOkay = await _userService.updateUserEmail(
               _firstFieldController.text.trim(),
             );
             setState(() => emailMessage = true);
             break;
           case 'Password':
-            await _userService.updateUserPassword(
+            isOkay = await _userService.updateUserPassword(
               _secondFieldController.text.trim(),
             );
+            if (isOkay) {
+              _firstFieldController.clear();
+              _secondFieldController.clear();
+              _thirdFieldController.clear();
+            }
             break;
         }
-        isUpdated = true;
+        isUpdated = isOkay;
         if (!mounted || widget.page == 'Email') return;
         Snackbar.show(context, '${widget.page} Updated Successfully!');
       } on FirebaseException catch (e) {
@@ -241,6 +247,7 @@ class _EditDataPageState extends State<EditDataPage> {
                 child: Column(
                   children: [
                     TextFormField(
+                      obscureText: true,
                       controller: _firstFieldController,
                       validator: Validators.validatePassword,
                       decoration: InputDecoration(
@@ -249,12 +256,14 @@ class _EditDataPageState extends State<EditDataPage> {
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                      obscureText: true,
                       controller: _secondFieldController,
                       validator: Validators.validatePassword,
                       decoration: InputDecoration(labelText: 'New Password'),
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                      obscureText: true,
                       controller: _thirdFieldController,
                       validator: (value) => Validators.validateConfirmPassword(
                         value,

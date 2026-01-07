@@ -67,7 +67,7 @@ class AvatarProvider extends ChangeNotifier {
     avatarImage = Conversions.getDefaultAvatarBase();
 
     String uid = _userService.getUserUID();
-    await FirebaseDatabase.instance.ref('users/$uid/avatar').set('');
+    await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarImage);
 
     notifyListeners();
   }

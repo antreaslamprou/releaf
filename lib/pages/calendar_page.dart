@@ -26,7 +26,6 @@ class _CalendarPageState extends State<CalendarPage> {
   late List<Map<String, dynamic>> dayPosts;
   late DateTime _selectedDay;
   late DateTime _focusedDay;
-  int postKey = 1;
 
   // Sets the selected and focused day to current date and fetches all user and
   // posts data
@@ -75,7 +74,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
     setState(() {
       events = newEvents;
-      postKey++;
     });
   }
 
@@ -104,7 +102,6 @@ class _CalendarPageState extends State<CalendarPage> {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
-                    postKey++;
                   });
                 },
                 enabledDayPredicate: (day) {
@@ -137,7 +134,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: Divider(),
               ),
               PostTaskHome(
-                key: ValueKey(postKey),
+                key: UniqueKey(),
                 date: Conversions.dateToString(_selectedDay),
                 isEditable: false,
               ),
