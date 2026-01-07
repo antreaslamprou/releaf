@@ -132,7 +132,7 @@ class _EditDataPageState extends State<EditDataPage> {
         if (!mounted || widget.page == 'Email') return;
         Snackbar.show(context, '${widget.page} Updated Successfully!');
       } on FirebaseException catch (e) {
-        Snackbar.show(context, 'Edititing ${widget.page} Failed: ${e.message}');
+        Snackbar.show(context, 'Editing ${widget.page} Failed: ${e.message}');
       } finally {
         setState(() {
           isLoading = false;
