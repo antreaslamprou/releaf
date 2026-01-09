@@ -258,7 +258,7 @@ class UserService {
 
     final diff = cleanNow.difference(cleanLast).inDays;
 
-    bool isStreakLost = diff > 2;
+    bool isStreakLost = diff > 1;
 
     if (isStreakLost) await updateUserData('hotstreaks', 0);
   }
