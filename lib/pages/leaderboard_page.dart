@@ -28,7 +28,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
     // Creates a listener to update the user data once the user is updated
     _triggerProvider = context.read<UserDetailsProvider>();
-    _triggerProvider.addListener(updateDailyPost);
+    _triggerProvider.addListener(getData);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getData();
