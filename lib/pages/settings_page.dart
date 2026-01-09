@@ -111,7 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               Text('Theme', style: TextStyle(fontWeight: FontWeight.bold)),
               FlutterSwitch(
-                value: context.read<ThemeProvider>().themeData == darkMode,
+                value: context.watch<ThemeProvider>().themeData == darkMode,
                 activeIcon: Icon(Icons.nightlight_round, color: Colors.black),
                 activeColor: Colors.green.shade900,
                 activeTextColor: Colors.white,
@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               Text('Large Text', style: TextStyle(fontWeight: FontWeight.bold)),
               FlutterSwitch(
-                value: context.read<TextScaleProvider>().scaleFactor != 1,
+                value: context.watch<TextScaleProvider>().scaleFactor != 1,
                 activeIcon: Icon(Icons.check, color: Colors.black),
                 activeColor: Colors.green.shade900,
                 activeTextColor: Colors.white,

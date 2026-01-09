@@ -35,6 +35,7 @@ class _FriendsPostsState extends State<FriendsPosts> {
   void init() async {
     final tempList = await _postService.getFriendsPosts(widget.date);
 
+    if (!mounted) return;
     setState(() {
       postData = tempList;
       isLoading = false;

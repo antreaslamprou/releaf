@@ -55,6 +55,7 @@ class _PostState extends State<Post> {
 
     final isSavedTemp = await _postService.getUserSaved(postId);
 
+    if (!mounted) return;
     setState(() {
       userData = userDataTemp;
 
