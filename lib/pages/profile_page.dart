@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:releaf/pages/edit_profile_page.dart';
 import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
+import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
@@ -20,6 +21,9 @@ class _ProfilePageState extends State<ProfilePage> {
   // Get important user defined services for fetching/altering user and post data
   final _userService = UserService();
   final _postService = PostService();
+  
+  // Used to update the user data automatically once the user is updated
+  late final UserDetailsProvider _triggerProvider;
 
   // Data holders
   Map<String, dynamic>? userData;
@@ -29,9 +33,21 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
 
+    // Creates a listener to update the user data once the user is updated
+    _triggerProvider = context.read<UserDetailsProvider>();
+    _triggerProvider.addListener(loadData);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loadData();
     });
+  }
+
+  @override
+  void dispose() {
+    // Removes the listener once the widget is destroyed
+    _triggerProvider.removeListener(loadData);
+
+    super.dispose();
   }
 
   // Loads the data for the current user
@@ -91,13 +107,13 @@ class _ProfilePageState extends State<ProfilePage> {
   // Navigates to the edit profile page and if any change on data is done, the
   // current page refreshes the data
   Future<void> goToEdit() async {
-    final updated = await Navigator.of(
+    await Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => EditProfilePage()));
 
-    if (updated == true) {
-      loadData();
-    }
+    // if (updated == true) {
+    //   loadData();
+    // }
   }
 
   // Show the profile page which contains the current user data

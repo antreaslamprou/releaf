@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 import 'package:releaf/utils/snackbar.dart';
@@ -23,7 +25,7 @@ class _EditDataPageState extends State<EditDataPage> {
   String? _usernameError;
   bool emailMessage = false;
   bool isLoading = false;
-  bool isUpdated = false;
+  // bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _firstFieldController;
   late TextEditingController _secondFieldController;
@@ -128,7 +130,17 @@ class _EditDataPageState extends State<EditDataPage> {
             }
             break;
         }
-        isUpdated = isOkay;
+
+        // If the update failed, inform the user
+        if (!mounted) return;
+        if (!isOkay) {
+          return Snackbar.show(context, 'Could not update ${widget.page}');
+        }
+
+        // Force a refresh of user data once it is updated
+        Provider.of<UserDetailsProvider>(context, listen: false).trigger();
+
+        // isUpdated = isOkay;
         if (!mounted || widget.page == 'Email') return;
         Snackbar.show(context, '${widget.page} Updated Successfully!');
       } on FirebaseException catch (e) {
@@ -179,7 +191,7 @@ class _EditDataPageState extends State<EditDataPage> {
         title: Text('Edit ${widget.page}', style: context.text.titleSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(isUpdated),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SingleChildScrollView(

@@ -5,6 +5,7 @@ import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
+import 'package:releaf/providers/user_details_provider.dart';
 import 'app.dart';
 
 void main() async {
@@ -12,24 +13,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Create all providers
-  final themeProvider = ThemeProvider();
-  final textScaleProvider = TextScaleProvider();
-  final avatarProvider = AvatarProvider();
-  final dailyPostProvider = DailyPostProvider();
-
   // Run app wrapped in the providers values
   runApp(
     MultiProvider(
+      // Create all providers
       providers: [
-        ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
-        ChangeNotifierProvider<TextScaleProvider>.value(
-          value: textScaleProvider,
-        ),
-        ChangeNotifierProvider<AvatarProvider>.value(value: avatarProvider),
-        ChangeNotifierProvider<DailyPostProvider>.value(
-          value: dailyPostProvider,
-        ),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => TextScaleProvider()),
+        ChangeNotifierProvider(create: (_) => AvatarProvider()),
+        ChangeNotifierProvider(create: (_) => DailyPostProvider()),
+        ChangeNotifierProvider(create: (_) => UserDetailsProvider()),
       ],
       child: const App(),
     ),

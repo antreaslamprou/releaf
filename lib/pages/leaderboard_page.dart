@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
@@ -14,18 +15,33 @@ class LeaderboardPage extends StatefulWidget {
 class _LeaderboardPageState extends State<LeaderboardPage> {
   // Get important user defined services for fetching/altering user data
   final _userService = UserService();
-
+  
+  // Used to update the user data automatically once the user is updated
+  late final UserDetailsProvider _triggerProvider;
+  
   // Data holder
   List<Map<dynamic, dynamic>>? _leaderboard;
 
   @override
   void initState() {
     super.initState();
+    
+    // Creates a listener to update the user data once the user is updated
+    _triggerProvider = context.read<UserDetailsProvider>();
+    _triggerProvider.addListener(updateDailyPost);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getData();
       updateDailyPost();
     });
+  }
+
+  @override
+  void dispose() {
+    // Removes the listener once the widget is destroyed
+    _triggerProvider.removeListener(updateDailyPost);
+
+    super.dispose();
   }
 
   // Fetches the leaderboard data

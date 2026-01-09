@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:releaf/components/friends_posts.dart';
 import 'package:releaf/components/post.dart';
 import 'package:releaf/pages/task_page.dart';
+import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -24,6 +26,9 @@ class _PostTaskHomeState extends State<PostTaskHome> {
   final _postService = PostService();
   final _taskService = TaskService();
 
+  // Used to update the user data automatically once the user is updated
+  late final UserDetailsProvider _triggerProvider;
+
   // Data holders and state variables
   Map<String, dynamic> postData = {};
   Map<dynamic, dynamic>? dailyTask;
@@ -34,9 +39,21 @@ class _PostTaskHomeState extends State<PostTaskHome> {
   void initState() {
     super.initState();
 
+    // Creates a listener to update the user data once the user is updated
+    _triggerProvider = context.read<UserDetailsProvider>();
+    _triggerProvider.addListener(updateDailyPost);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       init();
     });
+  }
+
+  @override
+  void dispose() {
+    // Removes the listener once the widget is destroyed
+    _triggerProvider.removeListener(updateDailyPost);
+
+    super.dispose();
   }
 
   // Fetches all data regarding the current user post and the task
@@ -61,6 +78,16 @@ class _PostTaskHomeState extends State<PostTaskHome> {
       postData = postDataTemp;
       dailyTask = dailyTaskTemp;
       isLoading = false;
+    });
+  }
+
+  // Updates the data for the current user's daily post
+  void updateDailyPost() async {
+    final postDataTemp = (widget.date == '' || widget.date == null)
+        ? await _postService.getDailyPost()
+        : await _postService.getDailyPost(date: widget.date!);
+    setState(() {
+      postData = postDataTemp;
     });
   }
 
