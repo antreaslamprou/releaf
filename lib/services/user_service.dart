@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class UserService {
@@ -89,13 +90,27 @@ class UserService {
     return data['username'] as String;
   }
 
-  // Deletes the user from the database and auth system
+  // Deletes the user from the system
   Future<bool> deleteUser() async {
     final String uid = getUserUID();
     if (uid.isEmpty) return false;
 
+    // Remove any friends connections
+    final friendsList = await getFriends();
+    if (friendsList.isNotEmpty) {
+      for (final friendId in friendsList) {
+        removeFriend(friendId);
+      }
+    }
+
+    // Remove any incoming or outgoing friend requests
+    final friendRequestService = FriendRequestService();
+    await friendRequestService.deleteRequest(receiverId: uid);
+    await friendRequestService.deleteRequest(senderId: uid);
+
+    // Remove the user from the database and auth system
     await _database.ref('users/$uid').remove();
-    FirebaseAuth.instance.currentUser!.delete();
+    await FirebaseAuth.instance.currentUser!.delete();
     await FirebaseAuth.instance.signOut();
 
     return true;
