@@ -224,7 +224,7 @@ class PostService {
       String friendUID = postId.split('_')[0];
       String date = postId.split('_')[1];
 
-      final commentId = '${uid}_${DateTime.now().millisecondsSinceEpoch}';
+      final commentId = '${DateTime.now().millisecondsSinceEpoch}_$uid';
 
       await _database.ref('posts/$friendUID/$date/comments/').update({
         commentId: comment,

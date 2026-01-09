@@ -238,7 +238,7 @@ class _PostState extends State<Post> {
                 builder: (_, isCommentsOpen, _) {
                   return isCommentsOpen
                       ? Transform.translate(
-                          offset: const Offset(0, -25),
+                          offset: const Offset(0, -10),
                           child: FractionallySizedBox(
                             widthFactor: 1,
                             child: CommentsSection(

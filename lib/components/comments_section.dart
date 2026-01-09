@@ -51,7 +51,7 @@ class _CommentsSectionState extends State<CommentsSection> {
     List<Map<dynamic, dynamic>> fullData = [];
 
     for (final userComment in commentsTemp) {
-      final userId = userComment.keys.first.split('_')[0];
+      final userId = userComment.keys.first.split('_')[1];
       final commentText = userComment[userComment.keys.first];
 
       final userData = await _userService.getUserDataById(userId);
