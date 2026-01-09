@@ -81,7 +81,7 @@ class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
     return RefreshIndicator(
       onRefresh: getIncomingRequests,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
@@ -92,35 +92,32 @@ class _IncomingFriendRequestsState extends State<IncomingFriendRequests> {
               Text('Incoming Requests', style: context.text.titleSmall),
             ],
           ),
-          isLoading
-              ? const CircularProgressIndicator()
-              : _incoming.isEmpty
-              ? SingleChildScrollView(
-                  padding: EdgeInsets.only(top: 20),
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Text('No incoming friend requests'),
-                      SizedBox(height: 400),
-                    ],
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _incoming.isEmpty
+                ? SingleChildScrollView(
+                    padding: EdgeInsets.only(top: 20),
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Text('No incoming friend requests'),
+                  )
+                : ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: _incoming.length,
+                    itemBuilder: (context, index) {
+                      final request = _incoming[index];
+                      return FriendWidget(
+                        key: ValueKey(request),
+                        userUID: request,
+                        type: 'In',
+                        onButtonClick: () => acceptIncoming(request),
+                        onExtraButtonClick: () => removeIncoming(request),
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 1, color: Colors.grey),
                   ),
-                )
-              : ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: _incoming.length,
-                  itemBuilder: (context, index) {
-                    final request = _incoming[index];
-                    return FriendWidget(
-                      key: ValueKey(request),
-                      userUID: request,
-                      type: 'In',
-                      onButtonClick: () => acceptIncoming(request),
-                      onExtraButtonClick: () => removeIncoming(request),
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 1, color: Colors.grey),
-                ),
+          ),
         ],
       ),
     );

@@ -52,7 +52,7 @@ class _FriendsPageState extends State<FriendsPage> {
                     ),
                   ],
                 ),
-                FriendList(),
+                Expanded(child: FriendList()),
               ],
             )
           : _page == 'Add'

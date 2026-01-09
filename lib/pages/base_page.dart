@@ -88,7 +88,7 @@ class _BasePageState extends State<BasePage> {
             .map(
               (item) => Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                child: item['page'] as Widget,
+                child: SizedBox.expand(child: item['page'] as Widget),
               ),
             )
             .toList(),

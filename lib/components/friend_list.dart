@@ -91,40 +91,30 @@ class _FriendListState extends State<FriendList> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: getFriends,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          isLoading
-              ? const CircularProgressIndicator()
-              : _friendList.isEmpty
-              ? SingleChildScrollView(
-                  padding: EdgeInsets.only(top: 20),
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [Text('You currently dont have any friends')],
-                      ),
-                      SizedBox(height: 400),
-                    ],
-                  ),
-                )
-              : ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: _friendList.length,
-                  itemBuilder: (context, index) {
-                    final request = _friendList[index];
-                    return FriendWidget(
-                      key: ValueKey(request),
-                      userUID: request,
-                      type: 'List',
-                      onButtonClick: () => showUnfriendDialog(request),
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 1, color: Colors.grey),
-                ),
-        ],
+      child: SizedBox.expand(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _friendList.isEmpty
+            ? SingleChildScrollView(
+                padding: EdgeInsets.only(top: 20),
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Text('You currently do not have any friends'),
+              )
+            : ListView.separated(
+                shrinkWrap: true,
+                itemCount: _friendList.length,
+                itemBuilder: (context, index) {
+                  final request = _friendList[index];
+                  return FriendWidget(
+                    key: ValueKey(request),
+                    userUID: request,
+                    type: 'List',
+                    onButtonClick: () => showUnfriendDialog(request),
+                  );
+                },
+                separatorBuilder: (context, index) =>
+                    const Divider(height: 1, color: Colors.grey),
+              ),
       ),
     );
   }
