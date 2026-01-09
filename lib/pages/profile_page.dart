@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // Get important user defined services for fetching/altering user and post data
   final _userService = UserService();
   final _postService = PostService();
-  
+
   // Used to update the user data automatically once the user is updated
   late final UserDetailsProvider _triggerProvider;
 
@@ -77,7 +77,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // Shows the bottom modal with information regarding the points system
-  void showPointsDetails(BuildContext context) {
+  void showPointsDetails(
+    BuildContext context, {
+    String? title,
+    String? details,
+  }) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -89,12 +93,13 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 SizedBox(height: 15),
                 Text(
-                  'How to obtain?',
+                  title ?? 'Welcome to Profile',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Current Points + Hotstreaks + 1',
+                  details ??
+                      'Here you can view different information regarding your profile',
                 ),
               ],
             ),
@@ -102,18 +107,6 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
-  }
-
-  // Navigates to the edit profile page and if any change on data is done, the
-  // current page refreshes the data
-  Future<void> goToEdit() async {
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => EditProfilePage()));
-
-    // if (updated == true) {
-    //   loadData();
-    // }
   }
 
   // Show the profile page which contains the current user data
@@ -125,7 +118,15 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Text('Profile', style: context.text.titleSmall),
             Spacer(),
-            Icon(Icons.local_fire_department),
+            GestureDetector(
+              onTap: () => showPointsDetails(
+                context,
+                title: 'How to obtain hotstreak?',
+                details:
+                    'Earn hotstreaks by posting daily and without missing a day. Each time you post while in a streak, the streak increases.',
+              ),
+              child: Icon(Icons.local_fire_department),
+            ),
             const SizedBox(width: 2),
             Text(
               userData?['hotstreaks'].toString() ?? '0',
@@ -179,7 +180,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         Text('Points'),
                         GestureDetector(
-                          onTap: () => showPointsDetails(context),
+                          onTap: () => showPointsDetails(
+                            context,
+                            title: 'How to obtain points?',
+                            details:
+                                'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Points + Hotstreaks + 1',
+                          ),
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(5),
                             child: Icon(Icons.info_outline, size: 15),
@@ -206,7 +212,9 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: goToEdit,
+                  onPressed: () => Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (_) => EditProfilePage())),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),

@@ -16,13 +16,12 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   // Get important user defined services for fetching/altering user data
   final _userService = UserService();
-  
+
   // Used to update the user data automatically once the user is updated
   late final UserDetailsProvider _triggerProvider;
 
   // Data holders
   Map<String, dynamic>? userData;
-  // bool isUpdated = false;
   String userEmail = 'username@email.com';
 
   @override
@@ -103,19 +102,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  // Navigates to the edit data page and if any change on data is done, the
-  // current page refreshes the data
-  Future<void> goToEdit(String page) async {
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => EditDataPage(page: page)));
-
-    // if (updated == true) {
-    //   isUpdated = true;
-    //   loadData();
-    // }
-  }
-
   // Show the edit profile page with the current user data
   @override
   Widget build(BuildContext context) {
@@ -177,7 +163,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 SizedBox(width: 20),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => goToEdit('Full Name'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => EditDataPage(page: 'Full Name'),
+                      ),
+                    ),
                     child: ListTile(
                       title: Text(userData?['full_name'] ?? 'Full Name'),
                       trailing: Icon(Icons.arrow_forward_ios, size: 18),
@@ -193,7 +183,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 SizedBox(width: 20),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => goToEdit('Username'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => EditDataPage(page: 'Username'),
+                      ),
+                    ),
                     child: ListTile(
                       title: Text(userData?['username'] ?? '@Username'),
                       trailing: Icon(Icons.arrow_forward_ios, size: 18),
@@ -209,7 +203,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 SizedBox(width: 50),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => goToEdit('Email'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => EditDataPage(page: 'Email'),
+                      ),
+                    ),
                     child: ListTile(
                       title: Text(userEmail),
                       trailing: Icon(Icons.arrow_forward_ios, size: 18),
@@ -225,7 +223,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 SizedBox(width: 25),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => goToEdit('Password'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => EditDataPage(page: 'Password'),
+                      ),
+                    ),
                     child: ListTile(
                       title: Text('**********'),
                       trailing: Icon(Icons.arrow_forward_ios, size: 18),

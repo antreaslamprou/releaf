@@ -25,7 +25,6 @@ class _EditDataPageState extends State<EditDataPage> {
   String? _usernameError;
   bool emailMessage = false;
   bool isLoading = false;
-  // bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _firstFieldController;
   late TextEditingController _secondFieldController;
