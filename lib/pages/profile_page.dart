@@ -77,11 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // Shows the bottom modal with information regarding the points system
-  void showPointsDetails(
-    BuildContext context, {
-    String? title,
-    String? details,
-  }) {
+  void showBottomModal(BuildContext context, {String? title, String? details}) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -119,18 +115,22 @@ class _ProfilePageState extends State<ProfilePage> {
             Text('Profile', style: context.text.titleSmall),
             Spacer(),
             GestureDetector(
-              onTap: () => showPointsDetails(
+              onTap: () => showBottomModal(
                 context,
                 title: 'How to obtain hotstreak?',
                 details:
                     'Earn hotstreaks by posting daily and without missing a day. Each time you post while in a streak, the streak increases.',
               ),
-              child: Icon(Icons.local_fire_department),
-            ),
-            const SizedBox(width: 2),
-            Text(
-              userData?['hotstreaks'].toString() ?? '0',
-              style: context.text.bodyMedium,
+              child: Row(
+                children: [
+                  Icon(Icons.local_fire_department),
+                  const SizedBox(width: 2),
+                  Text(
+                    userData?['hotstreaks'].toString() ?? '0',
+                    style: context.text.bodyMedium,
+                  ),
+                ],
+              ),
             ),
             IconButton(
               onPressed: () => Navigator.of(
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         Text('Points'),
                         GestureDetector(
-                          onTap: () => showPointsDetails(
+                          onTap: () => showBottomModal(
                             context,
                             title: 'How to obtain points?',
                             details:
