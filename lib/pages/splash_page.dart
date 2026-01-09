@@ -49,24 +49,18 @@ class _SplashPageState extends State<SplashPage> {
 
     // Get providers
     if (!mounted) return;
-    final textScaleProvider = Provider.of<TextScaleProvider>(
-      context,
-      listen: false,
-    );
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    final dailyPostProvider = Provider.of<DailyPostProvider>(
-      context,
-      listen: false,
-    );
-    final avatarProvider = Provider.of<AvatarProvider>(context, listen: false);
+    final textScaleProvider = context.read<TextScaleProvider>();
+    final themeProvider = context.read<ThemeProvider>();
+    final dailyPostProvider = context.read<DailyPostProvider>();
+    final avatarProvider = context.read<AvatarProvider>();
 
     // User comes from log out or user didnt log in yet
     final uid = _userService.getUserUID();
     if (uid.isEmpty) {
-      Provider.of<TextScaleProvider>(context, listen: false).reset();
-      Provider.of<DailyPostProvider>(context, listen: false).reset();
-      Provider.of<AvatarProvider>(context, listen: false).reset();
-      Provider.of<ThemeProvider>(context, listen: false).reset();
+      context.read<TextScaleProvider>().reset();
+      context.read<DailyPostProvider>().reset();
+      context.read<AvatarProvider>().reset();
+      context.read<ThemeProvider>().reset();
 
       Navigator.pushReplacementNamed(context, '/login');
       return;

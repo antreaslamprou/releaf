@@ -58,11 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // Shows the bottom modal sheet when users click on the edit avatar, giving
   // them the options to edit the avatar, delete the avatar or cancel the actions
-  void showBottomActions(
-    BuildContext context, {
-    required VoidCallback onEdit,
-    required VoidCallback onDelete,
-  }) {
+  void showBottomActions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -76,7 +72,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 title: const Text('Edit'),
                 onTap: () {
                   Navigator.pop(context);
-                  onEdit();
+                  context.read<AvatarProvider>().uploadAvatar();
+                  context.read<UserDetailsProvider>().trigger();
                 },
               ),
               ListTile(
@@ -87,7 +84,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  onDelete();
+                  context.read<AvatarProvider>().deleteAvatar();
+                  context.read<UserDetailsProvider>().trigger();
                 },
               ),
               ListTile(
@@ -135,17 +133,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Center(
                       child: IconButton(
                         icon: const Icon(Icons.create, size: 22),
-                        onPressed: () => showBottomActions(
-                          context,
-                          onEdit: Provider.of<AvatarProvider>(
-                            context,
-                            listen: false,
-                          ).uploadAvatar,
-                          onDelete: Provider.of<AvatarProvider>(
-                            context,
-                            listen: false,
-                          ).deleteAvatar,
-                        ),
+                        onPressed: () => showBottomActions(context),
                       ),
                     ),
                   ),

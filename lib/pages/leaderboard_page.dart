@@ -15,17 +15,17 @@ class LeaderboardPage extends StatefulWidget {
 class _LeaderboardPageState extends State<LeaderboardPage> {
   // Get important user defined services for fetching/altering user data
   final _userService = UserService();
-  
+
   // Used to update the user data automatically once the user is updated
   late final UserDetailsProvider _triggerProvider;
-  
+
   // Data holder
   List<Map<dynamic, dynamic>>? _leaderboard;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Creates a listener to update the user data once the user is updated
     _triggerProvider = context.read<UserDetailsProvider>();
     _triggerProvider.addListener(updateDailyPost);
@@ -55,7 +55,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
   // If the user posts for the day, the leaderboard will refetch the data
   void updateDailyPost() {
-    final provider = Provider.of<DailyPostProvider>(context, listen: false);
+    final provider = context.read<DailyPostProvider>();
 
     void listener() {
       getData();

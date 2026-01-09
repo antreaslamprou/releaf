@@ -45,7 +45,7 @@ class _CalendarPageState extends State<CalendarPage> {
   // If the user completed their daily task, the post is updated and the widget
   // refreshes
   void updateDailyPost() {
-    final provider = Provider.of<DailyPostProvider>(context, listen: false);
+    final provider = context.read<DailyPostProvider>();
 
     void listener() {
       init();

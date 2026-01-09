@@ -112,10 +112,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
       });
 
       if (!mounted) return;
-      Provider.of<DailyPostProvider>(
-        context,
-        listen: false,
-      ).completeDailyPost();
+      context.read<DailyPostProvider>().completeDailyPost();
 
       if (!mounted) return;
       Snackbar.show(context, message);

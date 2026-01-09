@@ -137,7 +137,7 @@ class _EditDataPageState extends State<EditDataPage> {
         }
 
         // Force a refresh of user data once it is updated
-        Provider.of<UserDetailsProvider>(context, listen: false).trigger();
+        context.read<UserDetailsProvider>().trigger();
 
         // isUpdated = isOkay;
         if (!mounted || widget.page == 'Email') return;

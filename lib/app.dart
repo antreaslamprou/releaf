@@ -18,11 +18,11 @@ class App extends StatelessWidget {
     return MediaQuery(
       data: MediaQuery.of(
         context,
-      ).copyWith(textScaler: Provider.of<TextScaleProvider>(context).textScale),
+      ).copyWith(textScaler: context.read<TextScaleProvider>().textScale),
       child: MaterialApp(
         title: 'ReLeaf',
         debugShowCheckedModeBanner: false,
-        theme: Provider.of<ThemeProvider>(context).themeData,
+        theme: context.read<ThemeProvider>().themeData,
         initialRoute: '/splash',
         routes: {
           '/splash': (context) => const SplashPage(),
