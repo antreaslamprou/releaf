@@ -74,13 +74,14 @@ class ApiService {
       }),
     );
 
+    // If the api cant return an answer, return the error
     if (response.statusCode != 200) {
       final errorData = jsonDecode(response.body);
       final provider =
           errorData['error']?['metadata']?['provider_name'] ?? 'Unknown';
       final message = errorData['error']?['message'] ?? 'Unknown error';
 
-      throw Exception('OpenRouter error from $provider: $message');
+      return 'False - OpenRouter error from $provider: $message';
     }
 
     final data = jsonDecode(response.body);
