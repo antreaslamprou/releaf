@@ -52,7 +52,10 @@ class ApiService {
       headers: {
         'Authorization': 'Bearer $apiKey',
         'Content-Type': 'application/json',
+        'HTTP-Referer':
+            'https://releaf.app', // Dummy domain to show on OpenRouter
         'X-Title': 'ReLeaf',
+        'X-Description': 'Task verification using AI',
       },
       body: jsonEncode({
         "model": "allenai/molmo-2-8b:free",
