@@ -48,6 +48,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   Future<void> getData() async {
     final leaderboard = await _userService.getLeaderboard();
 
+    if (!mounted) return;
     setState(() {
       _leaderboard = leaderboard;
     });
