@@ -23,16 +23,14 @@ class _PreTaskHomeState extends State<PreTaskHome> {
   // Get important user defined services for fetching/altering post and task data
   final _postService = PostService();
   final _taskService = TaskService();
-
-  // ----
   final _apiService = ApiService();
-  String imageErrorMessage = '';
 
   // Data holders
   Map<dynamic, dynamic>? dailyTask;
   final ImagePicker _picker = ImagePicker();
   File? _image;
   late TextEditingController _postDescriptionController;
+  String imageErrorMessage = '';
   bool isPosting = false;
 
   // Initialize the text controller and get the daily task
@@ -128,6 +126,16 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     }
   }
 
+  // When the image is not valid and the user needs to retake it
+  void reset() {
+    setState(() {
+      isPosting = false;
+      imageErrorMessage = '';
+    });
+
+    _openCamera();
+  }
+
   // Shows a loader till the daily task is fetched, on take image button click,
   // the camera opens and after the user selects the image, they see the image,
   // the description text field and the cancel and submit buttons for the post.
@@ -154,10 +162,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                             ),
                             SizedBox(height: 25),
                             ElevatedButton(
-                              onPressed: () => setState(() {
-                                isPosting = false;
-                                _image = null;
-                              }),
+                              onPressed: reset,
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
