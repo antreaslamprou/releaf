@@ -5,6 +5,7 @@ import 'package:releaf/components/countdown_timer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:releaf/pages/task_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/services/api_service.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -22,6 +23,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
   // Get important user defined services for fetching/altering post and task data
   final _postService = PostService();
   final _taskService = TaskService();
+
+  // ----
+  final _apiService = ApiService();
+  String imageErrorMessage = '';
 
   // Data holders
   Map<dynamic, dynamic>? dailyTask;
@@ -65,17 +70,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     final XFile? cameraImage = await _picker.pickImage(
       source: ImageSource.camera,
     );
-    if (cameraImage != null) {
-      setState(() {
-        _image = File(cameraImage.path);
-      });
-
-      if (!mounted) return;
-      Snackbar.show(context, 'Image captured!');
-    } else {
-      if (!mounted) return;
-      Snackbar.show(context, 'No image captured.');
-    }
+    if (cameraImage == null) return;
+    setState(() {
+      _image = File(cameraImage.path);
+    });
   }
 
   // Removes the saved image
@@ -93,6 +91,17 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     setState(() {
       isPosting = true;
     });
+
+    final apiText = await _apiService.analyzeImage(_image!);
+    final isOkay = apiText.split(' - ')[0];
+
+    if (isOkay == 'False') {
+      setState(() {
+        imageErrorMessage = apiText.split(' - ')[1];
+      });
+
+      return;
+    }
 
     String message = await _postService.createPost(
       _image!,
@@ -116,10 +125,6 @@ class _PreTaskHomeState extends State<PreTaskHome> {
 
       if (!mounted) return;
       Snackbar.show(context, message);
-
-      setState(() {
-        isPosting = false;
-      });
     }
   }
 
@@ -133,6 +138,40 @@ class _PreTaskHomeState extends State<PreTaskHome> {
     return SingleChildScrollView(
       child: dailyTask == null
           ? const CircularProgressIndicator()
+          : isPosting
+          ? Center(
+              child: Column(
+                children: [
+                  Text('Checking the image, please wait ...'),
+                  SizedBox(height: 15),
+                  imageErrorMessage.isEmpty
+                      ? const CircularProgressIndicator()
+                      : Column(
+                          children: [
+                            Text(
+                              imageErrorMessage,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            SizedBox(height: 25),
+                            ElevatedButton(
+                              onPressed: () => setState(() {
+                                isPosting = false;
+                                _image = null;
+                              }),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Retry'),
+                                  SizedBox(width: 5),
+                                  Icon(Icons.refresh),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                ],
+              ),
+            )
           : _image == null
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -218,18 +257,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                       onPressed: isPosting ? null : _submitImage,
                       child: Row(
                         children: [
-                          isPosting
-                              ? SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                )
-                              : Icon(Icons.check_rounded),
+                          Icon(Icons.check_rounded),
                           SizedBox(width: 5),
                           Text('POST'),
                         ],

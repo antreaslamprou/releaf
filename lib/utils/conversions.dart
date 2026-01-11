@@ -1,18 +1,22 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:io';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'dart:typed_data';
+import 'dart:convert';
+import 'dart:io';
 
 class Conversions {
   // Create a binary code from the image with predefined width, quality and
   // type of webp for storage optimizations and then encode the code into a
   // database friendly string which is base64
-  static Future<String> imageToBase(File file, {int minWidth = 1080}) async {
+  static Future<String> imageToBase(
+    File file, {
+    int minWidth = 1080,
+    bool isWebp = true,
+  }) async {
     final compressedBytes = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       minWidth: minWidth,
       quality: 75,
-      format: CompressFormat.webp,
+      format: isWebp ? CompressFormat.webp : CompressFormat.jpeg,
       keepExif: false,
     );
 

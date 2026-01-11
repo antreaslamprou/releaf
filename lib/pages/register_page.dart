@@ -149,7 +149,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _nameController,
                             validator: Validators.validateName,
-                            decoration: InputDecoration(labelText: 'Full Name'),
+                            decoration: InputDecoration(
+                              labelText: 'Full Name',
+                              errorMaxLines: 2,
+                            ),
                           ),
                           SizedBox(height: 10),
                           TextFormField(
