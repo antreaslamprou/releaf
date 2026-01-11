@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
@@ -60,47 +61,54 @@ class _FriendWidgetState extends State<FriendWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(vertical: 15, horizontal: 5),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: MemoryImage(
-              Conversions.baseToImage(
-                isLoading ? Conversions.getDefaultAvatarBase() : avatar!,
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ProfilePage(userId: widget.userUID),
+          ),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: MemoryImage(
+                Conversions.baseToImage(
+                  isLoading ? Conversions.getDefaultAvatarBase() : avatar!,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 15),
-          Text(
-            isLoading ? '' : username!,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const Spacer(),
-          widget.type == 'List'
-              ? IconButton(
-                  onPressed: widget.onButtonClick,
-                  icon: Icon(Icons.person_off),
-                )
-              : widget.type == 'In'
-              ? Row(
-                  children: [
-                    IconButton(
-                      onPressed: widget.onButtonClick,
-                      icon: Icon(Icons.check_circle_rounded),
-                    ),
-                    IconButton(
-                      onPressed: widget.onExtraButtonClick,
-                      icon: Icon(Icons.cancel_rounded),
-                    ),
-                  ],
-                )
-              : widget.type == 'Out'
-              ? IconButton(
-                  onPressed: widget.onButtonClick,
-                  icon: Icon(Icons.cancel_rounded),
-                )
-              : SizedBox(),
-        ],
+            SizedBox(width: 15),
+            Text(
+              isLoading ? '' : username!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            widget.type == 'List'
+                ? IconButton(
+                    onPressed: widget.onButtonClick,
+                    icon: Icon(Icons.person_off),
+                  )
+                : widget.type == 'In'
+                ? Row(
+                    children: [
+                      IconButton(
+                        onPressed: widget.onButtonClick,
+                        icon: Icon(Icons.check_circle_rounded),
+                      ),
+                      IconButton(
+                        onPressed: widget.onExtraButtonClick,
+                        icon: Icon(Icons.cancel_rounded),
+                      ),
+                    ],
+                  )
+                : widget.type == 'Out'
+                ? IconButton(
+                    onPressed: widget.onButtonClick,
+                    icon: Icon(Icons.cancel_rounded),
+                  )
+                : SizedBox(),
+          ],
+        ),
       ),
     );
   }

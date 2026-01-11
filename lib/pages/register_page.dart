@@ -69,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
         await FirebaseDatabase.instance
             .ref("users/${userCredential.user!.uid}")
             .set({
+              'id': userCredential.user!.uid,
               'avatar': Conversions.getDefaultAvatarBase(),
               'full_name': _nameController.text.trim(),
               'username': _usernameController.text.trim().toLowerCase(),

@@ -7,11 +7,14 @@ import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
+import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, this.userId});
+
+  final String? userId;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -28,6 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
   // Data holders
   Map<String, dynamic>? userData;
   int totalPosts = 0;
+  bool isFriend = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -52,12 +57,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Loads the data for the current user
   void loadData() async {
-    final data = await _userService.getUserData();
+    final isFriendTemp =
+        widget.userId != null && widget.userId != _userService.getUserUID();
+    final data = isFriendTemp
+        ? await _userService.getUserDataById(widget.userId!)
+        : await _userService.getUserData();
     final postsNumber = await _postService.getTotalPosts();
 
     setState(() {
+      isFriend = isFriendTemp;
       userData = data;
       totalPosts = postsNumber;
+      isLoading = false;
     });
   }
 
@@ -108,137 +119,156 @@ class _ProfilePageState extends State<ProfilePage> {
   // Show the profile page which contains the current user data
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text('Profile', style: context.text.titleSmall),
-            Spacer(),
-            GestureDetector(
-              onTap: () => showBottomModal(
-                context,
-                title: 'How to obtain hotstreak?',
-                details:
-                    'Earn hotstreaks by posting daily and without missing a day. Each time you post while in a streak, the streak increases.',
-              ),
-              child: Row(
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Scaffold(
+            appBar: AppBar(
+              title: Row(
                 children: [
-                  Icon(Icons.local_fire_department),
-                  const SizedBox(width: 2),
-                  Text(
-                    userData?['hotstreaks'].toString() ?? '0',
-                    style: context.text.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              onPressed: () => Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const SavedPostsPage())),
-              icon: Icon(Icons.bookmark_rounded),
-            ),
-          ],
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 55,
-              backgroundImage: context.watch<AvatarProvider>().imageProvider,
-            ),
-            SizedBox(height: 25),
-            Text(
-              userData?['full_name'] ?? 'User',
-              style: context.text.titleSmall,
-            ),
-            Text('@${userData?['username'] ?? 'Username'}'),
-            SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text(totalPosts.toString(), style: context.text.titleSmall),
-                    Text('Posts'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      userData?['points'].toString() ?? '0',
-                      style: context.text.titleSmall,
+                  Text('Profile', style: context.text.titleSmall),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () => showBottomModal(
+                      context,
+                      title: 'How to obtain hotstreak?',
+                      details:
+                          'Earn hotstreaks by posting daily and without missing a day. Each time you post while in a streak, the streak increases.',
                     ),
-                    Row(
+                    child: Row(
                       children: [
-                        Text('Points'),
-                        GestureDetector(
-                          onTap: () => showBottomModal(
-                            context,
-                            title: 'How to obtain points?',
-                            details:
-                                'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Points + Hotstreaks + 1',
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(5),
-                            child: Icon(Icons.info_outline, size: 15),
-                          ),
+                        Icon(Icons.local_fire_department),
+                        const SizedBox(width: 2),
+                        Text(
+                          userData?['hotstreaks'].toString() ?? '0',
+                          style: context.text.bodyMedium,
                         ),
                       ],
                     ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      ((userData?['friends'] as Map?)?.length ?? 0).toString(),
-                      style: context.text.titleSmall,
-                    ),
-                    Text('Friends'),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () => Navigator.of(
-                    context,
-                  ).push(MaterialPageRoute(builder: (_) => EditProfilePage())),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                   ),
-                  child: Text('EDIT PROFILE'),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: logout,
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                  if (!isFriend)
+                    IconButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const SavedPostsPage(),
+                        ),
+                      ),
+                      icon: Icon(Icons.bookmark_rounded),
                     ),
-                    backgroundColor: Colors.redAccent,
-                    foregroundColor: Colors.black,
-                  ),
-                  child: Text('LOGOUT'),
-                ),
-              ],
+                ],
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+            body: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundImage: isFriend
+                        ? MemoryImage(
+                            Conversions.baseToImage(
+                              userData?['avatar'] ??
+                                  Conversions.getDefaultAvatarBase(),
+                            ),
+                          )
+                        : context.watch<AvatarProvider>().imageProvider,
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    userData?['full_name'] ?? 'User',
+                    style: context.text.titleSmall,
+                  ),
+                  Text('@${userData?['username'] ?? 'Username'}'),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            totalPosts.toString(),
+                            style: context.text.titleSmall,
+                          ),
+                          Text('Posts'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            userData?['points'].toString() ?? '0',
+                            style: context.text.titleSmall,
+                          ),
+                          Row(
+                            children: [
+                              Text('Points'),
+                              GestureDetector(
+                                onTap: () => showBottomModal(
+                                  context,
+                                  title: 'How to obtain points?',
+                                  details:
+                                      'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Points + Hotstreaks + 1',
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsGeometry.all(5),
+                                  child: Icon(Icons.info_outline, size: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            ((userData?['friends'] as Map?)?.length ?? 0)
+                                .toString(),
+                            style: context.text.titleSmall,
+                          ),
+                          Text('Friends'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 50),
+                  if (!isFriend)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => EditProfilePage(),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Text('EDIT PROFILE'),
+                        ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: logout,
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            backgroundColor: Colors.redAccent,
+                            foregroundColor: Colors.black,
+                          ),
+                          child: Text('LOGOUT'),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          );
   }
 }

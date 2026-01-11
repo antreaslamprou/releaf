@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/user_service.dart';
@@ -82,50 +83,57 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                 final user = _leaderboard![index];
                 return Padding(
                   padding: EdgeInsetsGeometry.symmetric(vertical: 15),
-                  child: Row(
-                    children: [
-                      Stack(
-                        children: [
-                          Icon(
-                            size: 30,
-                            Icons.circle,
-                            color: index + 1 == 1
-                                ? const Color.fromARGB(255, 255, 215, 0)
-                                : index + 1 == 2
-                                ? const Color.fromARGB(255, 192, 192, 192)
-                                : index + 1 == 3
-                                ? const Color.fromARGB(255, 205, 127, 50)
-                                : const Color.fromARGB(0, 0, 0, 0),
-                          ),
-                          Positioned(
-                            width: 30,
-                            height: 30,
-                            child: Center(
-                              child: Text(
-                                '${index + 1}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: index + 1 >= 1 && index + 1 <= 3
-                                      ? Colors.black
-                                      : null,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ProfilePage(userId: user["id"]),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            Icon(
+                              size: 30,
+                              Icons.circle,
+                              color: index + 1 == 1
+                                  ? const Color.fromARGB(255, 255, 215, 0)
+                                  : index + 1 == 2
+                                  ? const Color.fromARGB(255, 192, 192, 192)
+                                  : index + 1 == 3
+                                  ? const Color.fromARGB(255, 205, 127, 50)
+                                  : const Color.fromARGB(0, 0, 0, 0),
+                            ),
+                            Positioned(
+                              width: 30,
+                              height: 30,
+                              child: Center(
+                                child: Text(
+                                  '${index + 1}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: index + 1 >= 1 && index + 1 <= 3
+                                        ? Colors.black
+                                        : null,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 10),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: MemoryImage(
-                          Conversions.baseToImage(user['avatar']),
+                          ],
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(user['username']),
-                      const Spacer(),
-                      Text(user['points'].toString()),
-                    ],
+                        SizedBox(width: 10),
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: MemoryImage(
+                            Conversions.baseToImage(user['avatar']),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(user['username']),
+                        const Spacer(),
+                        Text(user['points'].toString()),
+                      ],
+                    ),
                   ),
                 );
               },

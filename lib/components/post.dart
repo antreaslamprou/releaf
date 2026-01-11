@@ -3,6 +3,7 @@ import 'package:releaf/components/comments_section.dart';
 import 'package:releaf/controllers/comments_controller.dart';
 import 'package:releaf/controllers/likes_controller.dart';
 import 'package:releaf/controllers/saves_controller.dart';
+import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -120,20 +121,28 @@ class _PostState extends State<Post> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: MemoryImage(
-                              Conversions.baseToImage(userData!["avatar"]),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                ProfilePage(userId: userData!["id"]),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: MemoryImage(
+                                Conversions.baseToImage(userData!["avatar"]),
+                              ),
+                              radius: 20,
                             ),
-                            radius: 20,
-                          ),
-                          SizedBox(width: 15),
-                          Text(
-                            userData!["username"],
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                            SizedBox(width: 15),
+                            Text(
+                              userData!["username"],
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 20),
                       Image.memory(
