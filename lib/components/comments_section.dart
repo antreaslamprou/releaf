@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -122,45 +123,53 @@ class _CommentsSectionState extends State<CommentsSection> {
                                 final user =
                                     item['user'] as Map<String, dynamic>;
 
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 10,
+                                return GestureDetector(
+                                  onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          ProfilePage(userId: user['id']),
+                                    ),
                                   ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // aligns avatar to top
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 18,
-                                        backgroundImage: MemoryImage(
-                                          Conversions.baseToImage(
-                                            user['avatar'],
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start, // aligns avatar to top
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 18,
+                                          backgroundImage: MemoryImage(
+                                            Conversions.baseToImage(
+                                              user['avatar'],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              user['username'],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                user['username'],
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              comment,
-                                              style: TextStyle(
-                                                color: Colors.grey.shade600,
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                comment,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
