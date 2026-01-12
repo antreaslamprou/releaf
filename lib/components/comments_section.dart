@@ -112,7 +112,10 @@ class _CommentsSectionState extends State<CommentsSection> {
                       ),
                       const SizedBox(height: 15),
                       comments.isEmpty
-                          ? Text('No comments yet. Be the first to comment!')
+                          ? Text(
+                              'No comments yet.',
+                              textAlign: TextAlign.center,
+                            )
                           : ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -146,7 +149,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 16),
+                                        const SizedBox(width: 10),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -155,16 +158,11 @@ class _CommentsSectionState extends State<CommentsSection> {
                                               Text(
                                                 user['username'],
                                                 style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                comment,
-                                                style: TextStyle(
                                                   color: Colors.grey.shade600,
                                                 ),
                                               ),
+                                              const SizedBox(height: 4),
+                                              Text(comment),
                                             ],
                                           ),
                                         ),
