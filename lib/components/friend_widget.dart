@@ -77,7 +77,7 @@ class _FriendWidgetState extends State<FriendWidget> {
                 ),
               ),
             ),
-            SizedBox(width: 15),
+            SizedBox(width: 10),
             Text(
               isLoading ? '' : username!,
               style: TextStyle(fontWeight: FontWeight.bold),
