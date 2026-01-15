@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // Cancel outgoing friend request and updates UI
   void cancelOutgoingRequest() async {
     await _friendRequestService.deleteRequest(
-      receiverId: userData!['username'],
+      receiverId: userData!['id'],
     );
 
     if (!mounted) return;
