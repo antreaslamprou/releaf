@@ -1,0 +1,184 @@
+import 'package:flutter/material.dart';
+import 'package:releaf/services/sdgs_service.dart';
+import 'package:releaf/services/suggested_task_service.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/utils/validators.dart';
+
+class SuggestTaskPage extends StatefulWidget {
+  const SuggestTaskPage({super.key});
+
+  @override
+  State<SuggestTaskPage> createState() => _SuggestTaskPageState();
+}
+
+class _SuggestTaskPageState extends State<SuggestTaskPage> {
+  // Get important user defined services for fetching/altering suggested tasks and sdgs
+  final _suggestedTaskService = SuggestedTaskService();
+  final _sdgsService = SdgsService();
+
+  // Data holders and state variables
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  List<DropdownMenuItem<String>> dropdownOptions = [];
+  String? selectedSdg;
+  String? selectedSdgError;
+  bool isPosted = false;
+  bool isLoading = true;
+
+  // Initialized the text controllers
+  @override
+  void initState() {
+    super.initState();
+
+    _titleController = TextEditingController();
+    _descriptionController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getSDGs();
+    });
+  }
+
+  // Dispose the text controllers
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+
+    super.dispose();
+  }
+
+  void getSDGs() async {
+    final sdgsMap = await _sdgsService.getSDGS();
+    if (!mounted) return;
+    List<DropdownMenuItem<String>> finalOptions = [
+      DropdownMenuItem(
+        value: null,
+        child: Text('Please choose an SDG', style: context.text.bodyMedium),
+      ),
+    ];
+    sdgsMap.forEach(
+      (key, value) => finalOptions.add(
+        DropdownMenuItem(
+          value: key,
+          child: Text(value, style: context.text.bodyMedium),
+        ),
+      ),
+    );
+
+    setState(() {
+      dropdownOptions = finalOptions;
+      isLoading = false;
+    });
+  }
+
+  // Adds the post to the database if all data are valid
+  void postTask() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
+      await _suggestedTaskService.createSuggestedTasks(
+        _titleController.text,
+        selectedSdg!,
+        _descriptionController.text,
+      );
+
+      if (!mounted) return;
+      Snackbar.show(context, 'Task suggested, thank you!');
+
+      setState(() {
+        selectedSdg = null;
+        _titleController.clear();
+        _descriptionController.clear();
+        isPosted = true;
+        isLoading = false;
+      });
+    }
+  }
+
+  // If its loading show loader or if the task didnt return anything show
+  // an error message, otherwise show the task page with the data
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Suggest a Task', style: context.text.titleSmall),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(isPosted),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(15, 35, 15, 0),
+        child: Center(
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Please complete the information below regarding your taks idea:',
+                      ),
+                      SizedBox(height: 15),
+                      TextFormField(
+                        controller: _titleController,
+                        validator: Validators.validateNotEmpty,
+                        decoration: InputDecoration(labelText: 'Title'),
+                      ),
+                      SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        validator: Validators.validateNotEmpty,
+                        decoration: InputDecoration(
+                          labelText: 'Sustainable Development Goal',
+                        ),
+                        initialValue: selectedSdg,
+                        items: dropdownOptions,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSdg = value;
+                            selectedSdgError = null;
+                          });
+                        },
+                      ),
+                      if (selectedSdgError != null)
+                        Text(
+                          selectedSdgError!,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      SizedBox(height: 15),
+                      Image.asset(
+                        'assets/images/sdgs.png',
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _descriptionController,
+                        validator: Validators.validateNotEmpty,
+                        decoration: InputDecoration(labelText: 'Description'),
+                      ),
+                      SizedBox(height: 20),
+                      FractionallySizedBox(
+                        widthFactor: 1,
+                        child: ElevatedButton(
+                          onPressed: postTask,
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Text('SUBMIT'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+}

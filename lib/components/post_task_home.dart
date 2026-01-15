@@ -106,7 +106,12 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.task_alt_rounded, size: 25),
+                      Icon(
+                        postData.isEmpty
+                            ? Icons.pending_actions_rounded
+                            : Icons.task_alt_rounded,
+                        size: 25,
+                      ),
                       SizedBox(width: 10),
                       Text(dailyTask!['title'], style: context.text.titleSmall),
                     ],
@@ -133,6 +138,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                           key: UniqueKey(),
                           postData: postData,
                           isEditable: false,
+                          isReportable: false,
                         ),
                   Padding(
                     padding: EdgeInsetsGeometry.all(10),

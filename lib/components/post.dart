@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/components/bottom_actions.dart';
 import 'package:releaf/components/comments_section.dart';
 import 'package:releaf/controllers/comments_controller.dart';
 import 'package:releaf/controllers/likes_controller.dart';
 import 'package:releaf/controllers/saves_controller.dart';
 import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/services/post_service.dart';
+import 'package:releaf/services/report_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 
 class Post extends StatefulWidget {
-  const Post({super.key, required this.postData, this.isEditable = true});
+  const Post({
+    super.key,
+    required this.postData,
+    this.isEditable = true,
+    this.isReportable = true,
+  });
 
   // Widget parameters for the post, like and save button
   final Map<dynamic, dynamic> postData;
   final bool isEditable;
+  final bool isReportable;
 
   @override
   State<Post> createState() => _PostState();
 }
 
 class _PostState extends State<Post> {
-  // Get important user defined services for fetching/altering user and post data
+  // Get important user defined services for fetching/altering user, post and report data
   final _userService = UserService();
   final _postService = PostService();
+  final _reportService = ReportService();
 
   // Data holders
   late final LikesController likesController;
@@ -105,6 +114,44 @@ class _PostState extends State<Post> {
     }
   }
 
+  // Report functionality
+  void createReport(ReportType type) async {
+    final userId = _userService.getUserUID();
+    final isOkay = await _reportService.createReport(
+      userId,
+      widget.postData['id'],
+      type,
+    );
+    if (!mounted) return;
+    Snackbar.show(
+      context,
+      isOkay ? 'Report Created!' : 'There is an existing report.',
+    );
+  }
+
+  // Creates a report entity in the database for the current post
+  void reportPost(BuildContext context) async {
+    final List<BottomAction> actions = [
+      BottomAction(
+        icon: Icons.local_police,
+        label: 'Violence',
+        onTap: () => createReport(ReportType.violence),
+      ),
+      BottomAction(
+        icon: Icons.person_pin_rounded,
+        label: 'Nudity',
+        onTap: () => createReport(ReportType.nudity),
+      ),
+      BottomAction(
+        icon: Icons.pest_control,
+        label: 'False Task Completion',
+        onTap: () => createReport(ReportType.falseTask),
+      ),
+    ];
+
+    showBottomActions(context, actions);
+  }
+
   // When the data is fethced, the post is shown, which contains the user's
   // avatar and name, the image, the post description, the likes and depending
   // on the page, the like and save buttons
@@ -141,6 +188,12 @@ class _PostState extends State<Post> {
                               userData!["username"],
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
+                            Spacer(),
+                            if (widget.isReportable)
+                              IconButton(
+                                onPressed: () => reportPost(context),
+                                icon: Icon(Icons.flag_rounded),
+                              ),
                           ],
                         ),
                       ),

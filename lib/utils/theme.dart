@@ -7,11 +7,6 @@ ThemeData lightMode = ThemeData(
   // Edit bottom navbar text to be hidden
   navigationBarTheme: NavigationBarThemeData(
     labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
-      // final base = normalTextTheme.labelSmall!;
-      // if (states.contains(WidgetState.selected)) {
-      //   return base.copyWith(fontWeight: FontWeight.bold);
-      // }
-      // return base;
       return normalTextTheme.labelSmall!;
     }),
   ),
@@ -31,11 +26,6 @@ ThemeData darkMode = ThemeData(
   // Edit bottom navbar text to be hidden
   navigationBarTheme: NavigationBarThemeData(
     labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
-      // final base = normalTextTheme.labelSmall!;
-      // if (states.contains(WidgetState.selected)) {
-      //   return base.copyWith(fontWeight: FontWeight.bold);
-      // }
-      // return base;
       return normalTextTheme.labelSmall!;
     }),
   ),

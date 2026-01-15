@@ -145,9 +145,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: dailyTask == null
-          ? const CircularProgressIndicator()
+          ? const CircularProgressIndicator() // Page is loading
           : isPosting
           ? Center(
+              // Post is being checked by AI
               child: Column(
                 children: [
                   Text('Checking the image, please wait ...'),
@@ -179,8 +180,16 @@ class _PreTaskHomeState extends State<PreTaskHome> {
             )
           : _image == null
           ? Column(
+              // Home page pre task with timer
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 20),
                 CountdownTimer(),
                 SizedBox(height: 20),
                 Row(
@@ -222,6 +231,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               ],
             )
           : Column(
+              // Page with post image and description
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.file(_image!, width: 300, height: 300),

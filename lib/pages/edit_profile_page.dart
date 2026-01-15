@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/bottom_actions.dart';
 import 'package:releaf/pages/edit_data_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
@@ -58,46 +59,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // Shows the bottom modal sheet when users click on the edit avatar, giving
   // them the options to edit the avatar, delete the avatar or cancel the actions
-  void showBottomActions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 15),
-              ListTile(
-                leading: const Icon(Icons.edit),
-                title: const Text('Edit'),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.read<AvatarProvider>().uploadAvatar();
-                  context.read<UserDetailsProvider>().trigger();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.read<AvatarProvider>().deleteAvatar();
-                  context.read<UserDetailsProvider>().trigger();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.close),
-                title: const Text('Cancel'),
-                onTap: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  void showBottomActionsModal(BuildContext context) {
+    final List<BottomAction> actions = [
+      BottomAction(
+        icon: Icons.edit,
+        label: 'Edit',
+        onTap: () {
+          context.read<AvatarProvider>().uploadAvatar();
+          context.read<UserDetailsProvider>().trigger();
+        },
+      ),
+      BottomAction(
+        icon: Icons.delete,
+        label: 'Delete',
+        onTap: () {
+          context.read<AvatarProvider>().deleteAvatar();
+          context.read<UserDetailsProvider>().trigger();
+        },
+        isRed: true,
+      ),
+    ];
+
+    showBottomActions(context, actions);
   }
 
   // Show the edit profile page with the current user data
@@ -133,7 +116,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Center(
                       child: IconButton(
                         icon: const Icon(Icons.create, size: 22),
-                        onPressed: () => showBottomActions(context),
+                        onPressed: () => showBottomActionsModal(context),
                       ),
                     ),
                   ),

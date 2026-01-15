@@ -30,21 +30,26 @@ class ApiService {
     // The prompt to check the image
     final prompt =
         '''
-      You are an AI that verifies proof of task completion. 
+        You are an AI that verifies proof of task completion and performs safety checks.
 
-      Task: $taskTitle
+        Task: $taskTitle
 
-      Instructions:
-      - Examine the provided image.
-      - Determine whether it is valid proof that the task is completed.
-      - Answer in one sentence only:
-          1. Start with "True" if the image is valid proof, or "False" if it is not.
-          2. If "False", provide a short explanation of why the image is invalid.
-          3. If "True", no explanation is necessary.
+        Instructions:
+        - Examine the provided image.
+        - First, check whether the image contains any nudity or violence.
+            - Nudity includes exposed genitals, breasts, or explicit sexual acts.
+            - Violence includes physical harm, weapons being used, blood, or threats of harm.
+        - If nudity or violence is detected, the image is automatically invalid.
+        - If no nudity or violence is present, determine whether the image is valid proof that the task is completed.
+        - Answer in one sentence only:
+            1. Start with "True -" if the image is valid proof.
+            2. Start with "False -" if the image is invalid.
+            3. If "False", include a short explanation (including nudity or violence if applicable).
+            4. If "True", no explanation is necessary.
 
-      Answer format:
-      True - (no explanation if valid)
-      False - <short reason why image is not valid>
+        Answer format:
+        True -
+        False - <short reason why image is not valid>
       ''';
 
     final response = await http.post(

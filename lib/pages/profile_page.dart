@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/bottom_actions.dart';
 import 'package:releaf/pages/edit_profile_page.dart';
 import 'package:releaf/pages/saved_posts_page.dart';
+import 'package:releaf/pages/suggested_task_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/post_service.dart';
@@ -80,8 +82,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, '/splash', (route) => false);
-
-      Snackbar.show(context, 'Logged out successfully.');
     } catch (e) {
       Snackbar.show(context, 'Error With Logging Out: $e');
     }
@@ -116,6 +116,82 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // Shows bottom modal for more profile options
+  void openMore(BuildContext context) {
+    final List<BottomAction> actions = [
+      BottomAction(
+        icon: Icons.bookmark_rounded,
+        label: 'Saved Posts',
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const SavedPostsPage())),
+      ),
+      BottomAction(
+        icon: Icons.star_rounded,
+        label: 'My Suggestions',
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const SuggestedTaskPage())),
+      ),
+      BottomAction(
+        icon: Icons.delete,
+        label: 'Delete Account',
+        onTap: showDeleteAccountDialog,
+        isRed: true,
+      ),
+    ];
+
+    showBottomActions(context, actions);
+  }
+
+  // Shows a dialog with the delete account warning, gives the option to proceed
+  // or cancel
+  Future<void> showDeleteAccountDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Account'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to delete your account?'),
+                Text('This action cannot be reverted.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Delete', style: TextStyle(color: Colors.redAccent)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteAccount();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Deletes all user related data and resets the providers
+  void deleteAccount() async {
+    final isOkay = await _userService.deleteUser();
+
+    if (!mounted) return;
+    if (!isOkay) return Snackbar.show(context, 'Error With Deleting Account');
+
+    Snackbar.show(context, 'Account deleted.');
+    logout();
+  }
+
   // Show the profile page which contains the current user data
   @override
   Widget build(BuildContext context) {
@@ -147,12 +223,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   if (!isFriend)
                     IconButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const SavedPostsPage(),
-                        ),
-                      ),
-                      icon: Icon(Icons.bookmark_rounded),
+                      onPressed: () => openMore(context),
+                      icon: Icon(Icons.menu_rounded, size: 25),
                     ),
                 ],
               ),
@@ -250,7 +322,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
-                          child: Text('EDIT PROFILE'),
+                          child: Row(
+                            children: [
+                              Icon(Icons.create),
+                              SizedBox(width: 7),
+                              Text('EDIT PROFILE'),
+                            ],
+                          ),
                         ),
                         SizedBox(width: 10),
                         ElevatedButton(
@@ -262,7 +340,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             backgroundColor: Colors.redAccent,
                             foregroundColor: Colors.black,
                           ),
-                          child: Text('LOGOUT'),
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout_rounded),
+                              SizedBox(width: 5),
+                              Text('LOGOUT'),
+                            ],
+                          ),
                         ),
                       ],
                     ),

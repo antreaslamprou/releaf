@@ -1,4 +1,14 @@
 class Validators {
+  static String? validateNotEmpty(String? value) {
+    // Check if value is empty
+    if (value == null || value.isEmpty) {
+      return 'Please enter something valid';
+    }
+
+    // No issues found
+    return null;
+  }
+
   static String? validateName(String? value) {
     // Check if name is empty
     if (value == null || value.isEmpty) {
