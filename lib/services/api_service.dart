@@ -38,7 +38,7 @@ class ApiService {
         - Examine the provided image.
         - First, check whether the image contains any nudity or violence.
             - Nudity includes exposed genitals, breasts, or explicit sexual acts.
-            - Violence includes physical harm, weapons being used, blood, or threats of harm.
+            - Violence includes physical harm, weapons, blood, or threats of harm.
         - If nudity or violence is detected, the image is automatically invalid.
         - If no nudity or violence is present, determine whether the image is valid proof that the task is completed.
         - Answer in one sentence only:
