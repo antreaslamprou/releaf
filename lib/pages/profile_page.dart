@@ -132,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       title: 'How to obtain hotstreak?',
                       details:
-                          'Earn hotstreaks by posting daily and without missing a day. Each time you post while in a streak, the streak increases.',
+                          'Earn hotstreaks by posting daily and without missing a day. Each time you post while in a streak, the streak increases, boosting your total points.',
                     ),
                     child: Row(
                       children: [
