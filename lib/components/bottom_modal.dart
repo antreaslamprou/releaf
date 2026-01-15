@@ -15,8 +15,8 @@ class BottomAction {
   });
 }
 
-// Shows the bottom modal sheet when users click on the edit avatar, giving
-// them the options to edit the avatar, delete the avatar or cancel the actions
+// Shows the bottom modal sheet, takes the a list of bottom actions, which contain
+// Icon, label, functionality and optional red color
 void showBottomActions(BuildContext context, List<BottomAction> actions) {
   showModalBottomSheet(
     context: context,

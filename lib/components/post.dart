@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:releaf/components/bottom_actions.dart';
+import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/comments_section.dart';
 import 'package:releaf/controllers/comments_controller.dart';
 import 'package:releaf/controllers/likes_controller.dart';

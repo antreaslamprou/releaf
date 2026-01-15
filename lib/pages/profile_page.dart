@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/components/bottom_actions.dart';
+import 'package:releaf/components/bottom_modal.dart';
+import 'package:releaf/components/full_modal.dart';
 import 'package:releaf/pages/edit_profile_page.dart';
 import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/pages/suggested_task_page.dart';
@@ -101,14 +102,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
     setState(() {
       isFriendable = false;
+      isOutgoingPending = true;
     });
   }
 
   // Cancel outgoing friend request and updates UI
   void cancelOutgoingRequest() async {
-    await _friendRequestService.deleteRequest(
-      receiverId: userData!['id'],
-    );
+    await _friendRequestService.deleteRequest(receiverId: userData!['id']);
 
     if (!mounted) return;
     Snackbar.show(context, 'Friend request cancelled!');
@@ -140,6 +140,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
     setState(() {
       isIncomingPending = false;
+      isFriendable = false;
+    });
+  }
+
+  // Unfriend and update UI
+  void unfriend() async {
+    await _userService.removeFriend(userData!['id']);
+
+    if (!mounted) return;
+    Snackbar.show(context, 'Friend request cancelled!');
+
+    setState(() {
+      isFriendable = true;
     });
   }
 
@@ -513,7 +526,34 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         )
-                      : SizedBox(),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => showFullModal(
+                                context,
+                                'Remove Friend',
+                                'Are you sure you want to remove this friend?\nThis action cannot be undone.',
+                                'Unfriend',
+                                () => unfriend(),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                backgroundColor: Colors.redAccent,
+                                foregroundColor: Colors.black,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person_off),
+                                  SizedBox(width: 10),
+                                  Text('REMOVE FRIEND'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),

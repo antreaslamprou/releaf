@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/components/friend_widget.dart';
+import 'package:releaf/components/full_modal.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
 
@@ -37,43 +38,6 @@ class _FriendListState extends State<FriendList> {
     });
   }
 
-  // Shows a dialog with the unfriend warning, gives the option to proceed
-  // or cancel
-  Future<void> showUnfriendDialog(String friendId) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Remove Friend '),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Are you sure you want to remove this friend?'),
-                Text('This action cannot be undone.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Delete'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                unfriend(friendId);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // Removed the friend from both the users
   void unfriend(String friendId) async {
     final isOkay = await _userService.removeFriend(friendId);
@@ -104,12 +68,18 @@ class _FriendListState extends State<FriendList> {
                 shrinkWrap: true,
                 itemCount: _friendList.length,
                 itemBuilder: (context, index) {
-                  final request = _friendList[index];
+                  final friendId = _friendList[index];
                   return FriendWidget(
-                    key: ValueKey(request),
-                    userUID: request,
+                    key: ValueKey(friendId),
+                    userUID: friendId,
                     type: 'List',
-                    onButtonClick: () => showUnfriendDialog(request),
+                    onButtonClick: () => showFullModal(
+                      context,
+                      'Remove Friend',
+                      'Are you sure you want to remove this friend?\nThis action cannot be undone.',
+                      'Unfriend',
+                      () => unfriend(friendId),
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) =>

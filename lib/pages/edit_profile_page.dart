@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/components/bottom_actions.dart';
+import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/pages/edit_data_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
