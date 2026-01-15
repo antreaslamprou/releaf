@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/pages/application_mission.dart';
 import 'package:releaf/pages/suggest_task_page.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/utils/theme.dart';
@@ -74,6 +75,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 showOnOff: true,
                 width: 80,
                 onToggle: toggleTextScale,
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Application Mission',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ApplicationMission()),
+                ),
+                icon: Icon(Icons.arrow_forward_ios, size: 18),
               ),
             ],
           ),
