@@ -7,6 +7,7 @@ import 'package:releaf/pages/saved_posts_page.dart';
 import 'package:releaf/pages/suggested_task_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
+import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -26,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // Get important user defined services for fetching/altering user and post data
   final _userService = UserService();
   final _postService = PostService();
+  final _friendRequestService = FriendRequestService();
 
   // Used to update the user data automatically once the user is updated
   late final UserDetailsProvider _triggerProvider;
@@ -34,6 +36,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? userData;
   int totalPosts = 0;
   bool isFriend = false;
+  bool isFriendable = false;
+  bool isOutgoingPending = false;
+  bool isIncomingPending = false;
   bool isLoading = true;
 
   @override
@@ -66,11 +71,75 @@ class _ProfilePageState extends State<ProfilePage> {
         : await _userService.getUserData();
     final postsNumber = await _postService.getTotalPosts();
 
+    // Check if add friend button should appear
+    final friends = await _userService.getFriends();
+    final canBeAdded = isFriendTemp && !friends.contains(widget.userId);
+
+    final outgoing = await _friendRequestService.getOutgoingFriendRequest();
+    final isOutgoing = canBeAdded && outgoing.contains(widget.userId);
+
+    final incoming = await _friendRequestService.getIncomingFriendRequest();
+    final isIncoming = canBeAdded && incoming.contains(widget.userId);
+
     setState(() {
       isFriend = isFriendTemp;
+      isFriendable = canBeAdded;
+      isOutgoingPending = isOutgoing;
+      isIncomingPending = isIncoming;
       userData = data;
       totalPosts = postsNumber;
       isLoading = false;
+    });
+  }
+
+  // Adds friend and updates UI
+  void addFriend() async {
+    await _friendRequestService.sendFriendRequest(userData!['username']);
+
+    if (!mounted) return;
+    Snackbar.show(context, 'Friend request sent!');
+
+    setState(() {
+      isFriendable = false;
+    });
+  }
+
+  // Cancel outgoing friend request and updates UI
+  void cancelOutgoingRequest() async {
+    await _friendRequestService.deleteRequest(
+      receiverId: userData!['username'],
+    );
+
+    if (!mounted) return;
+    Snackbar.show(context, 'Friend request cancelled!');
+
+    setState(() {
+      isOutgoingPending = false;
+    });
+  }
+
+  // Cancel outgoing friend request and updates UI
+  void cancelIncomingRequest() async {
+    await _friendRequestService.deleteRequest(senderId: userData!['id']);
+
+    if (!mounted) return;
+    Snackbar.show(context, 'Friend request cancelled!');
+
+    setState(() {
+      isIncomingPending = false;
+    });
+  }
+
+  // Cancel outgoing friend request and updates UI
+  void acceptIncomingRequest() async {
+    await _friendRequestService.deleteRequest(senderId: userData!['id']);
+    await _userService.addFriend(userData!['id']);
+
+    if (!mounted) return;
+    Snackbar.show(context, 'Friend request cancelled!');
+
+    setState(() {
+      isIncomingPending = false;
     });
   }
 
@@ -306,50 +375,145 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 50),
-                  if (!isFriend)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => EditProfilePage(),
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(vertical: 15),
+                    child: Divider(),
+                  ),
+                  !isFriend
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => EditProfilePage(),
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.create),
+                                  SizedBox(width: 7),
+                                  Text('EDIT PROFILE'),
+                                ],
+                              ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: logout,
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                backgroundColor: Colors.redAccent,
+                                foregroundColor: Colors.black,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.logout_rounded),
+                                  SizedBox(width: 5),
+                                  Text('LOGOUT'),
+                                ],
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.create),
-                              SizedBox(width: 7),
-                              Text('EDIT PROFILE'),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: logout,
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                          ],
+                        )
+                      : isOutgoingPending
+                      ? Column(
+                          children: [
+                            Text('Pending Outgoing Friend Request'),
+                            SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: cancelOutgoingRequest,
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.close),
+                                      SizedBox(width: 10),
+                                      Text('CANCEL REQUEST'),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            backgroundColor: Colors.redAccent,
-                            foregroundColor: Colors.black,
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout_rounded),
-                              SizedBox(width: 5),
-                              Text('LOGOUT'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                          ],
+                        )
+                      : isIncomingPending
+                      ? Column(
+                          children: [
+                            Text('Pending Incoming Friend Request'),
+                            SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: acceptIncomingRequest,
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.check_rounded),
+                                      SizedBox(width: 10),
+                                      Text('ACCEPT'),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: cancelIncomingRequest,
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.close),
+                                      SizedBox(width: 10),
+                                      Text('CANCEL'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : isFriendable
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: addFriend,
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person_add_rounded),
+                                  SizedBox(width: 10),
+                                  Text('ADD FRIEND'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
