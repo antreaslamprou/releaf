@@ -299,6 +299,6 @@ class UserService {
     final value = userData['badges'][badgeId];
 
     // Update badge progress
-    await _database.ref('users/$uid/badges/$badgeId').set(value);
+    await _database.ref('users/$uid/badges/$badgeId').set(value + 1);
   }
 }
