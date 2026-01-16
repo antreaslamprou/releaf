@@ -210,6 +210,22 @@ class UserService {
     }
   }
 
+  // Returns the user's friends keys based on the user UID
+  Future<List<dynamic>> getFriendsFromUID(String uid) async {
+    if (uid.isEmpty) return [];
+
+    try {
+      final snapshot = await _database.ref('users/$uid/friends').get();
+      final friendsMap = snapshot.value as Map<dynamic, dynamic>?;
+
+      if (friendsMap == null) return [];
+
+      return friendsMap.keys.toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   // Create the connection on both users when they become friends
   Future<bool> addFriend(String friendUID) async {
     final String uid = getUserUID();

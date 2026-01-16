@@ -395,8 +395,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => TemplateSinglePage(
-                              title: 'My Friends',
-                              body: FriendList(),
+                              title: 'Friends',
+                              body: FriendList(
+                                userId: widget.userId,
+                                isEditable: widget.userId == null,
+                              ),
                             ),
                           ),
                         ),

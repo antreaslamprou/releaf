@@ -5,7 +5,10 @@ import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
 
 class FriendList extends StatefulWidget {
-  const FriendList({super.key});
+  const FriendList({super.key, this.userId, this.isEditable = true});
+
+  final String? userId;
+  final bool isEditable;
 
   @override
   State<FriendList> createState() => _FriendListState();
@@ -30,7 +33,8 @@ class _FriendListState extends State<FriendList> {
 
   // Fetches the friends
   Future<void> getFriends() async {
-    final friendsList = await _userService.getFriends();
+    final uid = widget.userId ?? _userService.getUserUID();
+    final friendsList = await _userService.getFriendsFromUID(uid);
 
     setState(() {
       _friendList = friendsList;
@@ -72,7 +76,7 @@ class _FriendListState extends State<FriendList> {
                   return FriendWidget(
                     key: ValueKey(friendId),
                     userUID: friendId,
-                    type: 'List',
+                    type: widget.isEditable ? 'List' : '',
                     onButtonClick: () => showFullModal(
                       context,
                       'Remove Friend',
