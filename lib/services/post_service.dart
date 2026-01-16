@@ -100,6 +100,14 @@ class PostService {
     return posts.length;
   }
 
+  // Get the user's total post count
+  Future<int> getTotalPostsByUID(String uid) async {
+    Map<String, dynamic>? posts = await getPostsByUID(uid);
+
+    if (posts == null) return 0;
+    return posts.length;
+  }
+
   // Create a post in the database for the current user, parameters of the image
   // and description need to be provided
   Future<String> createPost(File image, String descritpion) async {

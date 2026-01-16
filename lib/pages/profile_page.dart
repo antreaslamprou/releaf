@@ -74,7 +74,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final data = isFriendTemp
         ? await _userService.getUserDataById(widget.userId!)
         : await _userService.getUserData();
-    final postsNumber = await _postService.getTotalPosts();
+
+    final uid = widget.userId ?? _userService.getUserUID();
+    final postsNumber = await _postService.getTotalPostsByUID(uid);
 
     // Check if add friend button should appear
     final friends = await _userService.getFriends();
