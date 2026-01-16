@@ -67,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
             );
 
         await FirebaseDatabase.instance
-            .ref("users/${userCredential.user!.uid}")
+            .ref('users/${userCredential.user!.uid}')
             .set({
               'id': userCredential.user!.uid,
               'avatar': Conversions.getDefaultAvatarBase(),
@@ -78,6 +78,25 @@ class _RegisterPageState extends State<RegisterPage> {
               'last_post': '2000-01-01',
               'text_scale': 1,
               'is_dark_mode': false,
+              'badges': {
+                'sdg1': 0,
+                'sdg2': 0,
+                'sdg3': 0,
+                'sdg4': 0,
+                'sdg5': 0,
+                'sdg6': 0,
+                'sdg7': 0,
+                'sdg8': 0,
+                'sdg9': 0,
+                'sdg10': 0,
+                'sdg11': 0,
+                'sdg12': 0,
+                'sdg13': 0,
+                'sdg14': 0,
+                'sdg15': 0,
+                'sdg16': 0,
+                'sdg17': 0,
+              },
             });
 
         if (!mounted) return;
@@ -112,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       if (!usernameIsAvailable) {
-        setState(() => _usernameError = 'Username "$value" is taken');
+        setState(() => _usernameError = 'Username $value is taken');
       } else {
         setState(() => _usernameError = null);
       }
