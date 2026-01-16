@@ -1,14 +1,16 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:releaf/services/stats_service.dart';
+import 'package:releaf/services/task_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'dart:io';
 import 'package:releaf/utils/conversions.dart';
 
 class PostService {
   // Get important user defined services for altering user and stats/total-posts
-  // data
+  // and task data
   final _userService = UserService();
   final _statsService = StatsService();
+  final _taskService = TaskService();
 
   // Get important firebase services for public data
   final _database = FirebaseDatabase.instance;
@@ -124,12 +126,13 @@ class PostService {
         'description': descritpion,
       });
 
-      // Update the all related data like users last post, hotstreaks, points
-      // and total post count/stats
+      // Update the all related data like users last post, hotstreaks, points,
+      // total post count/stats and badges
       await _userService.updateUserData('last_post', date);
       await _userService.updatePoints();
       await _userService.updateHotstreaks();
       await _statsService.addPostCount();
+      await updateBadges();
 
       return "Post created!";
     } catch (e) {
@@ -279,5 +282,10 @@ class PostService {
     } catch (e) {
       return [];
     }
+  }
+
+  Future<void> updateBadges() async {
+    final task = await _taskService.getDailyTask();
+    await _userService.updateBadgeProgress(task['sdg_id']);
   }
 }

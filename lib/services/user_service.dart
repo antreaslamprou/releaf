@@ -306,4 +306,18 @@ class UserService {
 
     await updateUserData('hotstreaks', newHotstreaks);
   }
+
+  // Update the current user's budge
+  Future<void> updateBadgeProgress(String badgeId) async {
+    // Check user
+    final String uid = getUserUID();
+    if (uid.isEmpty) return;
+
+    // Get the badge current progress
+    final userData = await getUserData();
+    final value = userData['badges'][badgeId];
+
+    // Update badge progress
+    await updateUserData('badges/$badgeId', value);
+  }
 }
