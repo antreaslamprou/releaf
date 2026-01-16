@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await _userService.addFriend(userData!['id']);
 
     if (!mounted) return;
-    Snackbar.show(context, 'Friend request cancelled!');
+    Snackbar.show(context, 'Friend request accepted!');
 
     setState(() {
       isIncomingPending = false;
@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await _userService.removeFriend(userData!['id']);
 
     if (!mounted) return;
-    Snackbar.show(context, 'Friend request cancelled!');
+    Snackbar.show(context, 'Friend removed!');
 
     setState(() {
       isFriendable = true;
