@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/friends_posts.dart';
 import 'package:releaf/components/post.dart';
-import 'package:releaf/pages/task_page.dart';
+import 'package:releaf/components/task.dart';
+import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
@@ -120,9 +121,12 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => TaskPage(
-                          taskTitle: dailyTask!['title'],
-                          date: Conversions.getNowString(),
+                        builder: (_) => TemplateSinglePage(
+                          title: 'Task ${Conversions.getNowString()}',
+                          body: Task(
+                            taskTitle: dailyTask!['title'],
+                            date: Conversions.getNowString(),
+                          ),
                         ),
                       ),
                     ),

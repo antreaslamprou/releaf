@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:releaf/components/post.dart';
+import 'package:releaf/services/post_service.dart';
+import 'package:releaf/services/user_service.dart';
+
+class UserPosts extends StatefulWidget {
+  const UserPosts({super.key, this.userId});
+
+  final String? userId;
+
+  @override
+  State<UserPosts> createState() => _UserPostsState();
+}
+
+class _UserPostsState extends State<UserPosts> {
+  // Get important user defined services for fetching/altering user and post data
+  final _userService = UserService();
+  final _postService = PostService();
+
+  // Data holders and state variables
+  late Map<String, dynamic>? posts;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
+  }
+
+  // Loads the user saved posts
+  void loadData() async {
+    final userUID = widget.userId ?? _userService.getUserUID();
+    final postsList = await _postService.getPostsByUID(userUID);
+
+    setState(() {
+      posts = postsList;
+      isLoading = false;
+    });
+  }
+
+  // Shows the user posts if available, otherwise a warning message
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : posts == null || posts!.isEmpty
+            ? Text('You do not have any posts!')
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: posts!.entries.map((entry) {
+                  final value = entry.value;
+                  return Post(
+                    key: Key(value['id']),
+                    postData: value,
+                    isEditable: false,
+                    isReportable: false,
+                  );
+                }).toList(),
+              ),
+      ),
+    );
+  }
+}

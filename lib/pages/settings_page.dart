@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/pages/application_mission.dart';
-import 'package:releaf/pages/suggest_task_page.dart';
+import 'package:releaf/components/application_mission.dart';
+import 'package:releaf/components/suggest_task.dart';
+import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/utils/theme.dart';
 import 'package:releaf/providers/theme_provider.dart';
@@ -88,7 +89,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               IconButton(
                 onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ApplicationMission()),
+                  MaterialPageRoute(
+                    builder: (_) => const TemplateSinglePage(
+                      title: 'Application Mission',
+                      body: ApplicationMission(),
+                    ),
+                  ),
                 ),
                 icon: Icon(Icons.arrow_forward_ios, size: 18),
               ),
@@ -102,7 +108,12 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SuggestTaskPage()),
+                    MaterialPageRoute(
+                      builder: (_) => const TemplateSinglePage(
+                        title: 'Suggest a Task',
+                        body: SuggestTask(),
+                      ),
+                    ),
                   ),
                   child: Text(
                     'Have a suggestion for a potential task?\nSuggest a task here!',

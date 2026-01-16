@@ -41,6 +41,18 @@ class PostService {
     return snpashot.value as Map;
   }
 
+  // Get all posts from the current user
+  Future<Map<String, dynamic>?> getPostsByUID(String uid) async {
+    if (uid.isEmpty) return null;
+
+    final DatabaseReference postRef = _database.ref('posts/$uid');
+    final DataSnapshot snapshot = await postRef.get();
+
+    if (!snapshot.exists) return null;
+
+    return Map<String, dynamic>.from(snapshot.value as Map);
+  }
+
   // Get daily post of current user for the date provided, if no date, the current
   // date is checked
   Future<Map<String, dynamic>> getDailyPost({String? date}) async {

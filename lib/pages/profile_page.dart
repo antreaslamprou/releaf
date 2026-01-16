@@ -2,10 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/bottom_modal.dart';
+import 'package:releaf/components/friend_list.dart';
 import 'package:releaf/components/full_modal.dart';
-import 'package:releaf/pages/edit_profile_page.dart';
-import 'package:releaf/pages/saved_posts_page.dart';
-import 'package:releaf/pages/suggested_task_page.dart';
+import 'package:releaf/components/user_badges.dart';
+import 'package:releaf/components/user_posts.dart';
+import 'package:releaf/components/edit_profile.dart';
+import 'package:releaf/components/saved_posts.dart';
+import 'package:releaf/components/suggested_tasks.dart';
+import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/friend_request_service.dart';
@@ -204,16 +208,26 @@ class _ProfilePageState extends State<ProfilePage> {
       BottomAction(
         icon: Icons.bookmark_rounded,
         label: 'Saved Posts',
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const SavedPostsPage())),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const TemplateSinglePage(
+              title: 'Saved Posts',
+              body: SavedPosts(),
+            ),
+          ),
+        ),
       ),
       BottomAction(
         icon: Icons.star_rounded,
         label: 'My Suggestions',
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const SuggestedTaskPage())),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const TemplateSinglePage(
+              title: 'My Suggestions',
+              body: SuggestedTasks(),
+            ),
+          ),
+        ),
       ),
       BottomAction(
         icon: Icons.delete,
@@ -339,52 +353,85 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text('@${userData?['username'] ?? 'Username'}'),
                   SizedBox(height: 30),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
-                        children: [
-                          Text(
-                            totalPosts.toString(),
-                            style: context.text.titleSmall,
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TemplateSinglePage(
+                              title: 'Posts',
+                              body: UserPosts(userId: widget.userId),
+                            ),
                           ),
-                          Text('Posts'),
-                        ],
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              totalPosts.toString(),
+                              style: context.text.titleSmall,
+                            ),
+                            Text('Posts'),
+                          ],
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Text(
-                            userData?['points'].toString() ?? '0',
-                            style: context.text.titleSmall,
-                          ),
-                          Row(
-                            children: [
-                              Text('Points'),
-                              GestureDetector(
-                                onTap: () => showBottomModal(
-                                  context,
-                                  title: 'How to obtain points?',
-                                  details:
-                                      'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Points + Hotstreaks + 1',
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsGeometry.all(5),
-                                  child: Icon(Icons.info_outline, size: 15),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                      GestureDetector(
+                        onTap: () => showBottomModal(
+                          context,
+                          title: 'How to obtain points?',
+                          details:
+                              'Earn points by posting daily and achieving a hot streak. Each time you post, the points are calculated as stated below:\nTotal Points = Points + Hotstreaks + 1',
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              userData?['points'].toString() ?? '0',
+                              style: context.text.titleSmall,
+                            ),
+                            Text('Points'),
+                          ],
+                        ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            ((userData?['friends'] as Map?)?.length ?? 0)
-                                .toString(),
-                            style: context.text.titleSmall,
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TemplateSinglePage(
+                              title: 'My Friends',
+                              body: FriendList(),
+                            ),
                           ),
-                          Text('Friends'),
-                        ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ((userData?['friends'] as Map?)?.length ?? 0)
+                                  .toString(),
+                              style: context.text.titleSmall,
+                            ),
+                            Text('Friends'),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TemplateSinglePage(
+                              title: 'Badges',
+                              body: UserBadges(),
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ((userData?['friends'] as Map?)?.length ?? 0)
+                                  .toString(),
+                              style: context.text.titleSmall,
+                            ),
+                            Text('Badges'),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -399,7 +446,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ElevatedButton(
                               onPressed: () => Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => EditProfilePage(),
+                                  builder: (_) => TemplateSinglePage(
+                                    title: 'Edit Profile',
+                                    body: EditProfile(),
+                                  ),
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(

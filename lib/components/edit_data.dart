@@ -3,20 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/user_service.dart';
-import 'package:releaf/extensions/text_theme_x.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
 
-class EditDataPage extends StatefulWidget {
-  const EditDataPage({super.key, required this.page});
+class EditData extends StatefulWidget {
+  const EditData({super.key, required this.page});
 
   final String page;
 
   @override
-  State<EditDataPage> createState() => _EditDataPageState();
+  State<EditData> createState() => _EditDataState();
 }
 
-class _EditDataPageState extends State<EditDataPage> {
+class _EditDataState extends State<EditData> {
   // Get important user defined services for fetching/altering user and post data
   final _userService = UserService();
 
@@ -185,111 +184,99 @@ class _EditDataPageState extends State<EditDataPage> {
   // Show the edit profile page with the current user data
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit ${widget.page}', style: context.text.titleSmall),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-        child: widget.page == 'Full Name'
-            ? Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _firstFieldController,
-                      validator: Validators.validateName,
-                      decoration: InputDecoration(labelText: 'Full Name'),
+    return SingleChildScrollView(
+      child: widget.page == 'Full Name'
+          ? Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _firstFieldController,
+                    validator: Validators.validateName,
+                    decoration: InputDecoration(labelText: 'Full Name'),
+                  ),
+                  saveButton(),
+                ],
+              ),
+            )
+          : widget.page == 'Username'
+          ? Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _firstFieldController,
+                    onChanged: checkUsername,
+                    validator: Validators.validateUsername,
+                    decoration: InputDecoration(
+                      errorText: _usernameError,
+                      labelText: 'Username',
+                      errorMaxLines: 3,
                     ),
-                    saveButton(),
-                  ],
-                ),
-              )
-            : widget.page == 'Username'
-            ? Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _firstFieldController,
-                      onChanged: checkUsername,
-                      validator: Validators.validateUsername,
-                      decoration: InputDecoration(
-                        errorText: _usernameError,
-                        labelText: 'Username',
-                        errorMaxLines: 3,
-                      ),
+                  ),
+                  saveButton(),
+                ],
+              ),
+            )
+          : widget.page == 'Email'
+          ? Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _firstFieldController,
+                    validator: Validators.validateEmail,
+                    decoration: InputDecoration(labelText: 'Email'),
+                  ),
+                  emailMessage
+                      ? Column(
+                          children: [
+                            SizedBox(height: 15),
+                            Text(
+                              'An email has been sent to your new email address. To finish with the process, please click on the confirmation link in the email.',
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
+                  saveButton(),
+                ],
+              ),
+            )
+          : widget.page == 'Password'
+          ? Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    obscureText: true,
+                    controller: _firstFieldController,
+                    validator: Validators.validatePassword,
+                    decoration: InputDecoration(labelText: 'Current Password'),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _secondFieldController,
+                    validator: Validators.validatePassword,
+                    decoration: InputDecoration(labelText: 'New Password'),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _thirdFieldController,
+                    validator: (value) => Validators.validateConfirmPassword(
+                      value,
+                      _secondFieldController.text,
                     ),
-                    saveButton(),
-                  ],
-                ),
-              )
-            : widget.page == 'Email'
-            ? Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _firstFieldController,
-                      validator: Validators.validateEmail,
-                      decoration: InputDecoration(labelText: 'Email'),
+                    decoration: InputDecoration(
+                      labelText: 'Confirm New Password',
                     ),
-                    emailMessage
-                        ? Column(
-                            children: [
-                              SizedBox(height: 15),
-                              Text(
-                                'An email has been sent to your new email address. To finish with the process, please click on the confirmation link in the email.',
-                              ),
-                            ],
-                          )
-                        : SizedBox(),
-                    saveButton(),
-                  ],
-                ),
-              )
-            : widget.page == 'Password'
-            ? Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      obscureText: true,
-                      controller: _firstFieldController,
-                      validator: Validators.validatePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Current Password',
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      obscureText: true,
-                      controller: _secondFieldController,
-                      validator: Validators.validatePassword,
-                      decoration: InputDecoration(labelText: 'New Password'),
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      obscureText: true,
-                      controller: _thirdFieldController,
-                      validator: (value) => Validators.validateConfirmPassword(
-                        value,
-                        _secondFieldController.text,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Confirm New Password',
-                      ),
-                    ),
-                    saveButton(),
-                  ],
-                ),
-              )
-            : Text('Something went wrong!'),
-      ),
+                  ),
+                  saveButton(),
+                ],
+              ),
+            )
+          : Text('Something went wrong!'),
     );
   }
 }

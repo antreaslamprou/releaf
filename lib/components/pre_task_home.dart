@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/countdown_timer.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:releaf/pages/task_page.dart';
+import 'package:releaf/components/task.dart';
+import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/services/api_service.dart';
 import 'package:releaf/services/post_service.dart';
@@ -204,9 +205,12 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => TaskPage(
-                        taskTitle: dailyTask!['title'],
-                        date: Conversions.getNowString(),
+                      builder: (_) => TemplateSinglePage(
+                        title: 'Task ${Conversions.getNowString()}',
+                        body: Task(
+                          taskTitle: dailyTask!['title'],
+                          date: Conversions.getNowString(),
+                        ),
                       ),
                     ),
                   ),
