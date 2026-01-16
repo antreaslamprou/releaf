@@ -125,6 +125,8 @@ class _SuggestTaskState extends State<SuggestTask> {
                       validator: Validators.validateNotEmpty,
                       decoration: InputDecoration(
                         labelText: 'Sustainable Development Goal',
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 12),
                       ),
                       initialValue: selectedSdg,
                       items: dropdownOptions,

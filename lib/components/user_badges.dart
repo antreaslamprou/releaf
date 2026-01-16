@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:releaf/components/badge_widget.dart';
+import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/services/sdgs_service.dart';
 import 'package:releaf/services/user_service.dart';
 
@@ -55,15 +57,16 @@ class _UserBadgesState extends State<UserBadges> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? const CircularProgressIndicator()
+        ? const Center(child: CircularProgressIndicator())
         : GridView.builder(
             shrinkWrap: true,
             itemCount: badges.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 15,
               mainAxisSpacing: 0,
-              childAspectRatio: 0.7,
+              childAspectRatio:
+                  0.75 / context.read<TextScaleProvider>().scaleFactor,
             ),
             itemBuilder: (context, index) {
               final item = badges[index];
