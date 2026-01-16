@@ -40,25 +40,11 @@ class UserService {
     return true;
   }
 
-  // Get all data stored in firebase realtime database regarding the current user
-  Future<Map<String, dynamic>> getUserData() async {
-    final String uid = getUserUID();
-    if (uid.isEmpty) return {};
+  // Get all data stored in firebase realtime database regarding the user
+  Future<Map<String, dynamic>> getUserData({String? uid}) async {
+    uid ??= getUserUID();
 
     final userRef = _database.ref('users/$uid');
-    final DataSnapshot snapshot = await userRef.get();
-
-    if (!snapshot.exists) return {};
-
-    return Map<String, dynamic>.from(snapshot.value as Map);
-  }
-
-  // Get all data stored in firebase realtime database regarding a user from UID
-  Future<Map<String, dynamic>> getUserDataById(String userId) async {
-    final String uid = getUserUID();
-    if (uid.isEmpty) return {};
-
-    final userRef = _database.ref('users/$userId');
     final DataSnapshot snapshot = await userRef.get();
 
     if (!snapshot.exists) return {};
@@ -193,26 +179,9 @@ class UserService {
     }
   }
 
-  // Returns the current user's friends keys
-  Future<List<dynamic>> getFriends() async {
-    final String uid = getUserUID();
-    if (uid.isEmpty) return [];
-
-    try {
-      final snapshot = await _database.ref('users/$uid/friends').get();
-      final friendsMap = snapshot.value as Map<dynamic, dynamic>?;
-
-      if (friendsMap == null) return [];
-
-      return friendsMap.keys.toList();
-    } catch (e) {
-      return [];
-    }
-  }
-
-  // Returns the user's friends keys based on the user UID
-  Future<List<dynamic>> getFriendsFromUID(String uid) async {
-    if (uid.isEmpty) return [];
+  // Returns the user's friends keys
+  Future<List<dynamic>> getFriends({String? uid}) async {
+    uid ??= getUserUID();
 
     try {
       final snapshot = await _database.ref('users/$uid/friends').get();
@@ -307,6 +276,18 @@ class UserService {
     await updateUserData('hotstreaks', newHotstreaks);
   }
 
+  Future<num> getTotalBadges({String? uid}) async {
+    uid ??= getUserUID();
+
+    final userData = await getUserData(uid: uid);
+    final badges = userData['badges'];
+
+    num total = 0;
+    badges.forEach((key, value) => total += value);
+
+    return total;
+  }
+
   // Update the current user's budge
   Future<void> updateBadgeProgress(String badgeId) async {
     // Check user
@@ -318,6 +299,6 @@ class UserService {
     final value = userData['badges'][badgeId];
 
     // Update badge progress
-    await updateUserData('badges/$badgeId', value);
+    await _database.ref('users/$uid/badges/$badgeId').set(value);
   }
 }

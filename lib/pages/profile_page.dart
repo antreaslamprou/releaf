@@ -40,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // Data holders
   Map<String, dynamic>? userData;
   int totalPosts = 0;
+  num totalBadges = 0;
   bool isFriend = false;
   bool isFriendable = false;
   bool isOutgoingPending = false;
@@ -72,11 +73,13 @@ class _ProfilePageState extends State<ProfilePage> {
     final isFriendTemp =
         widget.userId != null && widget.userId != _userService.getUserUID();
     final data = isFriendTemp
-        ? await _userService.getUserDataById(widget.userId!)
+        ? await _userService.getUserData(uid: widget.userId!)
         : await _userService.getUserData();
 
     final uid = widget.userId ?? _userService.getUserUID();
-    final postsNumber = await _postService.getTotalPostsByUID(uid);
+    final postsNumber = await _postService.getTotalPosts(uid: uid);
+
+    final badges = await _userService.getTotalBadges();
 
     // Check if add friend button should appear
     final friends = await _userService.getFriends();
@@ -95,6 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
       isIncomingPending = isIncoming;
       userData = data;
       totalPosts = postsNumber;
+      totalBadges = badges;
       isLoading = false;
     });
   }
@@ -430,8 +434,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              ((userData?['friends'] as Map?)?.length ?? 0)
-                                  .toString(),
+                              totalBadges.toString(),
                               style: context.text.titleSmall,
                             ),
                             Text('Badges'),

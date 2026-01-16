@@ -55,7 +55,7 @@ class _CommentsSectionState extends State<CommentsSection> {
       final userId = userComment.keys.first.split('_')[1];
       final commentText = userComment[userComment.keys.first];
 
-      final userData = await _userService.getUserDataById(userId);
+      final userData = await _userService.getUserData(uid: userId);
 
       fullData.add({'comment': commentText, 'user': userData});
     }

@@ -16,9 +16,8 @@ class PostService {
   final _database = FirebaseDatabase.instance;
 
   // Get all posts from the current user
-  Future<Map<String, dynamic>?> getPosts() async {
-    String uid = _userService.getUserUID();
-    if (uid.isEmpty) return null;
+  Future<Map<String, dynamic>?> getPosts({String? uid}) async {
+    uid ??= _userService.getUserUID();
 
     final DatabaseReference postRef = _database.ref('posts/$uid');
     final DataSnapshot snapshot = await postRef.get();
@@ -41,18 +40,6 @@ class PostService {
     if (!snpashot.exists) return {};
 
     return snpashot.value as Map;
-  }
-
-  // Get all posts from the current user
-  Future<Map<String, dynamic>?> getPostsByUID(String uid) async {
-    if (uid.isEmpty) return null;
-
-    final DatabaseReference postRef = _database.ref('posts/$uid');
-    final DataSnapshot snapshot = await postRef.get();
-
-    if (!snapshot.exists) return null;
-
-    return Map<String, dynamic>.from(snapshot.value as Map);
   }
 
   // Get daily post of current user for the date provided, if no date, the current
@@ -95,16 +82,10 @@ class PostService {
   }
 
   // Get the current user's total post count
-  Future<int> getTotalPosts() async {
-    Map<String, dynamic>? posts = await getPosts();
+  Future<int> getTotalPosts({String? uid}) async {
+    uid ??= _userService.getUserUID();
 
-    if (posts == null) return 0;
-    return posts.length;
-  }
-
-  // Get the user's total post count
-  Future<int> getTotalPostsByUID(String uid) async {
-    Map<String, dynamic>? posts = await getPostsByUID(uid);
+    Map<String, dynamic>? posts = await getPosts(uid: uid);
 
     if (posts == null) return 0;
     return posts.length;

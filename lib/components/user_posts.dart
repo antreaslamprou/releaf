@@ -33,7 +33,7 @@ class _UserPostsState extends State<UserPosts> {
   // Loads the user saved posts
   void loadData() async {
     final userUID = widget.userId ?? _userService.getUserUID();
-    final postsList = await _postService.getPostsByUID(userUID);
+    final postsList = await _postService.getPosts(uid: userUID);
 
     setState(() {
       posts = postsList;

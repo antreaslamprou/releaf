@@ -34,7 +34,7 @@ class _FriendListState extends State<FriendList> {
   // Fetches the friends
   Future<void> getFriends() async {
     final uid = widget.userId ?? _userService.getUserUID();
-    final friendsList = await _userService.getFriendsFromUID(uid);
+    final friendsList = await _userService.getFriends(uid: uid);
 
     setState(() {
       _friendList = friendsList;

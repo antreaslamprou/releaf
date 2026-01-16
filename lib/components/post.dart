@@ -57,7 +57,7 @@ class _PostState extends State<Post> {
     final postId = widget.postData['id'];
     final userId = postId.split('_')[0];
 
-    final userDataTemp = await _userService.getUserDataById(userId);
+    final userDataTemp = await _userService.getUserData(uid: userId);
 
     final isLikedTemp = await _postService.getUserLiked(postId);
     final postData = await _postService.getPostById(postId);

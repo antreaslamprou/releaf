@@ -43,8 +43,8 @@ class _FriendWidgetState extends State<FriendWidget> {
 
   // Fetches the user data
   void loadData() async {
-    Map<String, dynamic>? userData = await _userService.getUserDataById(
-      widget.userUID,
+    Map<String, dynamic>? userData = await _userService.getUserData(
+      uid: widget.userUID,
     );
 
     if (userData.isEmpty) return;

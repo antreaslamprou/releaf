@@ -33,7 +33,7 @@ class _UserBadgesState extends State<UserBadges> {
   // Loads the user saved badges
   void loadData() async {
     final userUID = widget.userId ?? _userService.getUserUID();
-    final userData = await _userService.getUserDataById(userUID);
+    final userData = await _userService.getUserData(uid: userUID);
 
     final badgesMap = await _sdgsService.getSDGS();
     List<Map<dynamic, dynamic>> badgesList = [];
