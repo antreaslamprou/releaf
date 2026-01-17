@@ -297,10 +297,10 @@ class _ProfilePageState extends State<ProfilePage> {
   // Show the profile page which contains the current user data
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Scaffold(
-            appBar: AppBar(
+    return Scaffold(
+      appBar: isLoading
+          ? null
+          : AppBar(
               title: Row(
                 children: [
                   Text('Profile', style: context.text.titleSmall),
@@ -335,7 +335,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
-            body: SingleChildScrollView(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -615,6 +617,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-          );
+    );
   }
 }
