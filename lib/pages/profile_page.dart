@@ -76,10 +76,8 @@ class _ProfilePageState extends State<ProfilePage> {
         ? await _userService.getUserData(uid: widget.userId!)
         : await _userService.getUserData();
 
-    final uid = widget.userId ?? _userService.getUserUID();
-    final postsNumber = await _postService.getTotalPosts(uid: uid);
-
-    final badges = await _userService.getTotalBadges();
+    final postsNumber = await _postService.getTotalPosts(uid: widget.userId);
+    final badgesNumber = await _userService.getTotalBadges(uid: widget.userId);
 
     // Check if add friend button should appear
     final friends = await _userService.getFriends();
@@ -98,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
       isIncomingPending = isIncoming;
       userData = data;
       totalPosts = postsNumber;
-      totalBadges = badges;
+      totalBadges = badgesNumber;
       isLoading = false;
     });
   }
@@ -428,7 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           MaterialPageRoute(
                             builder: (_) => TemplateSinglePage(
                               title: 'Badges',
-                              body: UserBadges(),
+                              body: UserBadges(userId: widget.userId),
                             ),
                           ),
                         ),
