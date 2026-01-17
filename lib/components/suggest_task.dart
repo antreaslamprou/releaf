@@ -122,6 +122,7 @@ class _SuggestTaskState extends State<SuggestTask> {
                     ),
                     SizedBox(height: 10),
                     DropdownButtonFormField<String>(
+                      isExpanded: true,
                       validator: Validators.validateNotEmpty,
                       decoration: InputDecoration(
                         labelText: 'Sustainable Development Goal',
