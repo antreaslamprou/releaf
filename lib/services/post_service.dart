@@ -27,6 +27,14 @@ class PostService {
     return Map<String, dynamic>.from(snapshot.value as Map);
   }
 
+  // Delete all posts from the current user
+  Future<void> deletePosts() async {
+    String uid = _userService.getUserUID();
+    if (uid.isEmpty) return;
+
+    await _database.ref('posts/$uid').remove();
+  }
+
   // Get a posts from post id
   Future<Map<dynamic, dynamic>> getPostById(String id) async {
     String uid = _userService.getUserUID();
@@ -265,6 +273,40 @@ class PostService {
     }
   }
 
+  Future<void> deleteComments() async {
+    final uid = _userService.getUserUID();
+    if (uid.isEmpty) return;
+
+    // Get all posts
+    final postsRef = _database.ref('posts');
+    final snapshot = await postsRef.get();
+    if (!snapshot.exists) return;
+
+    // Data holders
+    final Map<String, dynamic> updates = {};
+    final posts = snapshot.value as Map<dynamic, dynamic>;
+
+    // For each post check if in the comments there is the uid of current user
+    // and if there is a comment add it to the updates to be null (same as delete)
+    posts.forEach((postId, postData) {
+      final comments = postData['comments'];
+      if (comments is Map) {
+        comments.forEach((commentKey, _) {
+          if (commentKey.toString().endsWith('_$uid')) {
+            updates['$postId/comments/$commentKey'] = null;
+          }
+        });
+      }
+    });
+
+    // If the user has comments, remove all comments in one query by setting
+    // them to null in bulk
+    if (updates.isNotEmpty) {
+      await postsRef.update(updates);
+    }
+  }
+
+  // Get the task id and call user's update task progress to update their badge
   Future<void> updateBadges() async {
     final task = await _taskService.getDailyTask();
     await _userService.updateBadgeProgress(task['sdg_id']);

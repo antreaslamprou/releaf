@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:releaf/services/friend_request_service.dart';
+import 'package:releaf/services/post_service.dart';
+import 'package:releaf/services/report_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class UserService {
@@ -94,10 +96,17 @@ class UserService {
     await friendRequestService.deleteRequest(receiverId: uid);
     await friendRequestService.deleteRequest(senderId: uid);
 
+    // Remove any posts
+    final postService = PostService();
+    await postService.deletePosts();
+
+    // Remove reports
+    final reportService = ReportService();
+    await reportService.deleteReports();
+
     // Remove the user from the database and auth system
     await _database.ref('users/$uid').remove();
     await FirebaseAuth.instance.currentUser!.delete();
-    await FirebaseAuth.instance.signOut();
 
     return true;
   }
