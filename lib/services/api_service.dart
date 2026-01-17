@@ -35,21 +35,26 @@ class ApiService {
         Task: $taskTitle
 
         Instructions:
-        - Examine the provided image.
+        - Examine the provided image carefully.
         - First, check whether the image contains any nudity or violence.
             - Nudity includes exposed genitals, breasts, or explicit sexual acts.
             - Violence includes physical harm, weapons, blood, or threats of harm.
         - If nudity or violence is detected, the image is automatically invalid.
-        - If no nudity or violence is present, determine whether the image is valid proof that the task is completed.
-        - Answer in one sentence only:
-            1. Start with "True -" if the image is valid proof.
-            2. Start with "False -" if the image is invalid.
-            3. If "False", include a short explanation (including nudity or violence if applicable).
-            4. If "True", no explanation is necessary.
+        - If no nudity or violence is present, determine whether the image is valid proof that the task has been completed.
+        
+        Answer rules:
+        - Respond in ONE sentence only.
+        - Start the response with "True -" if the image is valid proof.
+        - Start the response with "False -" if the image is invalid.
+        - If the response is "True", do NOT include any explanation.
+        - If the response is "False", include ONE clear reason from the following list:
+          - "Contains nudity, which is restricted"
+          - "Contains violence, which is restricted"
+          - "Does not show valid proof of task completion"
 
         Answer format:
         True -
-        False - <short reason why image is not valid>
+        False - <reason>
       ''';
 
     final response = await http.post(
