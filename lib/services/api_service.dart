@@ -25,14 +25,22 @@ class ApiService {
 
     // Get current task
     final taskData = await TaskService().getDailyTask();
-    final taskTitle = taskData['title'];
+    final taskTitle = ;
 
     // The prompt to check the image
     final prompt =
         '''
         You are an AI that verifies proof of task completion and performs safety checks.
 
-        Task: $taskTitle
+        Task: ${taskData['title']}
+
+        Task Example (for guidance only):
+        ${taskData['description']}
+
+        Important:
+        - The example is illustrative only.
+        - The user may provide different valid proof that still demonstrates task completion.
+        - Do NOT require the image to match the example exactly.
 
         Instructions:
         - Examine the provided image carefully.
