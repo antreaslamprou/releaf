@@ -25,7 +25,6 @@ class ApiService {
 
     // Get current task
     final taskData = await TaskService().getDailyTask();
-    final taskTitle = ;
 
     // The prompt to check the image
     final prompt =
