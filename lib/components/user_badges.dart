@@ -66,7 +66,7 @@ class _UserBadgesState extends State<UserBadges> {
               crossAxisSpacing: 15,
               mainAxisSpacing: 0,
               childAspectRatio:
-                  0.75 / context.read<TextScaleProvider>().scaleFactor,
+                  0.74 / context.read<TextScaleProvider>().scaleFactor,
             ),
             itemBuilder: (context, index) {
               final item = badges[index];
