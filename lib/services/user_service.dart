@@ -308,7 +308,7 @@ class UserService {
     final value = userData['badges'][badgeId];
 
     // Update badge progress if applicable
-    if (value < 3) return;
+    if (value >= 3) return;
     await _database.ref('users/$uid/badges/$badgeId').set(value + 1);
   }
 }
