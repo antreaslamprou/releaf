@@ -47,6 +47,7 @@ dependencies:
   http: ^1.2.0
   get: ^4.7.3
   fluttermoji: ^1.0.2
+  flutter_svg: ^2.2.3
   
 dev_dependencies:
   flutter_test:

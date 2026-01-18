@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttermoji/fluttermojiFunctions.dart';
 import 'package:releaf/utils/conversions.dart';
 
@@ -28,10 +28,20 @@ class AvatarWidget extends StatelessWidget {
 
     // Type is avatar, save locally the Fluttermoji and return the widget
     if (avatarType == 'Avatar') {
-      FluttermojiFunctions().decodeFluttermojifromString(avatarImage);
-      return FluttermojiCircleAvatar(
-        radius: radius,
+      String svgImage = FluttermojiFunctions().decodeFluttermojifromString(
+        avatarImage,
+      );
+      return CircleAvatar(
         backgroundColor: Colors.transparent,
+        radius: radius,
+        child: ClipOval(
+          child: SvgPicture.string(
+            svgImage,
+            width: radius * 2,
+            height: radius * 2,
+            fit: BoxFit.cover,
+          ),
+        ),
       );
     }
 
