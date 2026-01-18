@@ -45,7 +45,9 @@ dependencies:
   table_calendar: ^3.2.0
   flutter_image_compress: ^2.4.0
   http: ^1.2.0
-
+  get: ^4.7.3
+  fluttermoji: ^1.0.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

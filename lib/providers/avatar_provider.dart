@@ -12,32 +12,23 @@ class AvatarProvider extends ChangeNotifier {
   // Default values, the avatar is set to the default avatar and the pick image
   // to false
   String avatarImage = Conversions.getDefaultAvatarBase();
+  String avatarType = 'Image';
   bool _isPickingImage = false;
-
-  // Returns the avatar as a Widget/Image
-  ImageProvider get imageProvider {
-    return MemoryImage(Conversions.baseToImage(avatarImage));
-  }
 
   // Initialization function to get if the user avatar
   Future<void> loadAvatar() async {
     Map<String, dynamic>? userData = await _userService.getUserData();
+    if (userData.isEmpty) return;
 
-    if (userData.isEmpty) {
-      avatarImage = Conversions.getDefaultAvatarBase();
-
-      notifyListeners();
-      return;
-    }
-
+    avatarType = userData['avatar_type'];
     avatarImage = userData['avatar'];
 
     notifyListeners();
   }
 
-  // If the user is not already picking, changes the avatar, and updates the
+  // If the user is not already picking, changes the avatar image, and updates the
   // database
-  Future<void> uploadAvatar() async {
+  Future<void> uploadAvatarImage() async {
     if (_isPickingImage) return;
     _isPickingImage = true;
 
@@ -49,15 +40,29 @@ class AvatarProvider extends ChangeNotifier {
       return;
     }
 
+    avatarType = 'Image';
     avatarImage = await Conversions.imageToBase(
       File(picked.path),
       minWidth: 100,
     );
 
     String uid = _userService.getUserUID();
+    await FirebaseDatabase.instance.ref('users/$uid/avatar_type').set('Image');
     await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarImage);
 
     _isPickingImage = false;
+
+    notifyListeners();
+  }
+
+  // Changes the avatar, and updates the database
+  Future<void> uploadAvatar(String avatarString) async {
+    String uid = _userService.getUserUID();
+    await FirebaseDatabase.instance.ref('users/$uid/avatar_type').set('Avatar');
+    await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarString);
+
+    avatarType = 'Avatar';
+    avatarImage = avatarString;
 
     notifyListeners();
   }
@@ -67,6 +72,7 @@ class AvatarProvider extends ChangeNotifier {
     avatarImage = Conversions.getDefaultAvatarBase();
 
     String uid = _userService.getUserUID();
+    await FirebaseDatabase.instance.ref('users/$uid/avatar_type').set('Image');
     await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarImage);
 
     notifyListeners();

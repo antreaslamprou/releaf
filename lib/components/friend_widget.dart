@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/services/user_service.dart';
-import 'package:releaf/utils/conversions.dart';
 
 class FriendWidget extends StatefulWidget {
   const FriendWidget({
@@ -28,9 +28,7 @@ class _FriendWidgetState extends State<FriendWidget> {
   final _userService = UserService();
 
   // Data holders and state variables
-  String? avatar;
-  String? username;
-  bool isLoading = true;
+  Map<dynamic, dynamic> userData = {};
 
   @override
   void initState() {
@@ -43,73 +41,70 @@ class _FriendWidgetState extends State<FriendWidget> {
 
   // Fetches the user data
   void loadData() async {
-    Map<String, dynamic>? userData = await _userService.getUserData(
+    Map<String, dynamic>? data = await _userService.getUserData(
       uid: widget.userUID,
     );
 
-    if (userData.isEmpty) return;
+    if (data.isEmpty) return;
 
     setState(() {
-      avatar = userData['avatar'];
-      username = userData['username'];
-      isLoading = false;
+      userData = data;
     });
   }
 
   // Once the user data are fetched, the user widget used in lists is available
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 15, horizontal: 5),
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ProfilePage(userId: widget.userUID),
-          ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: MemoryImage(
-                Conversions.baseToImage(
-                  isLoading ? Conversions.getDefaultAvatarBase() : avatar!,
+    return userData.isEmpty
+        ? SizedBox()
+        : Padding(
+            padding: EdgeInsetsGeometry.symmetric(vertical: 15, horizontal: 5),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ProfilePage(userId: widget.userUID),
                 ),
               ),
+              child: Row(
+                children: [
+                  AvatarWidget(
+                    avatarType: userData['avatar_type'],
+                    avatarImage: userData['avatar'],
+                    radius: 20,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    userData['username'],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  widget.type == 'List'
+                      ? IconButton(
+                          onPressed: widget.onButtonClick,
+                          icon: Icon(Icons.person_off),
+                        )
+                      : widget.type == 'In'
+                      ? Row(
+                          children: [
+                            IconButton(
+                              onPressed: widget.onButtonClick,
+                              icon: Icon(Icons.check_circle_rounded),
+                            ),
+                            IconButton(
+                              onPressed: widget.onExtraButtonClick,
+                              icon: Icon(Icons.cancel_rounded),
+                            ),
+                          ],
+                        )
+                      : widget.type == 'Out'
+                      ? IconButton(
+                          onPressed: widget.onButtonClick,
+                          icon: Icon(Icons.cancel_rounded),
+                        )
+                      : SizedBox(),
+                ],
+              ),
             ),
-            SizedBox(width: 10),
-            Text(
-              isLoading ? '' : username!,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            widget.type == 'List'
-                ? IconButton(
-                    onPressed: widget.onButtonClick,
-                    icon: Icon(Icons.person_off),
-                  )
-                : widget.type == 'In'
-                ? Row(
-                    children: [
-                      IconButton(
-                        onPressed: widget.onButtonClick,
-                        icon: Icon(Icons.check_circle_rounded),
-                      ),
-                      IconButton(
-                        onPressed: widget.onExtraButtonClick,
-                        icon: Icon(Icons.cancel_rounded),
-                      ),
-                    ],
-                  )
-                : widget.type == 'Out'
-                ? IconButton(
-                    onPressed: widget.onButtonClick,
-                    icon: Icon(Icons.cancel_rounded),
-                  )
-                : SizedBox(),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

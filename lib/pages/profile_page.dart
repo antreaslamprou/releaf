@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/friend_list.dart';
 import 'package:releaf/components/full_modal.dart';
@@ -15,7 +16,6 @@ import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
-import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -340,16 +340,13 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 55,
-                    backgroundImage: isFriend
-                        ? MemoryImage(
-                            Conversions.baseToImage(
-                              userData?['avatar'] ??
-                                  Conversions.getDefaultAvatarBase(),
-                            ),
-                          )
-                        : context.watch<AvatarProvider>().imageProvider,
+                  AvatarWidget(
+                    avatarType: isFriend
+                        ? userData!['avatar_type']
+                        : context.watch<AvatarProvider>().avatarType,
+                    avatarImage: isFriend
+                        ? userData!['avatar']
+                        : context.watch<AvatarProvider>().avatarImage,
                   ),
                   SizedBox(height: 25),
                   Text(

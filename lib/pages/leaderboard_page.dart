@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/user_service.dart';
-import 'package:releaf/utils/conversions.dart';
 
 class LeaderboardPage extends StatefulWidget {
   const LeaderboardPage({super.key});
@@ -122,11 +122,10 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                           ],
                         ),
                         SizedBox(width: 10),
-                        CircleAvatar(
+                        AvatarWidget(
+                          avatarType: user['avatar_type'],
+                          avatarImage: user['avatar'],
                           radius: 20,
-                          backgroundImage: MemoryImage(
-                            Conversions.baseToImage(user['avatar']),
-                          ),
                         ),
                         SizedBox(width: 10),
                         Text(user['username']),

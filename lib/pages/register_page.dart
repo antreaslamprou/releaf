@@ -70,6 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
             .ref('users/${userCredential.user!.uid}')
             .set({
               'id': userCredential.user!.uid,
+              'avatar_type': 'Image',
               'avatar': Conversions.getDefaultAvatarBase(),
               'full_name': _nameController.text.trim(),
               'username': _usernameController.text.trim().toLowerCase(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/pages/leaderboard_page.dart';
 import 'package:releaf/pages/calendar_page.dart';
 import 'package:releaf/pages/friends_page.dart';
@@ -74,9 +75,10 @@ class _BasePageState extends State<BasePage> {
               onTap: () => Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (_) => const ProfilePage())),
-              child: CircleAvatar(
+              child: AvatarWidget(
+                avatarType: context.watch<AvatarProvider>().avatarType,
+                avatarImage: context.watch<AvatarProvider>().avatarImage,
                 radius: 20,
-                backgroundImage: context.watch<AvatarProvider>().imageProvider,
               ),
             ),
           ],
@@ -94,14 +96,12 @@ class _BasePageState extends State<BasePage> {
             .toList(),
       ),
       bottomNavigationBar: NavigationBar(
-        // height: 65,
         height: 55,
         destinations: navItems.map((item) {
           return NavigationDestination(
             icon: Icon(item['icon']),
             selectedIcon: Icon(item['selectedIcon']),
             label: '',
-            // label: item['label'],
           );
         }).toList(),
         selectedIndex: _currentIndex,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
+import 'package:releaf/components/edit_avatar.dart';
 import 'package:releaf/components/edit_data.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
@@ -63,15 +65,25 @@ class _EditProfileState extends State<EditProfile> {
     final List<BottomAction> actions = [
       BottomAction(
         icon: Icons.edit,
-        label: 'Edit',
+        label: 'Edit Avatar',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) =>
+                TemplateSinglePage(title: 'Edit Avatar', body: EditAvatar()),
+          ),
+        ),
+      ),
+      BottomAction(
+        icon: Icons.upload,
+        label: 'Upload Image',
         onTap: () {
-          context.read<AvatarProvider>().uploadAvatar();
+          context.read<AvatarProvider>().uploadAvatarImage();
           context.read<UserDetailsProvider>().trigger();
         },
       ),
       BottomAction(
         icon: Icons.delete,
-        label: 'Delete',
+        label: 'Delete Image',
         onTap: () {
           context.read<AvatarProvider>().deleteAvatar();
           context.read<UserDetailsProvider>().trigger();
@@ -93,9 +105,9 @@ class _EditProfileState extends State<EditProfile> {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              CircleAvatar(
-                radius: 55,
-                backgroundImage: context.watch<AvatarProvider>().imageProvider,
+              AvatarWidget(
+                avatarType: context.watch<AvatarProvider>().avatarType,
+                avatarImage: context.watch<AvatarProvider>().avatarImage,
               ),
               Positioned(
                 bottom: -10,

@@ -138,7 +138,6 @@ class _EditDataState extends State<EditData> {
         // Force a refresh of user data once it is updated
         context.read<UserDetailsProvider>().trigger();
 
-        // isUpdated = isOkay;
         if (!mounted || widget.page == 'Email') return;
         Snackbar.show(context, '${widget.page} Updated Successfully!');
       } on FirebaseException catch (e) {

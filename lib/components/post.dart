@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/comments_section.dart';
 import 'package:releaf/controllers/comments_controller.dart';
@@ -177,10 +178,9 @@ class _PostState extends State<Post> {
                         ),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              backgroundImage: MemoryImage(
-                                Conversions.baseToImage(userData!["avatar"]),
-                              ),
+                            AvatarWidget(
+                              avatarType: userData!['avatar_type'],
+                              avatarImage: userData!['avatar'],
                               radius: 20,
                             ),
                             SizedBox(width: 10),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/pages/profile_page.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
-import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 
 class CommentsSection extends StatefulWidget {
@@ -141,13 +141,10 @@ class _CommentsSectionState extends State<CommentsSection> {
                                       crossAxisAlignment: CrossAxisAlignment
                                           .start, // aligns avatar to top
                                       children: [
-                                        CircleAvatar(
+                                        AvatarWidget(
+                                          avatarType: user['avatar_type'],
+                                          avatarImage: user['avatar'],
                                           radius: 18,
-                                          backgroundImage: MemoryImage(
-                                            Conversions.baseToImage(
-                                              user['avatar'],
-                                            ),
-                                          ),
                                         ),
                                         const SizedBox(width: 10),
                                         Expanded(
