@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/components/post.dart';
 import 'package:releaf/services/post_service.dart';
-import 'package:releaf/services/user_service.dart';
 
 class UserPosts extends StatefulWidget {
   const UserPosts({super.key, this.userId});
@@ -14,7 +13,6 @@ class UserPosts extends StatefulWidget {
 
 class _UserPostsState extends State<UserPosts> {
   // Get important user defined services for fetching/altering user and post data
-  final _userService = UserService();
   final _postService = PostService();
 
   // Data holders and state variables
@@ -32,8 +30,7 @@ class _UserPostsState extends State<UserPosts> {
 
   // Loads the user saved posts
   void loadData() async {
-    final userUID = widget.userId ?? _userService.getUserUID();
-    final postsList = await _postService.getPosts(uid: userUID);
+    final postsList = await _postService.getPosts(uid: widget.userId);
 
     setState(() {
       posts = postsList;
