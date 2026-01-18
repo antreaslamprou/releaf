@@ -68,6 +68,7 @@ class _FriendWidgetState extends State<FriendWidget> {
               child: Row(
                 children: [
                   AvatarWidget(
+                    key: ValueKey(userData['avatar']),
                     avatarType: userData['avatar_type'],
                     avatarImage: userData['avatar'],
                     radius: 20,

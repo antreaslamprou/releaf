@@ -142,6 +142,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                                           .start, // aligns avatar to top
                                       children: [
                                         AvatarWidget(
+                                          key: ValueKey(user['avatar']),
                                           avatarType: user['avatar_type'],
                                           avatarImage: user['avatar'],
                                           radius: 18,

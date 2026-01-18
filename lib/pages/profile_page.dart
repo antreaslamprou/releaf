@@ -341,6 +341,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AvatarWidget(
+                    key: ValueKey(
+                      isFriend
+                          ? userData!['avatar']
+                          : context.watch<AvatarProvider>().avatarImage,
+                    ),
                     avatarType: isFriend
                         ? userData!['avatar_type']
                         : context.watch<AvatarProvider>().avatarType,

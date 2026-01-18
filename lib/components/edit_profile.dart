@@ -106,6 +106,7 @@ class _EditProfileState extends State<EditProfile> {
             clipBehavior: Clip.none,
             children: [
               AvatarWidget(
+                key: ValueKey(context.watch<AvatarProvider>().avatarImage),
                 avatarType: context.watch<AvatarProvider>().avatarType,
                 avatarImage: context.watch<AvatarProvider>().avatarImage,
               ),

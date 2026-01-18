@@ -123,6 +123,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                         ),
                         SizedBox(width: 10),
                         AvatarWidget(
+                          key: ValueKey(user['avatar']),
                           avatarType: user['avatar_type'],
                           avatarImage: user['avatar'],
                           radius: 20,

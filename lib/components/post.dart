@@ -179,6 +179,7 @@ class _PostState extends State<Post> {
                         child: Row(
                           children: [
                             AvatarWidget(
+                              key: ValueKey(userData!['avatar']),
                               avatarType: userData!['avatar_type'],
                               avatarImage: userData!['avatar'],
                               radius: 20,

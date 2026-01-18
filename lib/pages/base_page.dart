@@ -76,6 +76,7 @@ class _BasePageState extends State<BasePage> {
                 context,
               ).push(MaterialPageRoute(builder: (_) => const ProfilePage())),
               child: AvatarWidget(
+                key: ValueKey(context.watch<AvatarProvider>().avatarImage),
                 avatarType: context.watch<AvatarProvider>().avatarType,
                 avatarImage: context.watch<AvatarProvider>().avatarImage,
                 radius: 20,
