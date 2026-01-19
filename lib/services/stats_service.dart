@@ -23,8 +23,8 @@ class StatsService {
   }
 
   // Add or reduct to the total posts likes for the current date
-  Future<void> editLikeCount(int value) async {
-    final date = Conversions.getNowString();
+  Future<void> editLikeCount(int value, {String? date}) async {
+    date ??= Conversions.getNowString();
 
     int totalLikes = 0;
     try {

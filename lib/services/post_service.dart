@@ -148,10 +148,10 @@ class PostService {
       // the total likes/stats respectively)
       if (snapshot.exists) {
         await likeRef.remove();
-        await _statsService.editLikeCount(-1);
+        await _statsService.editLikeCount(-1, date: date);
       } else {
         await likeRef.set(true);
-        await _statsService.editLikeCount(1);
+        await _statsService.editLikeCount(1, date: date);
       }
 
       return true;
