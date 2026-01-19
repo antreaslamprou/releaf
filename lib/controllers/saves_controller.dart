@@ -1,19 +1,27 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class SavesController {
-  // Data holder
-  final ValueNotifier<bool> isSaved;
+class SavesController extends GetxController {
+  final RxBool isSaved;
 
-  // Likes controller constructor
-  SavesController(bool initialSaved) : isSaved = ValueNotifier(initialSaved);
+  SavesController({bool initialSaved = false}) : isSaved = initialSaved.obs;
 
-  // Toggles the UI like functionality
   void toggleSave() {
     isSaved.value = !isSaved.value;
   }
+}
 
-  // Dispose the controller variables
-  void dispose() {
-    isSaved.dispose();
+// Global map of controllers
+final Map<String, SavesController> _savesControllers = {};
+
+SavesController getSavesController(
+  String postId, {
+  required bool initialSaved,
+}) {
+  if (_savesControllers.containsKey(postId)) {
+    return _savesControllers[postId]!;
+  } else {
+    final controller = SavesController(initialSaved: initialSaved);
+    _savesControllers[postId] = controller;
+    return controller;
   }
 }

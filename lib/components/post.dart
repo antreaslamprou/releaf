@@ -59,7 +59,7 @@ class _PostState extends State<Post> {
     final postData = await _postService.getPostById(postId);
     final likesTemp = postData['likes'] != null ? postData['likes'].length : 0;
 
-    final isSavedTemp = await _postService.getUserSaved(postId);
+    final isSaved = await _postService.getUserSaved(postId);
 
     if (!mounted) return;
     setState(() {
@@ -71,7 +71,7 @@ class _PostState extends State<Post> {
         initialLiked: isLikedTemp,
       );
 
-      savesController = SavesController(isSavedTemp);
+      savesController = getSavesController(postId, initialSaved: isSaved);
     });
   }
 
@@ -223,7 +223,6 @@ class _PostState extends State<Post> {
                           // Like button
                           Obx(() {
                             final isLiked = likesController.isLiked.value;
-
                             return TextButton(
                               onPressed: toggleLikes,
                               child: Row(
@@ -262,25 +261,23 @@ class _PostState extends State<Post> {
                           ),
 
                           // Save button
-                          ValueListenableBuilder<bool>(
-                            valueListenable: savesController.isSaved,
-                            builder: (_, isSaved, _) {
-                              return TextButton(
-                                onPressed: toggleSaves,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      isSaved
-                                          ? Icons.bookmark_rounded
-                                          : Icons.bookmark_border_rounded,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(isSaved ? 'Saved' : 'Save'),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                          Obx(() {
+                            final isSaved = savesController.isSaved.value;
+                            return TextButton(
+                              onPressed: toggleSaves,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    isSaved
+                                        ? Icons.bookmark_rounded
+                                        : Icons.bookmark_border_rounded,
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(isSaved ? 'Saved' : 'Save'),
+                                ],
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ],
