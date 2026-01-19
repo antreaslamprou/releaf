@@ -19,11 +19,8 @@ class ThemeProvider extends ChangeNotifier {
         : lightMode;
   }
 
-  String getSystemThemeString() {
-    return SchedulerBinding.instance.platformDispatcher.platformBrightness ==
-            Brightness.dark
-        ? 'dark'
-        : 'light';
+  String getThemeString() {
+    return themeData == lightMode ? 'light' : 'dark';
   }
 
   // Initialization function to get the user theme, if no user is logged in,
@@ -57,8 +54,7 @@ class ThemeProvider extends ChangeNotifier {
   void toggleTheme() async {
     themeData = (themeData == lightMode) ? darkMode : lightMode;
 
-    final bool isDark = themeData == darkMode;
-    await _userService.updateUserData('theme_mode', isDark);
+    await _userService.updateUserData('theme_mode', getThemeString());
 
     notifyListeners();
   }
@@ -69,7 +65,7 @@ class ThemeProvider extends ChangeNotifier {
     isSystem = set;
     await _userService.updateUserData(
       'theme_mode',
-      set ? 'system' : getSystemThemeString(),
+      set ? 'system' : getThemeString(),
     );
 
     notifyListeners();
