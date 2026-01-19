@@ -182,28 +182,30 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          SizedBox(height: 30),
-          FractionallySizedBox(
-            widthFactor: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const TemplateSinglePage(
-                        title: 'Suggest a Task',
-                        body: SuggestTask(),
+          Padding(
+            padding: const EdgeInsets.all(30),
+            child: FractionallySizedBox(
+              widthFactor: 1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const TemplateSinglePage(
+                          title: 'Suggest a Task',
+                          body: SuggestTask(),
+                        ),
                       ),
                     ),
+                    child: Text(
+                      'Have a suggestion for a potential task?\nSuggest a task here!',
+                      textAlign: TextAlign.center,
+                      style: context.text.labelMedium,
+                    ),
                   ),
-                  child: Text(
-                    'Have a suggestion for a potential task?\nSuggest a task here!',
-                    textAlign: TextAlign.center,
-                    style: context.text.labelMedium,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
