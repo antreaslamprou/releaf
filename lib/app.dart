@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/pages/base_page.dart';
 import 'package:releaf/pages/login_page.dart';
@@ -19,18 +20,21 @@ class App extends StatelessWidget {
       data: MediaQuery.of(
         context,
       ).copyWith(textScaler: context.watch<TextScaleProvider>().textScale),
-      child: MaterialApp(
-        title: 'ReLeaf',
-        debugShowCheckedModeBanner: false,
-        theme: context.watch<ThemeProvider>().themeData,
-        initialRoute: '/splash',
-        routes: {
-          '/splash': (context) => const SplashPage(),
-          '/no-network': (context) => const NoNetworkPage(),
-          '/home': (context) => const BasePage(),
-          '/login': (context) => const LoginPage(),
-          '/register': (context) => const RegisterPage(),
-        },
+      child: KeyboardDismisser(
+        gestures: [GestureType.onTap],
+        child: MaterialApp(
+          title: 'ReLeaf',
+          debugShowCheckedModeBanner: false,
+          theme: context.watch<ThemeProvider>().themeData,
+          initialRoute: '/splash',
+          routes: {
+            '/splash': (context) => const SplashPage(),
+            '/no-network': (context) => const NoNetworkPage(),
+            '/home': (context) => const BasePage(),
+            '/login': (context) => const LoginPage(),
+            '/register': (context) => const RegisterPage(),
+          },
+        ),
       ),
     );
   }
