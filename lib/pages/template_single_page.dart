@@ -22,7 +22,7 @@ class TemplateSinglePage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Padding(padding: EdgeInsets.all(15), child: body),
+      body: body,
     );
   }
 }

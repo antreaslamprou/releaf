@@ -184,6 +184,7 @@ class _EditDataState extends State<EditData> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: widget.page == 'Full Name'
           ? Form(
               key: _formKey,

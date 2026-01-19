@@ -58,36 +58,39 @@ class _FriendListState extends State<FriendList> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: getFriends,
-      child: SizedBox.expand(
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _friendList.isEmpty
-            ? SingleChildScrollView(
-                padding: EdgeInsets.only(top: 20),
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Text('You currently do not have any friends'),
-              )
-            : ListView.separated(
-                shrinkWrap: true,
-                itemCount: _friendList.length,
-                itemBuilder: (context, index) {
-                  final friendId = _friendList[index];
-                  return FriendWidget(
-                    key: ValueKey(friendId),
-                    userUID: friendId,
-                    type: widget.isEditable ? 'List' : '',
-                    onButtonClick: () => showFullModal(
-                      context,
-                      'Remove Friend',
-                      'Are you sure you want to remove this friend?\nThis action cannot be undone.',
-                      'Unfriend',
-                      () => unfriend(friendId),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) =>
-                    const Divider(height: 1, color: Colors.grey),
-              ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+        child: SizedBox.expand(
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _friendList.isEmpty
+              ? SingleChildScrollView(
+                  padding: EdgeInsets.only(top: 20),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Text('You currently do not have any friends'),
+                )
+              : ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: _friendList.length,
+                  itemBuilder: (context, index) {
+                    final friendId = _friendList[index];
+                    return FriendWidget(
+                      key: ValueKey(friendId),
+                      userUID: friendId,
+                      type: widget.isEditable ? 'List' : '',
+                      onButtonClick: () => showFullModal(
+                        context,
+                        'Remove Friend',
+                        'Are you sure you want to remove this friend?\nThis action cannot be undone.',
+                        'Unfriend',
+                        () => unfriend(friendId),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 1, color: Colors.grey),
+                ),
+        ),
       ),
     );
   }

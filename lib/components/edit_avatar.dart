@@ -18,41 +18,44 @@ class EditAvatar extends StatelessWidget {
   // Show the edit profile page with the current user data
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: FluttermojiCircleAvatar(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+      child: Column(
+        children: [
+          FluttermojiCircleAvatar(
             radius: 65,
             backgroundColor: Colors.transparent,
           ),
-        ),
-        ElevatedButton(
-          onPressed: () => saveAvatar(context),
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+          SizedBox(height: 15),
+          ElevatedButton(
+            onPressed: () => saveAvatar(context),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [Icon(Icons.save), SizedBox(width: 5), Text('Save')],
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [Icon(Icons.save), SizedBox(width: 5), Text('Save')],
+          SizedBox(height: 15),
+          Expanded(
+            child: FluttermojiCustomizer(
+              autosave: false,
+              theme: context.read<ThemeProvider>().themeMode == ThemeMode.dark
+                  ? FluttermojiThemeData(
+                      primaryBgColor: Colors.grey.shade900,
+                      secondaryBgColor: Colors.grey.shade700,
+                      labelTextStyle: context.text.titleSmall,
+                    )
+                  : FluttermojiThemeData(
+                      labelTextStyle: context.text.titleSmall,
+                    ),
+            ),
           ),
-        ),
-        SizedBox(height: 15),
-        Expanded(
-          child: FluttermojiCustomizer(
-            autosave: false,
-            theme: context.read<ThemeProvider>().themeMode == ThemeMode.dark
-                ? FluttermojiThemeData(
-                    primaryBgColor: Colors.grey.shade900,
-                    secondaryBgColor: Colors.grey.shade700,
-                    labelTextStyle: context.text.titleSmall,
-                  )
-                : FluttermojiThemeData(labelTextStyle: context.text.titleSmall),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

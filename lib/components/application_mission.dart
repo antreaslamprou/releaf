@@ -8,6 +8,7 @@ class ApplicationMission extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

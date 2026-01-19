@@ -58,6 +58,7 @@ class _TaskState extends State<Task> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: Center(
         child: isLoading
             ? const CircularProgressIndicator()

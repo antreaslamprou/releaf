@@ -99,6 +99,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

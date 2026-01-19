@@ -58,6 +58,7 @@ class _UserBadgesState extends State<UserBadges> {
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : GridView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
             shrinkWrap: true,
             itemCount: badges.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
