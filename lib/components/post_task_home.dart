@@ -11,12 +11,10 @@ import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
 class PostTaskHome extends StatefulWidget {
-  const PostTaskHome({super.key, this.date, this.isEditable = true});
+  const PostTaskHome({super.key, this.date});
 
-  // Widget parameters used to fetch correctly the post data from a data and to
-  // show/hide post actions
+  // Widget parameters used to fetch correctly the post data from a data
   final String? date;
-  final bool isEditable;
 
   @override
   State<PostTaskHome> createState() => _PostTaskHomeState();
@@ -141,7 +139,6 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                       : Post(
                           key: UniqueKey(),
                           postData: postData,
-                          isEditable: false,
                           isReportable: false,
                         ),
                   Padding(
@@ -151,7 +148,6 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                   FriendsPosts(
                     key: UniqueKey(),
                     date: date,
-                    isEditable: widget.isEditable,
                   ),
                 ],
               ),

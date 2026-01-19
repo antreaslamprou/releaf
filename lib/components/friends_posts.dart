@@ -3,12 +3,11 @@ import 'package:releaf/components/post.dart';
 import 'package:releaf/services/post_service.dart';
 
 class FriendsPosts extends StatefulWidget {
-  const FriendsPosts({super.key, required this.date, this.isEditable = true});
+  const FriendsPosts({super.key, required this.date});
 
   // Widget parameters used to fetch correctly the post data from a data and to
   // show/hide post actions
   final String date;
-  final bool isEditable;
 
   @override
   State<FriendsPosts> createState() => _FriendsPostsState();
@@ -65,7 +64,6 @@ class _FriendsPostsState extends State<FriendsPosts> {
                       (post) => Post(
                         key: ValueKey(post['id']),
                         postData: post,
-                        isEditable: widget.isEditable,
                       ),
                     )
                     .toList(),

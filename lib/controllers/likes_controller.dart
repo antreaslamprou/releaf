@@ -1,28 +1,35 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class LikesController {
-  // Data holders
-  final ValueNotifier<int> count;
-  final ValueNotifier<bool> isLiked;
+class LikesController extends GetxController {
+  RxInt count;
+  RxBool isLiked;
 
-  // Likes controller constructor
-  LikesController({required int initialCount, required bool initialLiked})
-    : count = ValueNotifier(initialCount),
-      isLiked = ValueNotifier(initialLiked);
+  LikesController({int initialCount = 0, bool initialLiked = false})
+    : count = initialCount.obs,
+      isLiked = initialLiked.obs;
 
-  // Toggles the UI like functionality
   void toggleLike() {
-    if (isLiked.value) {
-      count.value--;
-    } else {
-      count.value++;
-    }
     isLiked.value = !isLiked.value;
+    count.value += isLiked.value ? 1 : -1;
   }
+}
 
-  // Dispose the controller variables
-  void dispose() {
-    count.dispose();
-    isLiked.dispose();
+// Global map of controllers
+final Map<String, LikesController> _likesControllers = {};
+
+LikesController getLikesController(
+  String postId, {
+  int initialCount = 0,
+  bool initialLiked = false,
+}) {
+  if (_likesControllers.containsKey(postId)) {
+    return _likesControllers[postId]!;
+  } else {
+    final controller = LikesController(
+      initialCount: initialCount,
+      initialLiked: initialLiked,
+    );
+    _likesControllers[postId] = controller;
+    return controller;
   }
 }

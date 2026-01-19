@@ -136,7 +136,6 @@ class _CalendarPageState extends State<CalendarPage> {
               PostTaskHome(
                 key: UniqueKey(),
                 date: Conversions.dateToString(_selectedDay),
-                isEditable: false,
               ),
             ],
           ),

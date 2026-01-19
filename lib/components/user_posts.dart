@@ -54,8 +54,7 @@ class _UserPostsState extends State<UserPosts> {
                   return Post(
                     key: Key(value['id']),
                     postData: value,
-                    isEditable: false,
-                    isReportable: false,
+                    isReportable: widget.userId != null,
                   );
                 }).toList(),
               ),

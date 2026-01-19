@@ -61,13 +61,7 @@ class _SavedPostsState extends State<SavedPosts> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: savedPosts
-                    .map(
-                      (post) => Post(
-                        key: Key(post['id']),
-                        postData: post,
-                        isEditable: false,
-                      ),
-                    )
+                    .map((post) => Post(key: Key(post['id']), postData: post))
                     .toList(),
               ),
       ),

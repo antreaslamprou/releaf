@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/comments_section.dart';
@@ -13,16 +14,10 @@ import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
 
 class Post extends StatefulWidget {
-  const Post({
-    super.key,
-    required this.postData,
-    this.isEditable = true,
-    this.isReportable = true,
-  });
+  const Post({super.key, required this.postData, this.isReportable = true});
 
   // Widget parameters for the post, like and save button
   final Map<dynamic, dynamic> postData;
-  final bool isEditable;
   final bool isReportable;
 
   @override
@@ -70,7 +65,8 @@ class _PostState extends State<Post> {
     setState(() {
       userData = userDataTemp;
 
-      likesController = LikesController(
+      likesController = getLikesController(
+        postData['id'],
         initialCount: likesTemp,
         initialLiked: isLikedTemp,
       );
@@ -216,38 +212,33 @@ class _PostState extends State<Post> {
                         children: [
                           Icon(Icons.favorite, color: Colors.red, size: 18),
                           const SizedBox(width: 5),
-                          ValueListenableBuilder<int>(
-                            valueListenable: likesController.count,
-                            builder: (_, count, _) {
-                              return Text(count.toString());
-                            },
-                          ),
+                          Obx(() {
+                            return Text(likesController.count.value.toString());
+                          }),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           // Like button
-                          if (widget.isEditable)
-                            ValueListenableBuilder<bool>(
-                              valueListenable: likesController.isLiked,
-                              builder: (_, isLiked, _) {
-                                return TextButton(
-                                  onPressed: toggleLikes,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        isLiked
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(isLiked ? 'Liked' : 'Like'),
-                                    ],
+                          Obx(() {
+                            final isLiked = likesController.isLiked.value;
+
+                            return TextButton(
+                              onPressed: toggleLikes,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    isLiked
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
                                   ),
-                                );
-                              },
-                            ),
+                                  const SizedBox(width: 5),
+                                  Text(isLiked ? 'Liked' : 'Like'),
+                                ],
+                              ),
+                            );
+                          }),
 
                           // Comment button
                           ValueListenableBuilder<bool>(
