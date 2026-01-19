@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/stats_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
@@ -92,7 +94,10 @@ class _TaskState extends State<Task> {
                       SizedBox(width: 5),
                       Text('$totalLikes'),
                       SizedBox(width: 30),
-                      Icon(Icons.comment, color: Colors.green),
+                      Icon(
+                        Icons.comment,
+                        color: context.read<ThemeProvider>().primaryColor,
+                      ),
                       SizedBox(width: 5),
                       Text('$totalComments'),
                     ],

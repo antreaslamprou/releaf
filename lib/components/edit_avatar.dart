@@ -5,7 +5,6 @@ import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
 import 'package:fluttermoji/fluttermoji.dart';
 import 'package:releaf/utils/snackbar.dart';
-import 'package:releaf/utils/theme.dart';
 
 class EditAvatar extends StatelessWidget {
   const EditAvatar({super.key});
@@ -44,7 +43,7 @@ class EditAvatar extends StatelessWidget {
         Expanded(
           child: FluttermojiCustomizer(
             autosave: false,
-            theme: context.read<ThemeProvider>().themeData == darkMode
+            theme: context.read<ThemeProvider>().themeMode == ThemeMode.dark
                 ? FluttermojiThemeData(
                     primaryBgColor: Colors.grey.shade900,
                     secondaryBgColor: Colors.grey.shade700,

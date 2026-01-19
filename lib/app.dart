@@ -26,11 +26,7 @@ class App extends StatelessWidget {
           title: 'ReLeaf',
           debugShowCheckedModeBanner: false,
           theme: context.watch<ThemeProvider>().themeData,
-          // theme: context.watch<ThemeProvider>().themeData.copyWith(
-          //   colorScheme: ColorScheme.fromSeed(
-          //     seedColor: context.watch<ThemeProvider>().primaryColor,
-          //   ),
-          // ),
+          themeMode: context.watch<ThemeProvider>().themeMode,
           initialRoute: '/splash',
           routes: {
             '/splash': (context) => const SplashPage(),

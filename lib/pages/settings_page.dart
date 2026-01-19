@@ -6,7 +6,6 @@ import 'package:releaf/components/color_picker_grid.dart';
 import 'package:releaf/components/suggest_task.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
-import 'package:releaf/utils/theme.dart';
 import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -20,7 +19,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   // Call the toogle theme on switch tap
   void toggleTheme(bool value) {
-    context.read<ThemeProvider>().toggleTheme();
+    context.read<ThemeProvider>().toggleTheme(value);
   }
 
   // Call the toogle text scale on switch tap
@@ -48,12 +47,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Checkbox(
-                value: context.watch<ThemeProvider>().isSystem,
+                value:
+                    context.watch<ThemeProvider>().themeMode ==
+                    ThemeMode.system,
                 onChanged: (bool? value) {
-                  context.read<ThemeProvider>().toogleSystemTheme(
-                    set: value ?? false,
+                  context.read<ThemeProvider>().toggleSystemTheme(
+                    value ?? false,
                   );
                 },
+                activeColor: context.read<ThemeProvider>().primaryColor,
               ),
             ],
           ),
@@ -65,43 +67,55 @@ class _SettingsPageState extends State<SettingsPage> {
                 'Theme',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: context.read<ThemeProvider>().isSystem
+                  color:
+                      context.read<ThemeProvider>().themeMode ==
+                          ThemeMode.system
                       ? Colors.grey
                       : null,
                 ),
               ),
               FlutterSwitch(
-                value: context.watch<ThemeProvider>().themeData == darkMode,
+                value:
+                    context.watch<ThemeProvider>().themeMode == ThemeMode.dark,
                 activeIcon: Icon(
                   Icons.nightlight_round,
-                  color: context.read<ThemeProvider>().isSystem
+                  color:
+                      context.read<ThemeProvider>().themeMode ==
+                          ThemeMode.system
                       ? Colors.grey
                       : Colors.black,
                 ),
-                activeColor: context.read<ThemeProvider>().isSystem
+                activeColor:
+                    context.read<ThemeProvider>().themeMode == ThemeMode.system
                     ? Colors.grey
-                    : Colors.green.shade900,
-                activeTextColor: context.read<ThemeProvider>().isSystem
+                    : context.read<ThemeProvider>().primaryColor,
+                activeTextColor:
+                    context.read<ThemeProvider>().themeMode == ThemeMode.system
                     ? Colors.grey.shade600
                     : Colors.white,
                 activeText: 'Dark',
                 inactiveIcon: Icon(
                   Icons.wb_sunny,
-                  color: context.read<ThemeProvider>().isSystem
+                  color:
+                      context.read<ThemeProvider>().themeMode ==
+                          ThemeMode.system
                       ? Colors.grey
                       : null,
                 ),
-                inactiveColor: context.read<ThemeProvider>().isSystem
+                inactiveColor:
+                    context.read<ThemeProvider>().themeMode == ThemeMode.system
                     ? Colors.grey
-                    : Colors.green.shade300,
-                inactiveTextColor: context.read<ThemeProvider>().isSystem
+                    : context.read<ThemeProvider>().primaryColor,
+                inactiveTextColor:
+                    context.read<ThemeProvider>().themeMode == ThemeMode.system
                     ? Colors.grey.shade600
                     : Colors.black,
                 inactiveText: 'Light',
                 showOnOff: true,
                 width: 80,
                 onToggle: (value) {
-                  if (!context.read<ThemeProvider>().isSystem) {
+                  if (context.read<ThemeProvider>().themeMode !=
+                      ThemeMode.system) {
                     toggleTheme(value);
                   }
                 },
@@ -131,11 +145,10 @@ class _SettingsPageState extends State<SettingsPage> {
               FlutterSwitch(
                 value: context.watch<TextScaleProvider>().scaleFactor != 1,
                 activeIcon: Icon(Icons.check, color: Colors.black),
-                activeColor: Colors.green.shade900,
+                activeColor: context.read<ThemeProvider>().primaryColor,
                 activeTextColor: Colors.white,
                 activeText: 'On',
                 inactiveIcon: Icon(Icons.close, color: Colors.black),
-                inactiveColor: Colors.green.shade300,
                 inactiveTextColor: Colors.black,
                 inactiveText: 'Off',
                 showOnOff: true,

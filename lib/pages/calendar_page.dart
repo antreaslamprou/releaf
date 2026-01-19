@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/post_task_home.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -121,7 +122,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         child: Icon(
                           Icons.calendar_today_rounded,
                           size: 35,
-                          color: Colors.green,
+                          color: context.watch<ThemeProvider>().primaryColor,
                         ),
                       );
                     }

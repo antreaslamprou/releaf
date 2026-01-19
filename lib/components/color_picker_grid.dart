@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/providers/theme_provider.dart';
 
 class ColorPickerGrid extends StatelessWidget {
   ColorPickerGrid({
@@ -14,7 +16,7 @@ class ColorPickerGrid extends StatelessWidget {
     Colors.purple,
     Colors.orange,
     Colors.teal,
-    Colors.yellow,
+    Colors.amber,
   ];
 
   final Color selectedColor;
@@ -32,7 +34,7 @@ class ColorPickerGrid extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final color = colors[index];
-        bool isSelected = color == selectedColor;
+        bool isSelected = color.toARGB32() == selectedColor.toARGB32();
         return Container(
           alignment: Alignment.center,
           child: AspectRatio(
@@ -42,7 +44,14 @@ class ColorPickerGrid extends StatelessWidget {
                 color: color,
                 shape: BoxShape.circle,
                 border: isSelected
-                    ? Border.all(width: 3, color: Colors.black)
+                    ? Border.all(
+                        width: 3,
+                        color:
+                            context.read<ThemeProvider>().themeMode ==
+                                ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
+                      )
                     : null,
               ),
               child: GestureDetector(onTap: () => onColorSelected(color)),

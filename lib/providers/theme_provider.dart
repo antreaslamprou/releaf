@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/theme.dart';
 
@@ -7,27 +6,45 @@ class ThemeProvider extends ChangeNotifier {
   // Get important user defined services for fetching/altering user data
   final _userService = UserService();
 
-  // Default theme is light and green
-  ThemeData themeData = lightMode;
-  bool isSystem = false;
-  Color primaryColor = Colors.green;
+  ThemeMode _themeMode = ThemeMode.light;
+  Color _primaryColor = Colors.green;
 
-  // Changes the highlight color
-  void setPrimaryColor(Color color) {
-    primaryColor = color;
+  ThemeMode get themeMode => _themeMode;
+  Color get primaryColor => _primaryColor;
+
+  void toggleTheme(bool isDark, {bool updateDatabase = true}) {
+    _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
+
+    if (updateDatabase) updateTheme();
   }
 
-  // Returns the corresponding theme to the device theme
-  ThemeData getSystemTheme() {
-    return SchedulerBinding.instance.platformDispatcher.platformBrightness ==
-            Brightness.dark
-        ? darkMode
-        : lightMode;
+  void toggleSystemTheme(bool isSystem, {bool updateDatabase = true}) {
+    _themeMode = isSystem ? ThemeMode.system : ThemeMode.light;
+    notifyListeners();
+
+    if (updateDatabase) updateTheme();
   }
 
-  String getThemeString() {
-    return themeData == lightMode ? 'light' : 'dark';
+  Future<void> updateTheme() async {
+    await _userService.updateUserData('theme_mode', _themeMode.toString());
+  }
+
+  Future<void> updateColor() async {
+    await _userService.updateUserData('theme_color', _primaryColor.toARGB32());
+  }
+
+  void setPrimaryColor(Color color, {bool updateDatabase = true}) {
+    _primaryColor = color;
+    notifyListeners();
+
+    if (updateDatabase) updateColor();
+  }
+
+  ThemeData get themeData {
+    return _themeMode == ThemeMode.dark
+        ? darkTheme(_primaryColor)
+        : lightTheme(_primaryColor);
   }
 
   // Initialization function to get the user theme, if no user is logged in,
@@ -36,51 +53,33 @@ class ThemeProvider extends ChangeNotifier {
     final userData = await _userService.getUserData();
 
     if (userData.isEmpty) {
-      themeData = getSystemTheme();
-      isSystem = true;
+      toggleSystemTheme(true, updateDatabase: false);
       notifyListeners();
       return;
     }
 
+    // Set theme
     switch (userData["theme_mode"]) {
-      case 'dark':
-        themeData = darkMode;
+      case 'ThemeMode.dark':
+        toggleTheme(true, updateDatabase: false);
         break;
-      case 'light':
-        themeData = lightMode;
+      case 'ThemeMode.light':
+        toggleTheme(false, updateDatabase: false);
         break;
-      case 'system':
-        themeData = getSystemTheme();
-        isSystem = true;
+      case 'ThemeMode.system':
+        toggleSystemTheme(true, updateDatabase: false);
     }
 
-    notifyListeners();
-  }
-
-  // Toggles between light and dark theme and updates the user settings
-  void toggleTheme() async {
-    themeData = (themeData == lightMode) ? darkMode : lightMode;
-
-    await _userService.updateUserData('theme_mode', getThemeString());
-
-    notifyListeners();
-  }
-
-  // Set or unset theme mode as system and updates the user settings
-  void toogleSystemTheme({bool set = true}) async {
-    themeData = getSystemTheme();
-    isSystem = set;
-    await _userService.updateUserData(
-      'theme_mode',
-      set ? 'system' : getThemeString(),
-    );
+    // Set primary color
+    final int color = userData["theme_color"];
+    _primaryColor = Color(color);
 
     notifyListeners();
   }
 
   // Resets the theme to the device theme
   void reset() {
-    themeData = getSystemTheme();
+    toggleSystemTheme(true);
     notifyListeners();
   }
 }
