@@ -18,6 +18,7 @@ class PostService {
   // Get all posts from the current user
   Future<Map<String, dynamic>?> getPosts({String? uid}) async {
     uid ??= _userService.getUserUID();
+    if (uid.isEmpty) return null;
 
     final DatabaseReference postRef = _database.ref('posts/$uid');
     final DataSnapshot snapshot = await postRef.get();
@@ -92,6 +93,7 @@ class PostService {
   // Get the current user's total post count
   Future<int> getTotalPosts({String? uid}) async {
     uid ??= _userService.getUserUID();
+    if (uid.isEmpty) return 0;
 
     Map<String, dynamic>? posts = await getPosts(uid: uid);
 

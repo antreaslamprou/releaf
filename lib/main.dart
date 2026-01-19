@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermoji/fluttermojiController.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
@@ -12,6 +14,9 @@ void main() async {
   // Ensures Firebase initializes first
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Initializes the custom avatars controller
+  Get.put(FluttermojiController());
 
   // Run app wrapped in the providers values
   runApp(

@@ -45,6 +45,7 @@ class UserService {
   // Get all data stored in firebase realtime database regarding the user
   Future<Map<String, dynamic>> getUserData({String? uid}) async {
     uid ??= getUserUID();
+    if (uid.isEmpty) return {};
 
     final userRef = _database.ref('users/$uid');
     final DataSnapshot snapshot = await userRef.get();
@@ -191,6 +192,7 @@ class UserService {
   // Returns the user's friends keys
   Future<List<dynamic>> getFriends({String? uid}) async {
     uid ??= getUserUID();
+    if (uid.isEmpty) return [];
 
     try {
       final snapshot = await _database.ref('users/$uid/friends').get();
@@ -287,6 +289,7 @@ class UserService {
 
   Future<num> getTotalBadges({String? uid}) async {
     uid ??= getUserUID();
+    if (uid.isEmpty) return 0;
 
     final userData = await getUserData(uid: uid);
     final badges = userData['badges'];

@@ -50,8 +50,6 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (!mounted) return;
-        Snackbar.show(context, 'Login Successful!');
-
         Navigator.pushReplacementNamed(context, '/splash');
       } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-credential') {

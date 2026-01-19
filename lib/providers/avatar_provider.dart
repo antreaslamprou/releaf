@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermoji/fluttermoji.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
@@ -8,6 +11,8 @@ import 'package:releaf/utils/conversions.dart';
 class AvatarProvider extends ChangeNotifier {
   // Get important user defined services for fetching/altering user data
   final _userService = UserService();
+  final _fluttermojiFunctions = FluttermojiFunctions();
+  final _fluttermojiController = Get.find<FluttermojiController>();
 
   // Default values, the avatar is set to the default avatar and the pick image
   // to false
@@ -15,13 +20,24 @@ class AvatarProvider extends ChangeNotifier {
   String avatarType = 'Image';
   bool _isPickingImage = false;
 
-  // Initialization function to get if the user avatar
+  // Initialization function to get the current user avatar
   Future<void> loadAvatar() async {
     Map<String, dynamic>? userData = await _userService.getUserData();
     if (userData.isEmpty) return;
 
     avatarType = userData['avatar_type'];
     avatarImage = userData['avatar'];
+
+    // Shows the current avatar as a default avatar, if available
+    if (avatarType == 'Avatar') {
+      final fluttermoji = _fluttermojiFunctions.decodeFluttermojifromString(
+        avatarImage,
+      );
+      _fluttermojiController.selectedOptions = Map<String, dynamic>.from(
+        jsonDecode(avatarImage),
+      );
+      await _fluttermojiController.setFluttermoji(fluttermojiNew: fluttermoji);
+    }
 
     notifyListeners();
   }
@@ -56,8 +72,11 @@ class AvatarProvider extends ChangeNotifier {
   }
 
   // Changes the avatar, and updates the database
-  Future<void> uploadAvatar(String avatarString) async {
+  Future<void> uploadAvatar() async {
+    await _fluttermojiController.setFluttermoji();
+
     String uid = _userService.getUserUID();
+    final avatarString = await _fluttermojiFunctions.encodeMySVGtoString();
     await FirebaseDatabase.instance.ref('users/$uid/avatar_type').set('Avatar');
     await FirebaseDatabase.instance.ref('users/$uid/avatar').set(avatarString);
 
@@ -78,9 +97,14 @@ class AvatarProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Resets the avatar to the default avatar
-  void reset() {
+  // Resets the avatar to the default avatar, and removes any avatar stored in
+  // local storage, for fluttermoji
+  void reset() async {
+    await _fluttermojiFunctions.clearFluttermoji();
+    _fluttermojiController.restoreState();
+
     avatarImage = Conversions.getDefaultAvatarBase();
+    avatarType = 'Image';
     notifyListeners();
   }
 }
