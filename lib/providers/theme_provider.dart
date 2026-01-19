@@ -7,9 +7,16 @@ class ThemeProvider extends ChangeNotifier {
   // Get important user defined services for fetching/altering user data
   final _userService = UserService();
 
-  // Default theme is light
+  // Default theme is light and green
   ThemeData themeData = lightMode;
   bool isSystem = false;
+  Color primaryColor = Colors.green;
+
+  // Changes the highlight color
+  void setPrimaryColor(Color color) {
+    primaryColor = color;
+    notifyListeners();
+  }
 
   // Returns the corresponding theme to the device theme
   ThemeData getSystemTheme() {

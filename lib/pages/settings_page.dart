@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/application_mission.dart';
+import 'package:releaf/components/color_picker_grid.dart';
 import 'package:releaf/components/suggest_task.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
@@ -56,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -106,6 +107,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ],
+          ),
+          SizedBox(height: 15),
+          Text(
+            'Highlight Color',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 15),
+          ColorPickerGrid(
+            selectedColor: context.watch<ThemeProvider>().primaryColor,
+            onColorSelected: (color) {
+              context.read<ThemeProvider>().setPrimaryColor(color);
+            },
           ),
           SizedBox(height: 25),
           Text('Font', style: context.text.titleSmall),
