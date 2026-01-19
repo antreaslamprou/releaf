@@ -8,6 +8,7 @@ import 'package:releaf/pages/register_page.dart';
 import 'package:releaf/pages/splash_page.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
+import 'package:releaf/utils/theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -25,7 +26,8 @@ class App extends StatelessWidget {
         child: MaterialApp(
           title: 'ReLeaf',
           debugShowCheckedModeBanner: false,
-          theme: context.watch<ThemeProvider>().themeData,
+          theme: lightTheme(context.watch<ThemeProvider>().primaryColor),
+          darkTheme: darkTheme(context.watch<ThemeProvider>().primaryColor),
           themeMode: context.watch<ThemeProvider>().themeMode,
           initialRoute: '/splash',
           routes: {

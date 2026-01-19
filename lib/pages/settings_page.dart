@@ -76,7 +76,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               FlutterSwitch(
                 value:
-                    context.watch<ThemeProvider>().themeMode == ThemeMode.dark,
+                    context.watch<ThemeProvider>().brightness ==
+                    Brightness.dark,
                 activeIcon: Icon(
                   Icons.nightlight_round,
                   color:

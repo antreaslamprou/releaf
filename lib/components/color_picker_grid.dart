@@ -47,8 +47,8 @@ class ColorPickerGrid extends StatelessWidget {
                     ? Border.all(
                         width: 3,
                         color:
-                            context.read<ThemeProvider>().themeMode ==
-                                ThemeMode.dark
+                            context.read<ThemeProvider>().brightness ==
+                                Brightness.dark
                             ? Colors.white
                             : Colors.black,
                       )
