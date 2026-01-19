@@ -36,29 +36,81 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Adjust your preferences below:'),
-          SizedBox(height: 40),
+          Text('Theme', style: context.text.titleSmall),
+          Divider(),
+          SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Theme', style: TextStyle(fontWeight: FontWeight.bold)),
-              FlutterSwitch(
-                value: context.watch<ThemeProvider>().themeData == darkMode,
-                activeIcon: Icon(Icons.nightlight_round, color: Colors.black),
-                activeColor: Colors.green.shade900,
-                activeTextColor: Colors.white,
-                activeText: 'Dark',
-                inactiveIcon: Icon(Icons.wb_sunny),
-                inactiveColor: Colors.green.shade300,
-                inactiveTextColor: Colors.black,
-                inactiveText: 'Light',
-                showOnOff: true,
-                width: 80,
-                onToggle: toggleTheme,
+              Text(
+                'System Theme',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Checkbox(
+                value: context.watch<ThemeProvider>().isSystem,
+                onChanged: (bool? value) {
+                  context.read<ThemeProvider>().toogleSystemTheme(
+                    set: value ?? false,
+                  );
+                },
               ),
             ],
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Theme',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: context.read<ThemeProvider>().isSystem
+                      ? Colors.grey
+                      : null,
+                ),
+              ),
+              FlutterSwitch(
+                value: context.watch<ThemeProvider>().themeData == darkMode,
+                activeIcon: Icon(
+                  Icons.nightlight_round,
+                  color: context.read<ThemeProvider>().isSystem
+                      ? Colors.grey
+                      : Colors.black,
+                ),
+                activeColor: context.read<ThemeProvider>().isSystem
+                    ? Colors.grey
+                    : Colors.green.shade900,
+                activeTextColor: context.read<ThemeProvider>().isSystem
+                    ? Colors.grey.shade600
+                    : Colors.white,
+                activeText: 'Dark',
+                inactiveIcon: Icon(
+                  Icons.wb_sunny,
+                  color: context.read<ThemeProvider>().isSystem
+                      ? Colors.grey
+                      : null,
+                ),
+                inactiveColor: context.read<ThemeProvider>().isSystem
+                    ? Colors.grey
+                    : Colors.green.shade300,
+                inactiveTextColor: context.read<ThemeProvider>().isSystem
+                    ? Colors.grey.shade600
+                    : Colors.black,
+                inactiveText: 'Light',
+                showOnOff: true,
+                width: 80,
+                onToggle: (value) {
+                  if (!context.read<ThemeProvider>().isSystem) {
+                    toggleTheme(value);
+                  }
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 25),
+          Text('Font', style: context.text.titleSmall),
+          Divider(),
+          SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -79,7 +131,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 25),
+          Text('About', style: context.text.titleSmall),
+          Divider(),
+          SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

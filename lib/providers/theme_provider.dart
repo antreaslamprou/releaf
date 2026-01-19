@@ -9,6 +9,7 @@ class ThemeProvider extends ChangeNotifier {
 
   // Default theme is light
   ThemeData themeData = lightMode;
+  bool isSystem = false;
 
   // Returns the corresponding theme to the device theme
   ThemeData getSystemTheme() {
@@ -18,6 +19,13 @@ class ThemeProvider extends ChangeNotifier {
         : lightMode;
   }
 
+  String getSystemThemeString() {
+    return SchedulerBinding.instance.platformDispatcher.platformBrightness ==
+            Brightness.dark
+        ? 'dark'
+        : 'light';
+  }
+
   // Initialization function to get the user theme, if no user is logged in,
   // it sets the theme to the device theme
   Future<void> loadTheme() async {
@@ -25,22 +33,44 @@ class ThemeProvider extends ChangeNotifier {
 
     if (userData.isEmpty) {
       themeData = getSystemTheme();
+      isSystem = true;
       notifyListeners();
       return;
     }
-    final bool isDark = userData["is_dark_mode"];
 
-    themeData = isDark ? darkMode : lightMode;
+    switch (userData["theme_mode"]) {
+      case 'dark':
+        themeData = darkMode;
+        break;
+      case 'light':
+        themeData = lightMode;
+        break;
+      case 'system':
+        themeData = getSystemTheme();
+        isSystem = true;
+    }
 
     notifyListeners();
   }
 
-  // Toggles between light and dark theme, updates the user settings aswell
+  // Toggles between light and dark theme and updates the user settings
   void toggleTheme() async {
     themeData = (themeData == lightMode) ? darkMode : lightMode;
 
     final bool isDark = themeData == darkMode;
-    await _userService.updateUserData('is_dark_mode', isDark);
+    await _userService.updateUserData('theme_mode', isDark);
+
+    notifyListeners();
+  }
+
+  // Set or unset theme mode as system and updates the user settings
+  void toogleSystemTheme({bool set = true}) async {
+    themeData = getSystemTheme();
+    isSystem = set;
+    await _userService.updateUserData(
+      'theme_mode',
+      set ? 'system' : getSystemThemeString(),
+    );
 
     notifyListeners();
   }

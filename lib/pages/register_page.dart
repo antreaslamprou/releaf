@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
               'points': 0,
               'last_post': '2000-01-01',
               'text_scale': 1,
-              'is_dark_mode': false,
+              'theme_mode': 'system',
               'badges': {
                 'sdg1': 0,
                 'sdg2': 0,
