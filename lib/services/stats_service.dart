@@ -39,16 +39,20 @@ class StatsService {
     }
   }
 
-  // Get total likes for the provided date
-  Future<int> getTotalLikes(String date) async {
-    int totalLikes = 0;
+  // Add to the total posts comments for the current date
+  Future<void> updateCommentsCount({String? date}) async {
+    date ??= Conversions.getNowString();
+
+    int totalComments = 0;
     try {
-      final postRef = _database.ref('stats/$date/likes');
+      final postRef = _database.ref('stats/$date/comments');
       final snapshot = await postRef.get();
 
-      return snapshot.value as int;
+      totalComments = (snapshot.value as int) + 1;
     } catch (e) {
-      return totalLikes;
+      totalComments = 1;
+    } finally {
+      await _database.ref('stats/$date/comments').set(totalComments);
     }
   }
 
@@ -62,6 +66,32 @@ class StatsService {
       return snapshot.value as int;
     } catch (e) {
       return totalPosts;
+    }
+  }
+
+  // Get total likes for the provided date
+  Future<int> getTotalLikes(String date) async {
+    int totalLikes = 0;
+    try {
+      final postRef = _database.ref('stats/$date/likes');
+      final snapshot = await postRef.get();
+
+      return snapshot.value as int;
+    } catch (e) {
+      return totalLikes;
+    }
+  }
+
+  // Get total comments for the provided date
+  Future<int> getTotalComments(String date) async {
+    int totalComments = 0;
+    try {
+      final postRef = _database.ref('stats/$date/comments');
+      final snapshot = await postRef.get();
+
+      return snapshot.value as int;
+    } catch (e) {
+      return totalComments;
     }
   }
 }

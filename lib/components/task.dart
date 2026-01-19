@@ -21,8 +21,9 @@ class _TaskState extends State<Task> {
 
   // Data holders and state variables
   late Map<dynamic, dynamic> task;
-  late int totalLikes;
   late int totalPosts;
+  late int totalLikes;
+  late int totalComments;
   bool isLoading = true;
 
   @override
@@ -37,13 +38,15 @@ class _TaskState extends State<Task> {
   // Fetches all task related data
   void getData() async {
     final taskTemp = await _taskService.getTaskByTitle(widget.taskTitle);
-    final totalLikesTemp = await _statsService.getTotalLikes(widget.date);
     final totalPostsTemp = await _statsService.getTotalPosts(widget.date);
+    final totalLikesTemp = await _statsService.getTotalLikes(widget.date);
+    final totalCommentsTemp = await _statsService.getTotalComments(widget.date);
 
     setState(() {
       task = taskTemp;
-      totalLikes = totalLikesTemp;
       totalPosts = totalPostsTemp;
+      totalLikes = totalLikesTemp;
+      totalComments = totalCommentsTemp;
       isLoading = false;
     });
   }
@@ -77,17 +80,21 @@ class _TaskState extends State<Task> {
                   Text(task['description'], textAlign: TextAlign.center),
                   SizedBox(height: 5),
                   Text(task['reflection'], textAlign: TextAlign.center),
-                  SizedBox(height: 20),
+                  SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.favorite, color: Colors.red),
-                      SizedBox(width: 5),
-                      Text('$totalLikes'),
-                      SizedBox(width: 20),
                       Icon(Icons.task_alt_rounded),
                       SizedBox(width: 5),
                       Text('$totalPosts'),
+                      SizedBox(width: 30),
+                      Icon(Icons.favorite, color: Colors.red),
+                      SizedBox(width: 5),
+                      Text('$totalLikes'),
+                      SizedBox(width: 30),
+                      Icon(Icons.comment, color: Colors.green),
+                      SizedBox(width: 5),
+                      Text('$totalComments'),
                     ],
                   ),
                 ],

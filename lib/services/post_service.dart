@@ -243,6 +243,9 @@ class PostService {
       await _database.ref('posts/$friendUID/$date/comments/').update({
         commentId: comment,
       });
+
+      await _statsService.updateCommentsCount(date: date);
+
       return true;
     } catch (e) {
       return false;
