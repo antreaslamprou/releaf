@@ -88,6 +88,7 @@ class AvatarProvider extends ChangeNotifier {
 
   // Changes the avatar to the default avatar, and updates the database
   Future<void> deleteAvatar() async {
+    avatarType = 'Image';
     avatarImage = Conversions.getDefaultAvatarBase();
 
     String uid = _userService.getUserUID();

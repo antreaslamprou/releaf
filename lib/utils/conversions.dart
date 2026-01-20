@@ -29,6 +29,10 @@ class Conversions {
 
   // Make the string into a binaty code that can be then used to create an image
   static Uint8List baseToImage(String baseCode) {
+    // If the string is corrupted, return the default avatar image
+    final isBase = RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(baseCode);
+    if (!isBase) return base64Decode(getDefaultAvatarBase());
+
     return base64Decode(baseCode);
   }
 
