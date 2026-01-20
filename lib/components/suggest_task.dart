@@ -62,7 +62,22 @@ class _SuggestTaskState extends State<SuggestTask> {
       (key, value) => finalOptions.add(
         DropdownMenuItem(
           value: key,
-          child: Text(value, style: context.text.bodyMedium),
+          child: Padding(
+            padding: EdgeInsetsGeometry.symmetric(vertical: 5),
+            child: Row(
+              children: [
+                Image.asset('assets/images/$key.png', height: 50),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    value,
+                    style: context.text.bodyMedium,
+                    softWrap: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -113,13 +128,16 @@ class _SuggestTaskState extends State<SuggestTask> {
                 child: Column(
                   children: [
                     Text(
-                      'Please complete the information below regarding your taks idea:',
+                      'Please complete the information below regarding your idea:',
                     ),
                     SizedBox(height: 15),
                     TextFormField(
                       controller: _titleController,
                       validator: Validators.validateNotEmpty,
-                      decoration: InputDecoration(labelText: 'Title'),
+                      decoration: InputDecoration(
+                        labelText: 'Title',
+                        hintText: 'eg. Recycle a plastic bottle',
+                      ),
                     ),
                     SizedBox(height: 10),
                     DropdownButtonFormField<String>(
@@ -154,7 +172,11 @@ class _SuggestTaskState extends State<SuggestTask> {
                     TextFormField(
                       controller: _descriptionController,
                       validator: Validators.validateNotEmpty,
-                      decoration: InputDecoration(labelText: 'Description'),
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        hintText:
+                            'eg. Take an image of you recycling a plastic bottle',
+                      ),
                     ),
                     SizedBox(height: 20),
                     FractionallySizedBox(

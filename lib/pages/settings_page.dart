@@ -3,7 +3,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/application_mission.dart';
 import 'package:releaf/components/color_picker_grid.dart';
-import 'package:releaf/components/suggest_task.dart';
+import 'package:releaf/components/privacy_policy.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
@@ -166,15 +166,15 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Application Mission',
+                'Privacy Policy',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const TemplateSinglePage(
-                      title: 'Application Mission',
-                      body: ApplicationMission(),
+                      title: 'Privacy Policy',
+                      body: PrivacyPolicy(),
                     ),
                   ),
                 ),
@@ -182,31 +182,26 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: FractionallySizedBox(
-              widthFactor: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const TemplateSinglePage(
-                          title: 'Suggest a Task',
-                          body: SuggestTask(),
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      'Have a suggestion for a potential task?\nSuggest a task here!',
-                      textAlign: TextAlign.center,
-                      style: context.text.labelMedium,
+          SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'ReLeaf Mission',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const TemplateSinglePage(
+                      title: 'ReLeaf Mission',
+                      body: ApplicationMission(),
                     ),
                   ),
-                ],
+                ),
+                icon: Icon(Icons.arrow_forward_ios, size: 18),
               ),
-            ),
+            ],
           ),
         ],
       ),

@@ -44,11 +44,11 @@ class _FriendsPageState extends State<FriendsPage> {
                     ),
                     IconButton(
                       onPressed: () => setPage('In'),
-                      icon: Icon(Icons.mark_email_unread_outlined),
+                      icon: Icon(Icons.arrow_circle_down),
                     ),
                     IconButton(
                       onPressed: () => setPage('Out'),
-                      icon: Icon(Icons.forward_to_inbox),
+                      icon: Icon(Icons.arrow_circle_up),
                     ),
                   ],
                 ),

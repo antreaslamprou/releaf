@@ -135,14 +135,24 @@ class _PostState extends State<Post> {
         onTap: () => createReport(ReportType.violence),
       ),
       BottomAction(
-        icon: Icons.person_pin_rounded,
+        icon: Icons.person_pin,
         label: 'Nudity',
         onTap: () => createReport(ReportType.nudity),
+      ),
+      BottomAction(
+        icon: Icons.plumbing,
+        label: 'Drugs',
+        onTap: () => createReport(ReportType.drugs),
       ),
       BottomAction(
         icon: Icons.pest_control,
         label: 'False Task Completion',
         onTap: () => createReport(ReportType.falseTask),
+      ),
+      BottomAction(
+        icon: Icons.flag,
+        label: 'Other',
+        onTap: () => createReport(ReportType.other),
       ),
     ];
 

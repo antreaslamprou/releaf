@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 class BottomAction {
   final IconData icon;
   final String label;
+  final String? disabledHintLabel;
   final VoidCallback onTap;
   final bool isRed;
+  final bool isDisabled;
 
   BottomAction({
     required this.icon,
     required this.label,
     required this.onTap,
+    this.disabledHintLabel,
     this.isRed = false,
+    this.isDisabled = false,
   });
 }
 
@@ -29,16 +33,33 @@ void showBottomActions(BuildContext context, List<BottomAction> actions) {
             for (final action in actions)
               ListTile(
                     leading: Icon(
-                      action.icon,
-                      color: action.isRed ? Colors.red : null,
+                      action.isDisabled ? Icons.lock : action.icon,
+                      color: action.isRed
+                          ? Colors.red
+                          : action.isDisabled
+                          ? Colors.grey
+                          : null,
                     ),
                     title: Text(
-                      action.label,
-                      style: TextStyle(color: action.isRed ? Colors.red : null),
+                      [
+                        action.label,
+                        if (action.isDisabled &&
+                            action.disabledHintLabel != null)
+                          ' - ${action.disabledHintLabel}',
+                      ].join(),
+                      style: TextStyle(
+                        color: action.isRed
+                            ? Colors.red
+                            : action.isDisabled
+                            ? Colors.grey
+                            : null,
+                      ),
                     ),
                     onTap: () {
-                      Navigator.pop(context);
-                      action.onTap();
+                      if (!action.isDisabled) {
+                        Navigator.pop(context);
+                        action.onTap();
+                      }
                     },
                   )
                   as Widget,

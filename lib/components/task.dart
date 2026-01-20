@@ -68,14 +68,19 @@ class _TaskState extends State<Task> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/images/${task['sdg_id']}.png',
+                    width: 200,
+                    height: 200,
+                  ),
                   Text(
-                    task['title'],
+                    task['sdg'],
                     textAlign: TextAlign.center,
                     style: context.text.titleSmall,
                   ),
                   SizedBox(height: 10),
                   Text(
-                    task['sdg'],
+                    task['title'],
                     textAlign: TextAlign.center,
                     style: context.text.titleSmall,
                   ),

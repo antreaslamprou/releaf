@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:releaf/extensions/text_theme_x.dart';
 
 class BadgeWidget extends StatelessWidget {
   const BadgeWidget({
@@ -20,24 +19,58 @@ class BadgeWidget extends StatelessWidget {
     return Column(
       children: [
         // Shows badge
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.asset(
-              'assets/images/badge.png',
-              width: 100,
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            border: Border.all(
               color: progress >= 3
                   ? const Color.fromARGB(255, 255, 215, 0)
                   : progress == 2
-                  ? const Color.fromARGB(255, 192, 192, 192)
+                  ? const Color.fromARGB(255, 205, 127, 50)
                   : progress == 1
                   ? const Color.fromARGB(255, 205, 127, 50)
-                  : Colors.grey[700],
+                  : Colors.grey,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Image.asset(
+              'assets/images/sdg$number.png',
+              width: 75,
+              color: progress < 1 ? Colors.grey : null,
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          spacing: 2,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/badge.png',
+              width: 20,
+              color: progress >= 1
+                  ? const Color.fromARGB(255, 205, 127, 50)
+                  : Colors.grey,
               fit: BoxFit.cover,
             ),
-            Text(
-              number.toString(),
-              style: context.text.titleLarge?.copyWith(color: Colors.black),
+            Image.asset(
+              'assets/images/badge.png',
+              width: 20,
+              color: progress >= 2
+                  ? const Color.fromARGB(255, 192, 192, 192)
+                  : Colors.grey,
+              fit: BoxFit.cover,
+            ),
+            Image.asset(
+              'assets/images/badge.png',
+              width: 20,
+              color: progress >= 3
+                  ? const Color.fromARGB(255, 255, 215, 0)
+                  : Colors.grey,
+              fit: BoxFit.cover,
             ),
           ],
         ),

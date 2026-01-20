@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:releaf/components/task.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
+import 'package:releaf/components/suggest_task.dart';
 import 'package:releaf/services/api_service.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
@@ -185,22 +186,11 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/logo.png',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
+                  'assets/images/${dailyTask!['sdg_id']}.png',
+                  width: 150,
+                  height: 150,
                 ),
-                SizedBox(height: 20),
-                CountdownTimer(),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.pending_actions_rounded, size: 25),
-                    SizedBox(width: 10),
-                    Text(dailyTask!['title'], style: context.text.titleSmall),
-                  ],
-                ),
+                Text(dailyTask!['sdg'], style: context.text.titleSmall),
                 SizedBox(height: 10),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
@@ -219,12 +209,39 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                     style: context.text.labelMedium,
                   ),
                 ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.pending_actions_rounded, size: 25),
+                    SizedBox(width: 10),
+                    Text(dailyTask!['title'], style: context.text.titleSmall),
+                  ],
+                ),
                 SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const TemplateSinglePage(
+                        title: 'Suggest a Task',
+                        body: SuggestTask(),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    'Join the team! Suggest a task here!',
+                    textAlign: TextAlign.center,
+                    style: context.text.labelMedium,
+                  ),
+                ),
+                SizedBox(height: 15),
                 Text(
                   'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 15),
+                CountdownTimer(),
+                SizedBox(height: 15),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),

@@ -4,7 +4,9 @@ import 'package:releaf/services/user_service.dart';
 enum ReportType {
   violence('violence'),
   nudity('nudity'),
-  falseTask('false_task');
+  drugs('drugs'),
+  falseTask('false_task'),
+  other('other');
 
   final String value;
   const ReportType(this.value);

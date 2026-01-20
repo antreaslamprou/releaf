@@ -72,6 +72,8 @@ class _EditProfileState extends State<EditProfile> {
                 TemplateSinglePage(title: 'Edit Avatar', body: EditAvatar()),
           ),
         ),
+        isDisabled: userData?['points'] < 25,
+        disabledHintLabel: 'Unlockable after gaining 25 points!',
       ),
       BottomAction(
         icon: Icons.upload,

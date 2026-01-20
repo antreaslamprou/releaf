@@ -10,20 +10,18 @@ class ApplicationMission extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'assets/images/logo.png',
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
+          Center(
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
           ),
           SizedBox(height: 15),
-          Text(
-            'Problem',
-            style: context.text.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
+          Text('Problem', style: context.text.headlineSmall),
           Divider(),
           SizedBox(height: 5),
           Text(
@@ -31,11 +29,7 @@ class ApplicationMission extends StatelessWidget {
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 25),
-          Text(
-            'Mission',
-            style: context.text.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
+          Text('Mission', style: context.text.headlineSmall),
           Divider(),
           SizedBox(height: 5),
           Text(
@@ -43,11 +37,7 @@ class ApplicationMission extends StatelessWidget {
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 25),
-          Text(
-            'Gamification',
-            style: context.text.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
+          Text('Gamification', style: context.text.headlineSmall),
           Divider(),
           SizedBox(height: 5),
           Text(

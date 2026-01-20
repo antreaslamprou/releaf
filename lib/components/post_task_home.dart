@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/friends_posts.dart';
 import 'package:releaf/components/post.dart';
+import 'package:releaf/components/suggest_task.dart';
 import 'package:releaf/components/task.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/user_details_provider.dart';
@@ -102,19 +103,12 @@ class _PostTaskHomeState extends State<PostTaskHome> {
             ? const CircularProgressIndicator()
             : Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        postData.isEmpty
-                            ? Icons.pending_actions_rounded
-                            : Icons.task_alt_rounded,
-                        size: 25,
-                      ),
-                      SizedBox(width: 10),
-                      Text(dailyTask!['title'], style: context.text.titleSmall),
-                    ],
+                  Image.asset(
+                    'assets/images/${dailyTask!['sdg_id']}.png',
+                    width: 150,
+                    height: 150,
                   ),
+                  Text(dailyTask!['sdg'], style: context.text.titleSmall),
                   SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
@@ -133,7 +127,32 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                       style: context.text.labelMedium,
                     ),
                   ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.pending_actions_rounded, size: 25),
+                      SizedBox(width: 10),
+                      Text(dailyTask!['title'], style: context.text.titleSmall),
+                    ],
+                  ),
                   SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const TemplateSinglePage(
+                          title: 'Suggest a Task',
+                          body: SuggestTask(),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Join the team! Suggest a task here!',
+                      textAlign: TextAlign.center,
+                      style: context.text.labelMedium,
+                    ),
+                  ),
+                  SizedBox(height: 15),
                   postData.isEmpty
                       ? Text('You have no post for this date!')
                       : Post(
@@ -145,10 +164,7 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                     padding: EdgeInsetsGeometry.all(10),
                     child: Divider(),
                   ),
-                  FriendsPosts(
-                    key: UniqueKey(),
-                    date: date,
-                  ),
+                  FriendsPosts(key: UniqueKey(), date: date),
                 ],
               ),
       ),
