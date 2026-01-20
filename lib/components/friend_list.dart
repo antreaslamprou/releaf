@@ -5,10 +5,16 @@ import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
 
 class FriendList extends StatefulWidget {
-  const FriendList({super.key, this.userId, this.isEditable = true});
+  const FriendList({
+    super.key,
+    this.userId,
+    this.isEditable = true,
+    this.isPage = false,
+  });
 
   final String? userId;
   final bool isEditable;
+  final bool isPage;
 
   @override
   State<FriendList> createState() => _FriendListState();
@@ -59,7 +65,9 @@ class _FriendListState extends State<FriendList> {
     return RefreshIndicator(
       onRefresh: getFriends,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+        padding: widget.isPage
+            ? EdgeInsets.symmetric(horizontal: 15, vertical: 25)
+            : EdgeInsetsGeometry.all(0),
         child: SizedBox.expand(
           child: isLoading
               ? const Center(child: CircularProgressIndicator())

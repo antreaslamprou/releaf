@@ -407,6 +407,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               body: FriendList(
                                 userId: widget.userId,
                                 isEditable: widget.userId == null,
+                                isPage: true,
                               ),
                             ),
                           ),
