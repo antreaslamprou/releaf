@@ -297,17 +297,19 @@ class _PostState extends State<Post> {
               ValueListenableBuilder<bool>(
                 valueListenable: commentsController.isCommentsOpen,
                 builder: (_, isCommentsOpen, _) {
-                  return isCommentsOpen
-                      ? Transform.translate(
-                          offset: const Offset(0, -10),
-                          child: FractionallySizedBox(
+                  return AnimatedSize(
+                    duration: const Duration(milliseconds: 250),
+                    child: isCommentsOpen
+                        ? FractionallySizedBox(
                             widthFactor: 1,
                             child: CommentsSection(
                               postId: widget.postData['id'],
                             ),
+                          )
+                        : const Card(
+                            child: FractionallySizedBox(widthFactor: 1),
                           ),
-                        )
-                      : const SizedBox();
+                  );
                 },
               ),
             ],
