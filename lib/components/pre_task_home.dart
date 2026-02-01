@@ -153,7 +153,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               // Post is being checked by AI
               child: Column(
                 children: [
-                  Text('Checking the image, please wait ...'),
+                  Text(
+                    'We are checking the quality of the uploaded photo. You will be automatically re-directed to your fresh post in a few moments, please wait ...',
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(height: 15),
                   imageErrorMessage.isEmpty
                       ? const CircularProgressIndicator()
@@ -190,8 +193,21 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                   width: 150,
                   height: 150,
                 ),
-                Text(dailyTask!['sdg'], style: context.text.titleSmall),
+                Text(
+                  dailyTask!['sdg'],
+                  textAlign: TextAlign.center,
+                  style: context.text.titleSmall,
+                ),
                 SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.pending_actions_rounded, size: 25),
+                    SizedBox(width: 10),
+                    Text(dailyTask!['title'], style: context.text.titleSmall),
+                  ],
+                ),
+                SizedBox(height: 20),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -205,22 +221,13 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                     ),
                   ),
                   child: Text(
-                    'Learn more about this SDG here!',
+                    'Learn more about this task & SDG here!',
                     style: context.text.labelMedium,
                   ),
                 ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.pending_actions_rounded, size: 25),
-                    SizedBox(width: 10),
-                    Text(dailyTask!['title'], style: context.text.titleSmall),
-                  ],
-                ),
                 SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).push(
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const TemplateSinglePage(
                         title: 'Suggest a Task',
@@ -228,10 +235,14 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                       ),
                     ),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   child: Text(
-                    'Join the team! Suggest a task here!',
+                    'Grow ReLeaf Impact - Suggest a new challenge!',
                     textAlign: TextAlign.center,
-                    style: context.text.labelMedium,
                   ),
                 ),
                 SizedBox(height: 15),

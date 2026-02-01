@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/comments_section.dart';
+import 'package:releaf/components/task.dart';
 import 'package:releaf/controllers/comments_controller.dart';
 import 'package:releaf/controllers/likes_controller.dart';
 import 'package:releaf/controllers/saves_controller.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
 import 'package:releaf/pages/profile_page.dart';
+import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/report_service.dart';
 import 'package:releaf/services/user_service.dart';
@@ -191,9 +194,21 @@ class _PostState extends State<Post> {
                               radius: 20,
                             ),
                             SizedBox(width: 10),
-                            Text(
-                              userData!["username"],
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userData!['username'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  widget.postData['date'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
                             ),
                             Spacer(),
                             if (widget.isReportable)
@@ -209,15 +224,7 @@ class _PostState extends State<Post> {
                         Conversions.baseToImage(widget.postData['image']),
                         fit: BoxFit.cover,
                       ),
-                      const SizedBox(height: 5),
-                      if (widget.postData['description'] != '')
-                        Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            Text(widget.postData['description'] ?? ''),
-                          ],
-                        ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Row(
                         children: [
                           Icon(Icons.favorite, color: Colors.red, size: 18),
@@ -227,6 +234,31 @@ class _PostState extends State<Post> {
                           }),
                         ],
                       ),
+                      SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TemplateSinglePage(
+                              title: 'Task ${widget.postData['date']}',
+                              body: Task(
+                                taskTitle: widget.postData['task'],
+                                date: widget.postData['date'],
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          '${widget.postData['sdg']} | ${widget.postData['task']}',
+                          style: context.text.labelMedium,
+                        ),
+                      ),
+                      if (widget.postData['description'] != '')
+                        Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Text(widget.postData['description']),
+                          ],
+                        ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

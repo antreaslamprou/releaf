@@ -110,11 +110,15 @@ class PostService {
     String date = Conversions.getNowString();
 
     try {
+      final task = await _taskService.getDailyTask();
       final base64img = await Conversions.imageToBase(image);
       await _database.ref('posts/$uid/$date').set({
         'id': '${uid}_$date',
         'image': base64img,
         'description': descritpion,
+        'date': date,
+        'task': task['title'],
+        'sdg': task['sdg'],
       });
 
       // Update the all related data like users last post, hotstreaks, points,

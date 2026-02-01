@@ -128,7 +128,8 @@ class _SuggestTaskState extends State<SuggestTask> {
                 child: Column(
                   children: [
                     Text(
-                      'Please complete the information below regarding your idea:',
+                      'Complete the information below regarding your idea and get 10 points once your task is approved!',
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 15),
                     TextFormField(
