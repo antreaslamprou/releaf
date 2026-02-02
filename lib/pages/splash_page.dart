@@ -53,8 +53,8 @@ class _SplashPageState extends State<SplashPage> {
       if (!isNetworkConnected) {
         if (!mounted) return;
         Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => NoNetworkPage()));
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => NoNetworkPage()));
         return;
       }
     }
