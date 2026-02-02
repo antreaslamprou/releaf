@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
@@ -39,12 +40,14 @@ class _SplashPageState extends State<SplashPage> {
   // Redirect to the correct path depending on wether the user is logged in or
   // not, if the user is logged in, initialize the providers
   Future<void> init() async {
-    // App doesnt have access to network
-    bool isNetworkConnected = await hasInternet();
-    if (!isNetworkConnected) {
-      if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/no-network');
-      return;
+    if (!kIsWeb) {
+      // App doesnt have access to network
+      bool isNetworkConnected = await hasInternet();
+      if (!isNetworkConnected) {
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, '/no-network');
+        return;
+      }
     }
 
     // Get providers
