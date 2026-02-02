@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:releaf/pages/register_page.dart';
+import 'package:releaf/pages/splash_page.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
@@ -50,7 +52,9 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/splash');
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => SplashPage()));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-credential') {
           Snackbar.show(
@@ -128,9 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, '/register');
-                      },
+                      onTap: () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => RegisterPage()),
+                      ),
                       child: Text(
                         'New to ReLeaf? Register here!',
                         style: context.text.labelMedium,

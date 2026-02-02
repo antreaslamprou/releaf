@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
 class TemplateSinglePage extends StatelessWidget {
-  const TemplateSinglePage({
-    super.key,
-    required this.title,
-    required this.body,
-  });
+  const TemplateSinglePage({super.key, this.title = '', required this.body});
 
   final String title;
   final Widget body;

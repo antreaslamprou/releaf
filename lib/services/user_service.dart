@@ -84,32 +84,36 @@ class UserService {
     final String uid = getUserUID();
     if (uid.isEmpty) return false;
 
-    // Remove any friends connections
-    final friendsList = await getFriends();
-    if (friendsList.isNotEmpty) {
-      for (final friendId in friendsList) {
-        removeFriend(friendId);
+    try {
+      // Remove any friends connections
+      final friendsList = await getFriends();
+      if (friendsList.isNotEmpty) {
+        for (final friendId in friendsList) {
+          removeFriend(friendId);
+        }
       }
+
+      // Remove any incoming or outgoing friend requests
+      final friendRequestService = FriendRequestService();
+      await friendRequestService.deleteRequest(receiverId: uid);
+      await friendRequestService.deleteRequest(senderId: uid);
+
+      // Remove any posts
+      final postService = PostService();
+      await postService.deletePosts();
+
+      // Remove reports
+      final reportService = ReportService();
+      await reportService.deleteReports();
+
+      // Remove the user from the database and auth system
+      await _database.ref('users/$uid').remove();
+      await FirebaseAuth.instance.currentUser!.delete();
+
+      return true;
+    } on FirebaseAuthException {
+      return false;
     }
-
-    // Remove any incoming or outgoing friend requests
-    final friendRequestService = FriendRequestService();
-    await friendRequestService.deleteRequest(receiverId: uid);
-    await friendRequestService.deleteRequest(senderId: uid);
-
-    // Remove any posts
-    final postService = PostService();
-    await postService.deletePosts();
-
-    // Remove reports
-    final reportService = ReportService();
-    await reportService.deleteReports();
-
-    // Remove the user from the database and auth system
-    await _database.ref('users/$uid').remove();
-    await FirebaseAuth.instance.currentUser!.delete();
-
-    return true;
   }
 
   // Gets the first 10 users ordered by points

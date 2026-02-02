@@ -7,8 +7,9 @@ Future<void> showFullModal(
   String title,
   String description,
   String buttonText,
-  VoidCallback onTap,
-) async {
+  VoidCallback onTap, {
+  isConfirmRed = false,
+}) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
@@ -28,7 +29,10 @@ Future<void> showFullModal(
               Navigator.of(context).pop();
               onTap();
             },
-            child: Text(buttonText),
+            child: Text(
+              buttonText,
+              style: TextStyle(color: isConfirmRed ? Colors.red : null),
+            ),
           ),
         ],
       );

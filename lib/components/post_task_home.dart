@@ -155,9 +155,12 @@ class _PostTaskHomeState extends State<PostTaskHome> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                    child: Text(
-                      'Grow ReLeaf Impact - Suggest a new challenge!',
-                      textAlign: TextAlign.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Grow ReLeaf Impact\nSuggest a new challenge!',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                   SizedBox(height: 15),

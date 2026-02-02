@@ -154,7 +154,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               child: Column(
                 children: [
                   Text(
-                    'We are checking the quality of the uploaded photo. You will be automatically re-directed to your fresh post in a few moments, please wait ...',
+                    'We are checking the quality of the uploaded photo. You will be automatically re-directed to your fresh post in a few moments.',
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 15),
@@ -240,9 +240,12 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  child: Text(
-                    'Grow ReLeaf Impact - Suggest a new challenge!',
-                    textAlign: TextAlign.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      'Grow ReLeaf Impact\nSuggest a new challenge!',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 SizedBox(height: 15),
@@ -252,13 +255,18 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                 ),
                 SizedBox(height: 15),
                 CountdownTimer(),
-                SizedBox(height: 15),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                    ),
+                    onPressed: _openCamera,
+                    child: Icon(Icons.camera_alt, size: 30),
                   ),
-                  onPressed: _openCamera,
-                  child: Icon(Icons.camera_alt, size: 30),
                 ),
               ],
             )

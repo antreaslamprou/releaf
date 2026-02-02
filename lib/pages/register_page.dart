@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:releaf/pages/login_page.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
@@ -103,8 +104,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
         if (!mounted) return;
         Snackbar.show(context, 'Register Successful!');
-
-        Navigator.pushReplacementNamed(context, '/login');
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
       } on FirebaseException catch (e) {
         Snackbar.show(context, 'Register Failed: ${e.message}');
       } finally {
@@ -231,9 +233,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      },
+                      onTap: () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => LoginPage()),
+                      ),
                       child: Text(
                         'Already a member? Log in here!',
                         style: context.text.labelMedium,

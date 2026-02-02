@@ -1,14 +1,21 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/pages/base_page.dart';
+import 'package:releaf/pages/login_page.dart';
+import 'package:releaf/pages/no_network_page.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
 import 'package:releaf/providers/text_scale_provider.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/theme_provider.dart';
+import 'package:releaf/utils/snackbar.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
+  const SplashPage({super.key, this.deleteUser = false});
+
+  final bool deleteUser;
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -43,7 +50,9 @@ class _SplashPageState extends State<SplashPage> {
     bool isNetworkConnected = await hasInternet();
     if (!isNetworkConnected) {
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/no-network');
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => NoNetworkPage()));
       return;
     }
 
@@ -54,7 +63,15 @@ class _SplashPageState extends State<SplashPage> {
     final dailyPostProvider = context.read<DailyPostProvider>();
     final avatarProvider = context.read<AvatarProvider>();
 
-    // User comes from log out or user didnt log in yet
+    //User needs to be deleted
+    if (widget.deleteUser) {
+      final userService = UserService();
+      await userService.deleteUser();
+      if (!mounted) return;
+      Snackbar.show(context, 'Account deleted.');
+    }
+
+    // User comes from log out / user didnt log in yet / user deleted
     final uid = _userService.getUserUID();
     if (uid.isEmpty) {
       context.read<TextScaleProvider>().reset();
@@ -62,7 +79,9 @@ class _SplashPageState extends State<SplashPage> {
       context.read<AvatarProvider>().reset();
       context.read<ThemeProvider>().reset();
 
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
       return;
     }
 
@@ -75,7 +94,9 @@ class _SplashPageState extends State<SplashPage> {
     await _userService.checkHotstreaks();
 
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, '/home');
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => BasePage()));
   }
 
   // Show the ReLeaf logo while the process is done in the background
@@ -83,11 +104,18 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset(
-          'assets/images/logo.png',
-          width: 100,
-          height: 100,
-          fit: BoxFit.cover,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 10),
+            Text('ReLeaf', style: context.text.titleMedium),
+          ],
         ),
       ),
     );

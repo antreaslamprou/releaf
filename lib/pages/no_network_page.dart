@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/pages/splash_page.dart';
 
 class NoNetworkPage extends StatelessWidget {
   const NoNetworkPage({super.key});
@@ -50,8 +51,9 @@ class NoNetworkPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () =>
-                  Navigator.pushReplacementNamed(context, '/splash'),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => SplashPage()),
+              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

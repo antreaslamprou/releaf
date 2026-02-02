@@ -5,11 +5,12 @@ import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/friend_list.dart';
 import 'package:releaf/components/full_modal.dart';
+import 'package:releaf/components/posts_grid.dart';
 import 'package:releaf/components/user_badges.dart';
-import 'package:releaf/components/user_posts.dart';
 import 'package:releaf/components/edit_profile.dart';
 import 'package:releaf/components/saved_posts.dart';
 import 'package:releaf/components/suggested_tasks.dart';
+import 'package:releaf/pages/splash_page.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/providers/avatar_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
@@ -39,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Data holders
   Map<String, dynamic>? userData;
+  Map<String, dynamic>? userPosts;
   int totalPosts = 0;
   num totalBadges = 0;
   bool isFriend = false;
@@ -89,6 +91,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final incoming = await _friendRequestService.getIncomingFriendRequest();
     final isIncoming = canBeAdded && incoming.contains(widget.userId);
 
+    // User Posts
+    final posts = await _postService.getPosts(uid: widget.userId);
+
     setState(() {
       isFriend = isFriendTemp;
       isFriendable = canBeAdded;
@@ -98,6 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
       totalPosts = postsNumber;
       totalBadges = badgesNumber;
       isLoading = false;
+      userPosts = posts;
     });
   }
 
@@ -171,7 +177,10 @@ class _ProfilePageState extends State<ProfilePage> {
       await FirebaseAuth.instance.signOut();
 
       if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, '/splash', (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => SplashPage()),
+        (route) => false,
+      );
     } catch (e) {
       Snackbar.show(context, 'Error With Logging Out: $e');
     }
@@ -210,18 +219,6 @@ class _ProfilePageState extends State<ProfilePage> {
   void openMore(BuildContext context) {
     final List<BottomAction> actions = [
       BottomAction(
-        icon: Icons.bookmark_rounded,
-        label: 'Saved Posts',
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => const TemplateSinglePage(
-              title: 'Saved Posts',
-              body: SavedPosts(),
-            ),
-          ),
-        ),
-      ),
-      BottomAction(
         icon: Icons.star_rounded,
         label: 'My Suggestions',
         onTap: () => Navigator.of(context).push(
@@ -234,9 +231,50 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       BottomAction(
+        icon: Icons.bookmark_rounded,
+        label: 'Saved Posts',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const TemplateSinglePage(
+              title: 'Saved Posts',
+              body: SavedPosts(),
+            ),
+          ),
+        ),
+      ),
+      BottomAction(
+        icon: Icons.create,
+        label: 'Edit Profile',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) =>
+                TemplateSinglePage(title: 'Edit Profile', body: EditProfile()),
+          ),
+        ),
+      ),
+      BottomAction(
+        icon: Icons.logout_rounded,
+        label: 'Logout',
+        onTap: () => showFullModal(
+          context,
+          'Logout',
+          'Are you sure you want to logout from your account?',
+          'Logout',
+          () => logout(),
+          isConfirmRed: true,
+        ),
+      ),
+      BottomAction(
         icon: Icons.delete,
         label: 'Delete Account',
-        onTap: showDeleteAccountDialog,
+        onTap: () => showFullModal(
+          context,
+          'Delete Account',
+          'Are you sure you want to delete your account?\nThis action cannot be reverted.',
+          'Delete',
+          () => deleteAccount(),
+          isConfirmRed: true,
+        ),
         isRed: true,
       ),
     ];
@@ -244,52 +282,12 @@ class _ProfilePageState extends State<ProfilePage> {
     showBottomActions(context, actions);
   }
 
-  // Shows a dialog with the delete account warning, gives the option to proceed
-  // or cancel
-  Future<void> showDeleteAccountDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Delete Account'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Are you sure you want to delete your account?'),
-                Text('This action cannot be reverted.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Delete', style: TextStyle(color: Colors.redAccent)),
-              onPressed: () {
-                Navigator.of(context).pop();
-                deleteAccount();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // Deletes all user related data and resets the providers
-  void deleteAccount() async {
-    final isOkay = await _userService.deleteUser();
-
-    if (!mounted) return;
-    if (!isOkay) return Snackbar.show(context, 'Error With Deleting Account');
-
-    Snackbar.show(context, 'Account deleted.');
-    logout();
+  void deleteAccount() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => SplashPage(deleteUser: true)),
+      (route) => false,
+    );
   }
 
   // Show the profile page which contains the current user data
@@ -321,11 +319,78 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-                  if (!isFriend)
-                    IconButton(
-                      onPressed: () => openMore(context),
-                      icon: Icon(Icons.menu_rounded, size: 25),
-                    ),
+                  // Current User Profile
+                  !isFriend
+                      ? IconButton(
+                          onPressed: () => openMore(context),
+                          icon: Icon(Icons.menu_rounded, size: 25),
+                        )
+                      // Outgoing Request User Profile
+                      : isOutgoingPending
+                      ? IconButton(
+                          onPressed: () => showFullModal(
+                            context,
+                            'Remove Friend Request',
+                            'Are you sure you want to delete the friend request to @${userData!['username']}?',
+                            'Remove',
+                            () => cancelOutgoingRequest(),
+                            isConfirmRed: true,
+                          ),
+                          icon: Icon(Icons.cancel_rounded),
+                        )
+                      // Incoming Request User Profile
+                      : isIncomingPending
+                      ? Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              child: GestureDetector(
+                                onTap: () => showFullModal(
+                                  context,
+                                  'Accept Friend Request',
+                                  'Are you sure you want accept the friend request from @${userData!['username']}?',
+                                  'Accept',
+                                  () => acceptIncomingRequest(),
+                                ),
+                                child: Icon(Icons.check_circle_rounded),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: GestureDetector(
+                                onTap: () => showFullModal(
+                                  context,
+                                  'Reject Friend Request',
+                                  'Are you sure you want reject the friend request from @${userData!['username']}?',
+                                  'Reject',
+                                  () => cancelIncomingRequest(),
+                                  isConfirmRed: true,
+                                ),
+                                child: Icon(Icons.cancel_rounded),
+                              ),
+                            ),
+                          ],
+                        )
+                      // No Relation User Profile
+                      : isFriendable
+                      ? IconButton(
+                          onPressed: addFriend,
+                          icon: Icon(Icons.person_add_rounded),
+                        )
+                      // Friend Profile
+                      : IconButton(
+                          onPressed: () => showFullModal(
+                            context,
+                            'Remove Friend',
+                            'Are you sure you want to remove @${userData!['username']} from your friends list?',
+                            'Unfriend',
+                            () => unfriend(),
+                            isConfirmRed: true,
+                          ),
+                          icon: Icon(Icons.person_off),
+                        ),
                 ],
               ),
               leading: IconButton(
@@ -364,14 +429,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => TemplateSinglePage(
-                              title: 'Posts',
-                              body: UserPosts(userId: widget.userId),
-                            ),
-                          ),
-                        ),
+                        onTap: () {},
                         child: Column(
                           children: [
                             Text(
@@ -447,174 +505,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 15),
+                    padding: EdgeInsetsGeometry.only(top: 15),
                     child: Divider(),
                   ),
-                  !isFriend
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => TemplateSinglePage(
-                                    title: 'Edit Profile',
-                                    body: EditProfile(),
-                                  ),
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.create),
-                                  SizedBox(width: 7),
-                                  Text('EDIT PROFILE'),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: logout,
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: Colors.redAccent,
-                                foregroundColor: Colors.black,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.logout_rounded),
-                                  SizedBox(width: 5),
-                                  Text('LOGOUT'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : isOutgoingPending
-                      ? Column(
-                          children: [
-                            Text('Pending Outgoing Friend Request'),
-                            SizedBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: cancelOutgoingRequest,
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.close),
-                                      SizedBox(width: 10),
-                                      Text('CANCEL REQUEST'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : isIncomingPending
-                      ? Column(
-                          children: [
-                            Text('Pending Incoming Friend Request'),
-                            SizedBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: acceptIncomingRequest,
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.check_rounded),
-                                      SizedBox(width: 10),
-                                      Text('ACCEPT'),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                ElevatedButton(
-                                  onPressed: cancelIncomingRequest,
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.close),
-                                      SizedBox(width: 10),
-                                      Text('CANCEL'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : isFriendable
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: addFriend,
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person_add_rounded),
-                                  SizedBox(width: 10),
-                                  Text('ADD FRIEND'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => showFullModal(
-                                context,
-                                'Remove Friend',
-                                'Are you sure you want to remove this friend?\nThis action cannot be undone.',
-                                'Unfriend',
-                                () => unfriend(),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: Colors.redAccent,
-                                foregroundColor: Colors.black,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person_off),
-                                  SizedBox(width: 10),
-                                  Text('REMOVE FRIEND'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                  PostsGrid(posts: userPosts),
                 ],
               ),
             ),
