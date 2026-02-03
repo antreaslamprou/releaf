@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:releaf/classes/user_image.dart';
 import 'package:releaf/components/countdown_timer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:releaf/components/task.dart';
@@ -30,7 +32,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
   // Data holders
   Map<dynamic, dynamic>? dailyTask;
   final ImagePicker _picker = ImagePicker();
-  File? _image;
+  UserImage? _image;
   late TextEditingController _postDescriptionController;
   String imageErrorMessage = '';
   bool isPosting = false;
@@ -71,9 +73,17 @@ class _PreTaskHomeState extends State<PreTaskHome> {
       source: ImageSource.camera,
     );
     if (cameraImage == null) return;
-    setState(() {
-      _image = File(cameraImage.path);
-    });
+
+    if (kIsWeb) {
+      final bytes = await cameraImage.readAsBytes();
+      setState(() {
+        _image = UserImage.web(bytes);
+      });
+    } else {
+      setState(() {
+        _image = UserImage.mobile(File(cameraImage.path));
+      });
+    }
   }
 
   // Removes the saved image
@@ -274,7 +284,9 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               // Page with post image and description
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.file(_image!, width: 300, height: 300),
+                _image!.isWeb
+                    ? Image.memory(_image!.bytes!, width: 300, height: 300)
+                    : Image.file(_image!.file!, width: 300, height: 300),
                 SizedBox(height: 20),
                 TextField(
                   controller: _postDescriptionController,

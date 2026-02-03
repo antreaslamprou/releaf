@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttermoji/fluttermoji.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:releaf/classes/user_image.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 
@@ -56,11 +57,13 @@ class AvatarProvider extends ChangeNotifier {
       return;
     }
 
+    final bytes = await picked.readAsBytes();
+    UserImage image = kIsWeb
+        ? UserImage.web(bytes)
+        : UserImage.mobile(File(picked.path));
+
     avatarType = 'Image';
-    avatarImage = await Conversions.imageToBase(
-      File(picked.path),
-      minWidth: 100,
-    );
+    avatarImage = await Conversions.userImageToBase(image, minWidth: 100);
 
     String uid = _userService.getUserUID();
     await FirebaseDatabase.instance.ref('users/$uid/avatar_type').set('Image');

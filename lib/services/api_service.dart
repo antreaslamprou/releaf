@@ -1,9 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/classes/user_image.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 
 class ApiService {
   // Get important firebase services for public data
@@ -16,9 +16,12 @@ class ApiService {
     return apiKey;
   }
 
-  Future<String> analyzeImage(File imageFile) async {
+  Future<String> analyzeImage(UserImage imageFile) async {
     // Image as base and jpeg (api accepted format)
-    final base64Image = await Conversions.imageToBase(imageFile, isWebp: false);
+    final base64Image = await Conversions.userImageToBase(
+      imageFile,
+      isWebp: false,
+    );
 
     // Get API key from database
     final apiKey = await ApiService().getAiApiKey();
@@ -74,7 +77,6 @@ class ApiService {
         'HTTP-Referer':
             'https://releaf.app', // Dummy domain to show on OpenRouter
         'X-Title': 'ReLeaf',
-        'X-Description': 'Task verification using AI',
       },
       body: jsonEncode({
         "model": "allenai/molmo-2-8b:free",
