@@ -79,7 +79,7 @@ class ApiService {
         'X-Title': 'ReLeaf',
       },
       body: jsonEncode({
-        "model": "allenai/molmo-2-8b:free",
+        "model": "nvidia/nemotron-nano-12b-v2-vl:free",
         "messages": [
           {
             "role": "user",
