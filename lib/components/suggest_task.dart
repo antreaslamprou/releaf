@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releaf/components/sdg_links.dart';
 import 'package:releaf/services/sdgs_service.dart';
 import 'package:releaf/services/suggested_task_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
@@ -163,13 +164,24 @@ class _SuggestTaskState extends State<SuggestTask> {
                         selectedSdgError!,
                         style: TextStyle(color: Colors.red),
                       ),
-                    SizedBox(height: 15),
-                    Image.asset(
-                      'assets/images/sdgs.png',
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                    SizedBox(height: 20),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(
+                            text:
+                                'Want to learn more about each SDG? Access in browser ',
+                          ),
+                          TextSpan(
+                            text: 'https://sdgs.un.org/goals',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const TextSpan(text: ' or tap on the links below!'),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
+                    SdgLinks(),
                     TextFormField(
                       controller: _descriptionController,
                       validator: Validators.validateNotEmpty,

@@ -5,16 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:releaf/classes/user_image.dart';
 import 'package:releaf/components/countdown_timer.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:releaf/components/task.dart';
-import 'package:releaf/pages/template_single_page.dart';
+import 'package:releaf/components/task_home.dart';
 import 'package:releaf/providers/daily_post_provider.dart';
-import 'package:releaf/components/suggest_task.dart';
 import 'package:releaf/services/api_service.dart';
 import 'package:releaf/services/post_service.dart';
 import 'package:releaf/services/task_service.dart';
-import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
-import 'package:releaf/extensions/text_theme_x.dart';
 
 class PreTaskHome extends StatefulWidget {
   const PreTaskHome({super.key});
@@ -88,10 +84,10 @@ class _PreTaskHomeState extends State<PreTaskHome> {
 
   // Removes the saved image
   void _deleteImage() {
+    _postDescriptionController.clear();
     setState(() {
       _image = null;
     });
-    Snackbar.show(context, 'Image deleted.');
   }
 
   // Creates a post using the saved image and the provided description, on
@@ -135,6 +131,8 @@ class _PreTaskHomeState extends State<PreTaskHome> {
 
       if (!mounted) return;
       Snackbar.show(context, message);
+
+      _postDescriptionController.dispose();
     }
   }
 
@@ -198,71 +196,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               // Home page pre task with timer
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/${dailyTask!['sdg_id']}.png',
-                  width: 150,
-                  height: 150,
-                ),
-                Text(
-                  dailyTask!['sdg'],
-                  textAlign: TextAlign.center,
-                  style: context.text.titleSmall,
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.pending_actions_rounded, size: 25),
-                    SizedBox(width: 10),
-                    Text(dailyTask!['title'], style: context.text.titleSmall),
-                  ],
-                ),
-                SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => TemplateSinglePage(
-                        title: 'Task ${Conversions.getNowString()}',
-                        body: Task(
-                          taskTitle: dailyTask!['title'],
-                          date: Conversions.getNowString(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Learn more about this task & SDG here!',
-                    style: context.text.labelMedium,
-                  ),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const TemplateSinglePage(
-                        title: 'Suggest a Task',
-                        body: SuggestTask(),
-                      ),
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      'Grow ReLeaf Impact\nSuggest a new challenge!',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
-                  textAlign: TextAlign.center,
-                ),
+                TaskHome(task: dailyTask!, isPosted: false),
                 SizedBox(height: 15),
                 CountdownTimer(),
                 Padding(

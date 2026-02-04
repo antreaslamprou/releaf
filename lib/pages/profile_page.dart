@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? userPosts;
   int totalPosts = 0;
   num totalBadges = 0;
-  bool isFriend = false;
+  bool isCurrentUser = true;
   bool isFriendable = false;
   bool isOutgoingPending = false;
   bool isIncomingPending = false;
@@ -72,18 +72,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Loads the data for the current user
   void loadData() async {
-    final isFriendTemp =
-        widget.userId != null && widget.userId != _userService.getUserUID();
-    final data = isFriendTemp
-        ? await _userService.getUserData(uid: widget.userId!)
-        : await _userService.getUserData();
+    final isCurrentUserTemp =
+        widget.userId == null || widget.userId == _userService.getUserUID();
+    final data = isCurrentUserTemp
+        ? await _userService.getUserData()
+        : await _userService.getUserData(uid: widget.userId!);
 
     final postsNumber = await _postService.getTotalPosts(uid: widget.userId);
     final badgesNumber = await _userService.getTotalBadges(uid: widget.userId);
 
     // Check if add friend button should appear
     final friends = await _userService.getFriends();
-    final canBeAdded = isFriendTemp && !friends.contains(widget.userId);
+    final canBeAdded = !isCurrentUserTemp && !friends.contains(widget.userId);
 
     final outgoing = await _friendRequestService.getOutgoingFriendRequest();
     final isOutgoing = canBeAdded && outgoing.contains(widget.userId);
@@ -95,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final posts = await _postService.getPosts(uid: widget.userId);
 
     setState(() {
-      isFriend = isFriendTemp;
+      isCurrentUser = isCurrentUserTemp;
       isFriendable = canBeAdded;
       isOutgoingPending = isOutgoing;
       isIncomingPending = isIncoming;
@@ -320,7 +320,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   // Current User Profile
-                  !isFriend
+                  isCurrentUser
                       ? IconButton(
                           onPressed: () => openMore(context),
                           icon: Icon(Icons.menu_rounded, size: 25),
@@ -407,16 +407,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   AvatarWidget(
                     key: ValueKey(
-                      isFriend
-                          ? userData!['avatar']
-                          : context.watch<AvatarProvider>().avatarImage,
+                      isCurrentUser
+                          ? context.watch<AvatarProvider>().avatarImage
+                          : userData!['avatar'],
                     ),
-                    avatarType: isFriend
-                        ? userData!['avatar_type']
-                        : context.watch<AvatarProvider>().avatarType,
-                    avatarImage: isFriend
-                        ? userData!['avatar']
-                        : context.watch<AvatarProvider>().avatarImage,
+                    avatarType: isCurrentUser
+                        ? context.watch<AvatarProvider>().avatarType
+                        : userData!['avatar_type'],
+                    avatarImage: isCurrentUser
+                        ? context.watch<AvatarProvider>().avatarImage
+                        : userData!['avatar'],
                   ),
                   SizedBox(height: 25),
                   Text(
@@ -508,7 +508,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: EdgeInsetsGeometry.only(top: 15),
                     child: Divider(),
                   ),
-                  PostsGrid(posts: userPosts),
+                  PostsGrid(posts: userPosts, isReportable: !isCurrentUser),
                 ],
               ),
             ),

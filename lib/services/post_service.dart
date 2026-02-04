@@ -25,7 +25,19 @@ class PostService {
 
     if (!snapshot.exists) return null;
 
-    return Map<String, dynamic>.from(snapshot.value as Map);
+    final Map<String, dynamic> posts = Map<String, dynamic>.from(
+      snapshot.value as Map,
+    );
+
+    // Sort posts latest first
+    final sortedEntries = posts.entries.toList()
+      ..sort((a, b) {
+        final dateA = a.value['date'] as String;
+        final dateB = b.value['date'] as String;
+        return dateB.compareTo(dateA);
+      });
+
+    return Map.fromEntries(sortedEntries);
   }
 
   // Delete all posts from the current user

@@ -26,6 +26,7 @@ class _CommentsSectionState extends State<CommentsSection> {
   static const maxCommentsCount = 5;
   int displayCommentsCount = maxCommentsCount;
   bool isLoading = true;
+  bool isPosting = false;
 
   @override
   void initState() {
@@ -67,6 +68,8 @@ class _CommentsSectionState extends State<CommentsSection> {
   }
 
   Future<void> addComment() async {
+    if (_commentController.text.trim() == '') return;
+    setState(() => isPosting = true);
     final isOkay = await _postService.postComment(
       widget.postId,
       _commentController.text,
@@ -80,6 +83,7 @@ class _CommentsSectionState extends State<CommentsSection> {
     } else {
       Snackbar.show(context, 'Error with posting comment');
     }
+    setState(() => isPosting = false);
   }
 
   void showMoreComments() {
@@ -181,8 +185,11 @@ class _CommentsSectionState extends State<CommentsSection> {
                         decoration: InputDecoration(
                           labelText: 'Add Comment',
                           suffixIcon: IconButton(
-                            onPressed: addComment,
-                            icon: Icon(Icons.send),
+                            onPressed: isPosting ? null : addComment,
+                            icon: Icon(
+                              Icons.send,
+                              color: isPosting ? Colors.grey : null,
+                            ),
                           ),
                         ),
                       ),
