@@ -52,6 +52,7 @@ class ApiService {
             - Drugs includes visible drugs or clear use of drugs.
         - If nudity or violence is detected, the image is automatically invalid.
         - If no nudity or violence is present, determine whether the image is valid proof that the task has been completed.
+        - The provided image may be accepted as valid proof of task completion only if the task can be clearly and logically inferred from the image (e.g., a person in motion → Exercise/Move Your Body), and the image must be a real, camera-captured photo, not an icon or AI-generated image.
         
         Answer rules:
         - Respond in ONE sentence only.
@@ -98,11 +99,9 @@ class ApiService {
     // If the api cant return an answer, return the error
     if (response.statusCode != 200) {
       final errorData = jsonDecode(response.body);
-      final provider =
-          errorData['error']?['metadata']?['provider_name'] ?? 'Unknown';
       final message = errorData['error']?['message'] ?? 'Unknown error';
 
-      return 'False - OpenRouter error from $provider: $message';
+      return 'False - OpenRouter error: $message';
     }
 
     final data = jsonDecode(response.body);
