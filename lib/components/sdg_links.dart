@@ -12,7 +12,6 @@ class SdgLinks extends StatelessWidget {
     final url = 'https://sdgs.un.org/goals/goal$sdgNo';
 
     if (kIsWeb) {
-      //TODO: Works locally but on firebase hosted page doesnt work
       final uri = Uri.parse(url);
       await launchUrl(uri, webOnlyWindowName: '_blank');
     } else {
