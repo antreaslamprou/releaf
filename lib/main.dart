@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermoji/fluttermojiController.dart';
 import 'package:get/get.dart';
@@ -14,17 +15,22 @@ void main() async {
   // Ensures Firebase initializes first
   WidgetsFlutterBinding.ensureInitialized();
   // This config crashes the application, if the options is missing, it is fine
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCK53tyeHjONnKmlOcOYsaLAPoItMrTX8I",
-      appId: "releaf-e2afa",
-      messagingSenderId: "97602229252",
-      projectId: "releaf-e2afa",
-      databaseURL:
-          "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
-      storageBucket: "releaf-e2afa.appspot.com",
-    ),
-  );
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyCK53tyeHjONnKmlOcOYsaLAPoItMrTX8I",
+        appId: "releaf-e2afa",
+        messagingSenderId: "97602229252",
+        projectId: "releaf-e2afa",
+        databaseURL:
+        "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
+        storageBucket: "releaf-e2afa.appspot.com",
+      ),
+    );
+  }
+  else {
+    await Firebase.initializeApp();
+  }
 
   // Initializes the custom avatars controller
   Get.put(FluttermojiController());
