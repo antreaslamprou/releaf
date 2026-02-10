@@ -11,6 +11,27 @@ import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'app.dart';
 
+Widget _buildRunnableApp({
+  required bool isWeb,
+  required double webAppWidth,
+  required double webAppHeight,
+  required Widget app,
+}) {
+  if (!isWeb) {
+    return app;
+  }
+
+  return Center(
+    child: ClipRect(
+      child: SizedBox(
+        width: webAppWidth,
+        height: webAppHeight,
+        child: app,
+      ),
+    ),
+  );
+}
+
 void main() async {
   // Ensures Firebase initializes first
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,8 +57,8 @@ void main() async {
   Get.put(FluttermojiController());
 
   // Run app wrapped in the providers values
-  runApp(
-    MultiProvider(
+  runApp(_buildRunnableApp(
+    app: MultiProvider(
       // Create all providers
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
@@ -48,5 +69,8 @@ void main() async {
       ],
       child: const App(),
     ),
-  );
+    isWeb: kIsWeb,
+    webAppWidth: 480,
+    webAppHeight: 960,
+  ));
 }
