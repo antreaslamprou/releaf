@@ -4,10 +4,11 @@ import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/utils/conversions.dart';
 
 class PostsGrid extends StatelessWidget {
-  const PostsGrid({super.key, required this.posts});
+  const PostsGrid({super.key, required this.posts, this.isReportable = true});
 
   // Data holders
   final Map<String, dynamic>? posts;
+  final bool isReportable;
 
   // Shows the user badges if available, otherwise a warning message
   @override
@@ -27,8 +28,9 @@ class PostsGrid extends StatelessWidget {
         return GestureDetector(
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) =>
-                  TemplateSinglePage(body: SinglePost(postData: item)),
+              builder: (_) => TemplateSinglePage(
+                body: SinglePost(postData: item, isReportable: isReportable),
+              ),
             ),
           ),
           child: Image.memory(

@@ -35,7 +35,6 @@ Widget _buildRunnableApp({
 void main() async {
   // Ensures Firebase initializes first
   WidgetsFlutterBinding.ensureInitialized();
-  // This config crashes the application, if the options is missing, it is fine
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -44,12 +43,11 @@ void main() async {
         messagingSenderId: "97602229252",
         projectId: "releaf-e2afa",
         databaseURL:
-        "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
+            "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
         storageBucket: "releaf-e2afa.appspot.com",
       ),
     );
-  }
-  else {
+  } else {
     await Firebase.initializeApp();
   }
 

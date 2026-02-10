@@ -15,6 +15,9 @@ class Validators {
       return 'Please enter your full name';
     }
 
+    // Remove trailing spaces
+    value = value.trim();
+
     // Check if name is in correct format
     final nameRegex = RegExp(r'^(?=.{3,25}$)[A-Za-z]+(?: [A-Za-z]+)*$');
     if (!nameRegex.hasMatch(value)) {
@@ -31,6 +34,9 @@ class Validators {
       return 'Please enter a username';
     }
 
+    // Remove trailing spaces
+    value = value.trim();
+
     // Check if username is in correct format
     final usernameRegex = RegExp(r'^[a-z0-9_-]{3,20}$');
     if (!usernameRegex.hasMatch(value)) {
@@ -46,6 +52,9 @@ class Validators {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
+
+    // Remove trailing spaces
+    value = value.trim();
 
     // Check if email is in correct format
     final emailRegex = RegExp(
