@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/classes/user_image.dart';
+import 'package:releaf/utils/user_image.dart';
 import 'package:releaf/components/countdown_timer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:releaf/components/task_home.dart';

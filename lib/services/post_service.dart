@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:releaf/classes/user_image.dart';
+import 'package:releaf/utils/user_image.dart';
 import 'package:releaf/services/stats_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/services/user_service.dart';

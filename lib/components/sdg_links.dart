@@ -1,35 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:releaf/components/badge_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:releaf/utils/web_link.dart';
 
 class SdgLinks extends StatelessWidget {
   const SdgLinks({super.key});
-
-  // Opens the sdg link
-  Future<void> openLink(BuildContext context, int sdgNo) async {
-    final url = 'https://sdgs.un.org/goals/goal$sdgNo';
-
-    if (kIsWeb) {
-      final uri = Uri.parse(url);
-      await launchUrl(uri, webOnlyWindowName: '_blank');
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => Scaffold(
-            appBar: AppBar(),
-            body: WebViewWidget(
-              controller: WebViewController()
-                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                ..loadRequest(Uri.parse(url)),
-            ),
-          ),
-        ),
-      );
-    }
-  }
 
   // Shows the user badges if available, otherwise a warning message
   @override
@@ -47,7 +21,10 @@ class SdgLinks extends StatelessWidget {
         return Container(
           alignment: Alignment.center,
           child: GestureDetector(
-            onTap: () => openLink(context, index + 1),
+            onTap: () => WebLink.open(
+              context,
+              'https://sdgs.un.org/goals/goal${index + 1}',
+            ),
             child: BadgeWidget(number: index + 1),
           ),
         );

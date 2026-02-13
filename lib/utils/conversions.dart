@@ -1,7 +1,7 @@
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:releaf/classes/user_image.dart';
+import 'package:releaf/utils/user_image.dart';
 
 class Conversions {
   // Create a binary code from the image with predefined width, quality and

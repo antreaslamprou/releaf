@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:releaf/components/task.dart';
 import 'package:releaf/pages/template_single_page.dart';
 import 'package:releaf/components/suggest_task.dart';
+import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -47,6 +49,11 @@ class TaskHome extends StatelessWidget {
             ),
           ),
           style: ElevatedButton.styleFrom(
+            backgroundColor: context.read<ThemeProvider>().primaryColor,
+            foregroundColor:
+                context.read<ThemeProvider>().brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
