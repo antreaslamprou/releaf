@@ -76,7 +76,7 @@ flutter doctor
 ```sh
 git clone https://github.com/antreaslamprou/releaf.git
 cd releaf
-flutter build
+flutter pub get
 ```
 
 ### Configuration
