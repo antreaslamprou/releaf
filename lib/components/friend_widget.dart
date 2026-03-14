@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:releaf/components/avatar_widget.dart';
+import 'package:releaf/pages/profile_page.dart';
+import 'package:releaf/services/user_service.dart';
+
+class FriendWidget extends StatefulWidget {
+  const FriendWidget({
+    super.key,
+    required this.userUID,
+    required this.type,
+    required this.onButtonClick,
+    this.onExtraButtonClick,
+  });
+
+  // Widget parameters used to show and connect this widget with data and
+  // functionality
+  final String userUID;
+  final String type;
+  final VoidCallback onButtonClick;
+  final VoidCallback? onExtraButtonClick;
+
+  @override
+  State<FriendWidget> createState() => _FriendWidgetState();
+}
+
+class _FriendWidgetState extends State<FriendWidget> {
+  // Get important user defined services for fetching/altering user data
+  final _userService = UserService();
+
+  // Data holders and state variables
+  Map<dynamic, dynamic> userData = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
+  }
+
+  // Fetches the user data
+  void loadData() async {
+    Map<String, dynamic>? data = await _userService.getUserData(
+      uid: widget.userUID,
+    );
+
+    if (data.isEmpty) return;
+
+    setState(() {
+      userData = data;
+    });
+  }
+
+  // Once the user data are fetched, the user widget used in lists is available
+  @override
+  Widget build(BuildContext context) {
+    return userData.isEmpty
+        ? SizedBox()
+        : Padding(
+            padding: EdgeInsetsGeometry.symmetric(vertical: 15, horizontal: 5),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ProfilePage(userId: widget.userUID),
+                ),
+              ),
+              child: Row(
+                children: [
+                  AvatarWidget(
+                    key: ValueKey(userData['avatar']),
+                    avatarType: userData['avatar_type'],
+                    avatarImage: userData['avatar'],
+                    radius: 20,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    userData['username'],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  widget.type == 'List'
+                      ? IconButton(
+                          onPressed: widget.onButtonClick,
+                          icon: Icon(Icons.person_off),
+                        )
+                      : widget.type == 'In'
+                      ? Row(
+                          children: [
+                            IconButton(
+                              onPressed: widget.onButtonClick,
+                              icon: Icon(Icons.check_circle_rounded),
+                            ),
+                            IconButton(
+                              onPressed: widget.onExtraButtonClick,
+                              icon: Icon(Icons.cancel_rounded),
+                            ),
+                          ],
+                        )
+                      : widget.type == 'Out'
+                      ? IconButton(
+                          onPressed: widget.onButtonClick,
+                          icon: Icon(Icons.cancel_rounded),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+            ),
+          );
+  }
+}

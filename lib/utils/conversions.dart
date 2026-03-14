@@ -1,0 +1,73 @@
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'dart:typed_data';
+import 'dart:convert';
+import 'package:releaf/utils/user_image.dart';
+
+class Conversions {
+  // Create a binary code from the image with predefined width, quality and
+  // type of webp for storage optimizations and then encode the code into a
+  // database friendly string which is base64
+  static Future<String> userImageToBase(
+    UserImage image, {
+    int minWidth = 1080,
+    bool isWebp = true,
+  }) async {
+    Uint8List? compressedBytes;
+    if (image.isWeb) {
+      compressedBytes = await FlutterImageCompress.compressWithList(
+        image.bytes!,
+        minWidth: minWidth,
+        quality: 75,
+        format: isWebp ? CompressFormat.webp : CompressFormat.jpeg,
+        keepExif: false,
+      );
+    } else {
+      compressedBytes = await FlutterImageCompress.compressWithFile(
+        image.file!.absolute.path,
+        minWidth: minWidth,
+        quality: 75,
+        format: isWebp ? CompressFormat.webp : CompressFormat.jpeg,
+        keepExif: false,
+      );
+    }
+
+    if (compressedBytes == null) {
+      throw Exception('Image compression failed');
+    }
+
+    return base64Encode(compressedBytes);
+  }
+
+  // Make the string into a binaty code that can be then used to create an image
+  static Uint8List baseToImage(String baseCode) {
+    // If the string is corrupted, return the default avatar image
+    final isBase = RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(baseCode);
+    if (!isBase) return base64Decode(getDefaultAvatarBase());
+
+    return base64Decode(baseCode);
+  }
+
+  // String that shows the default avatar if then decoded to base64
+  static String getDefaultAvatarBase() {
+    return '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';
+  }
+
+  // Convert date to a string and make sure months and days are two digits
+  static String dateToString(DateTime date) {
+    String year = date.year.toString();
+    String month = date.month.toString().padLeft(2, '0');
+    String day = date.day.toString().padLeft(2, '0');
+
+    return '$year-$month-$day';
+  }
+
+  // Return current date in UTC
+  static DateTime getNow() {
+    return DateTime.now().toUtc();
+  }
+
+  // Return current date in UTC as string format
+  static String getNowString() {
+    return dateToString(getNow());
+  }
+}

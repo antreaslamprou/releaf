@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "97602229252",
+    "firebase_url": "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "releaf-e2afa",
+    "storage_bucket": "releaf-e2afa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97602229252:android:b98e9f67be600352a15151",
+        "android_client_info": {
+          "package_name": "com.example.releaf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97602229252-h0d9svu78qk7gkpou8mhmduemrro7qj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK53tyeHjONnKmlOcOYsaLAPoItMrTX8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97602229252-h0d9svu78qk7gkpou8mhmduemrro7qj5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

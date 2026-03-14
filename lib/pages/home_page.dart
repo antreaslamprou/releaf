@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/components/post_task_home.dart';
+import 'package:releaf/components/pre_task_home.dart';
+import 'package:releaf/providers/daily_post_provider.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  // Shows the correct widget depending on wether the user completed their daily
+  // task
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: context.watch<DailyPostProvider>().isLoading
+          ? const CircularProgressIndicator()
+          : context.watch<DailyPostProvider>().isDailyPosted
+          ? PostTaskHome()
+          : PreTaskHome(),
+    );
+  }
+}
