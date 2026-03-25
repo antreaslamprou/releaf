@@ -21,7 +21,6 @@ A gamified social media mobile application, that provides daily tasks to complet
   - [Configuration](#configuration)
 - [Usage](#usage)
 - [Development](#development)
-  - [Running Tests](#running-tests)
   - [Project Structure](#project-structure)
 - [Roadmap](#roadmap)
   - [Planned Features](#planned-features)
@@ -97,12 +96,6 @@ flutter run --release
 ---
 
 ## Development
-
-### Running Tests
-
-```sh
-test-command
-```
 
 ### Project Structure
 
