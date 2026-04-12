@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:releaf/extensions/text_theme_x.dart';
 import 'package:releaf/pages/base_page.dart';
 import 'package:releaf/pages/login_page.dart';
 import 'package:releaf/pages/no_network_page.dart';
@@ -111,13 +110,11 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/logo.png',
+              'assets/images/logo-releaf.png',
               width: 100,
               height: 100,
               fit: BoxFit.cover,
             ),
-            SizedBox(height: 10),
-            Text('ReLeaf', style: context.text.titleMedium),
           ],
         ),
       ),
