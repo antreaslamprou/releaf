@@ -198,15 +198,12 @@ class _PreTaskHomeState extends State<PreTaskHome> {
                   textAlign: TextAlign.center,
                   style: context.text.titleSmall,
                 ),
+
                 SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.pending_actions_rounded, size: 25),
-                    SizedBox(width: 10),
-                    Text(dailyTask!['title'], style: context.text.titleSmall),
-                  ],
-                ),
+                Icon(Icons.pending_actions_rounded, size: 25),
+                SizedBox(width: 10),
+                Text(dailyTask!['title']),
+
                 SizedBox(height: 20),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(

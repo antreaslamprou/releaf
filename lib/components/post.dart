@@ -221,8 +221,10 @@ class _PostState extends State<Post> {
                       ),
                       SizedBox(height: 20),
                       Image.memory(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.width,
                         Conversions.baseToImage(widget.postData['image']),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 10),
                       Row(

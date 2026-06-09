@@ -15,15 +15,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // This config crashes the application, if the options is missing, it is fine
   await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCK53tyeHjONnKmlOcOYsaLAPoItMrTX8I",
-      appId: "releaf-e2afa",
-      messagingSenderId: "97602229252",
-      projectId: "releaf-e2afa",
-      databaseURL:
-          "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
-      storageBucket: "releaf-e2afa.appspot.com",
-    ),
+    // options: FirebaseOptions(
+    //   apiKey: "AIzaSyCK53tyeHjONnKmlOcOYsaLAPoItMrTX8I",
+    //   appId: "releaf-e2afa",
+    //   messagingSenderId: "97602229252",
+    //   projectId: "releaf-e2afa",
+    //   databaseURL:
+    //       "https://releaf-e2afa-default-rtdb.europe-west1.firebasedatabase.app",
+    //   storageBucket: "releaf-e2afa.appspot.com",
+    // ),
   );
 
   // Initializes the custom avatars controller
