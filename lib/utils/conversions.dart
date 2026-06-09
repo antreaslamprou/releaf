@@ -1,24 +1,35 @@
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'dart:io';
+import 'package:releaf/utils/user_image.dart';
 
 class Conversions {
   // Create a binary code from the image with predefined width, quality and
   // type of webp for storage optimizations and then encode the code into a
   // database friendly string which is base64
-  static Future<String> imageToBase(
-    File file, {
+  static Future<String> userImageToBase(
+    UserImage image, {
     int minWidth = 1080,
     bool isWebp = true,
   }) async {
-    final compressedBytes = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      minWidth: minWidth,
-      quality: 75,
-      format: isWebp ? CompressFormat.webp : CompressFormat.jpeg,
-      keepExif: false,
-    );
+    Uint8List? compressedBytes;
+    if (image.isWeb) {
+      compressedBytes = await FlutterImageCompress.compressWithList(
+        image.bytes!,
+        minWidth: minWidth,
+        quality: 75,
+        format: isWebp ? CompressFormat.webp : CompressFormat.jpeg,
+        keepExif: false,
+      );
+    } else {
+      compressedBytes = await FlutterImageCompress.compressWithFile(
+        image.file!.absolute.path,
+        minWidth: minWidth,
+        quality: 75,
+        format: isWebp ? CompressFormat.webp : CompressFormat.jpeg,
+        keepExif: false,
+      );
+    }
 
     if (compressedBytes == null) {
       throw Exception('Image compression failed');

@@ -1,7 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:releaf/components/sdg_links.dart';
+import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/sdgs_service.dart';
 import 'package:releaf/services/suggested_task_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/utils/web_link.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
 
@@ -163,13 +168,32 @@ class _SuggestTaskState extends State<SuggestTask> {
                         selectedSdgError!,
                         style: TextStyle(color: Colors.red),
                       ),
-                    SizedBox(height: 15),
-                    Image.asset(
-                      'assets/images/sdgs.png',
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                    SizedBox(height: 20),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(
+                            text:
+                                'Want to learn more about the Sustainable Development Goals (SDGs)? Access all of them',
+                          ),
+                          TextSpan(
+                            text: ' here ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: context.read<ThemeProvider>().primaryColor,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => WebLink.open(
+                                context,
+                                'https://sdgs.un.org/goals',
+                              ),
+                          ),
+                          const TextSpan(text: 'or tap each one below!'),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
+                    SdgLinks(),
                     TextFormField(
                       controller: _descriptionController,
                       validator: Validators.validateNotEmpty,

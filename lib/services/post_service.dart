@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/utils/user_image.dart';
 import 'package:releaf/services/stats_service.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/services/user_service.dart';
-import 'dart:io';
 import 'package:releaf/utils/conversions.dart';
 
 class PostService {
@@ -25,7 +25,19 @@ class PostService {
 
     if (!snapshot.exists) return null;
 
-    return Map<String, dynamic>.from(snapshot.value as Map);
+    final Map<String, dynamic> posts = Map<String, dynamic>.from(
+      snapshot.value as Map,
+    );
+
+    // Sort posts latest first
+    final sortedEntries = posts.entries.toList()
+      ..sort((a, b) {
+        final dateA = a.value['date'] as String;
+        final dateB = b.value['date'] as String;
+        return dateB.compareTo(dateA);
+      });
+
+    return Map.fromEntries(sortedEntries);
   }
 
   // Delete all posts from the current user
@@ -103,7 +115,7 @@ class PostService {
 
   // Create a post in the database for the current user, parameters of the image
   // and description need to be provided
-  Future<String> createPost(File image, String descritpion) async {
+  Future<String> createPost(UserImage image, String descritpion) async {
     final uid = _userService.getUserUID();
     if (uid.isEmpty) return "Error: Invalid User";
 
@@ -111,7 +123,7 @@ class PostService {
 
     try {
       final task = await _taskService.getDailyTask();
-      final base64img = await Conversions.imageToBase(image);
+      final base64img = await Conversions.userImageToBase(image);
       await _database.ref('posts/$uid/$date').set({
         'id': '${uid}_$date',
         'image': base64img,

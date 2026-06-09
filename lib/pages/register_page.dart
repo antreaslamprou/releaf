@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:releaf/pages/login_page.dart';
+import 'package:releaf/pages/splash_page.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
@@ -102,11 +103,16 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             });
 
+        // Authenticate user and send to home
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+
         if (!mounted) return;
-        Snackbar.show(context, 'Register Successful!');
         Navigator.of(
           context,
-        ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+        ).pushReplacement(MaterialPageRoute(builder: (_) => SplashPage()));
       } on FirebaseException catch (e) {
         Snackbar.show(context, 'Register Failed: ${e.message}');
       } finally {
@@ -124,11 +130,6 @@ class _RegisterPageState extends State<RegisterPage> {
   // Checks the username on each character change in the username field,
   // informing the user if the currently inserted username is available
   Future<void> checkUsername(String value) async {
-    if (value.isEmpty) {
-      setState(() => _usernameError = 'Please enter a username');
-      return;
-    }
-
     bool usernameIsAvailable = await _userService.checkUsernameAvailability(
       value,
     );
@@ -173,6 +174,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _nameController,
                             validator: Validators.validateName,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                               labelText: 'Full Name',
                               errorMaxLines: 2,
@@ -182,7 +185,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _usernameController,
                             validator: Validators.validateUsername,
-                            onChanged: checkUsername,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            onChanged: (value) {
+                              if (Validators.validateUsername(value) == null) {
+                                checkUsername(value);
+                              }
+                            },
                             decoration: InputDecoration(
                               errorText: _usernameError,
                               labelText: 'Username',
@@ -193,6 +202,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _emailController,
                             validator: Validators.validateEmail,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(labelText: 'Email'),
                           ),
                           SizedBox(height: 10),
@@ -200,6 +211,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             obscureText: true,
                             controller: _passwordController,
                             validator: Validators.validatePassword,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(labelText: 'Password'),
                           ),
                           SizedBox(height: 10),
@@ -211,6 +224,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   value,
                                   _passwordController.text,
                                 ),
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                               labelText: 'Confirm Password',
                             ),

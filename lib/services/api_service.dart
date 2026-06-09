@@ -1,9 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:releaf/utils/user_image.dart';
 import 'package:releaf/services/task_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 
 class ApiService {
   // Get important firebase services for public data
@@ -16,9 +16,12 @@ class ApiService {
     return apiKey;
   }
 
-  Future<String> analyzeImage(File imageFile) async {
+  Future<String> analyzeImage(UserImage imageFile) async {
     // Image as base and jpeg (api accepted format)
-    final base64Image = await Conversions.imageToBase(imageFile, isWebp: false);
+    final base64Image = await Conversions.userImageToBase(
+      imageFile,
+      isWebp: false,
+    );
 
     // Get API key from database
     final apiKey = await ApiService().getAiApiKey();
@@ -49,6 +52,7 @@ class ApiService {
             - Drugs includes visible drugs or clear use of drugs.
         - If nudity or violence is detected, the image is automatically invalid.
         - If no nudity or violence is present, determine whether the image is valid proof that the task has been completed.
+        - The provided image may be accepted as valid proof of task completion only if the task can be clearly and logically inferred from the image (e.g., a person in motion → Exercise/Move Your Body), and the image must be a real, camera-captured photo, not an icon or AI-generated image.
         
         Answer rules:
         - Respond in ONE sentence only.
@@ -74,10 +78,9 @@ class ApiService {
         'HTTP-Referer':
             'https://releaf.app', // Dummy domain to show on OpenRouter
         'X-Title': 'ReLeaf',
-        'X-Description': 'Task verification using AI',
       },
       body: jsonEncode({
-        "model": "allenai/molmo-2-8b:free",
+        "model": "nvidia/nemotron-nano-12b-v2-vl:free",
         "messages": [
           {
             "role": "user",
@@ -96,11 +99,9 @@ class ApiService {
     // If the api cant return an answer, return the error
     if (response.statusCode != 200) {
       final errorData = jsonDecode(response.body);
-      final provider =
-          errorData['error']?['metadata']?['provider_name'] ?? 'Unknown';
       final message = errorData['error']?['message'] ?? 'Unknown error';
 
-      return 'False - OpenRouter error from $provider: $message';
+      return 'False - OpenRouter error: $message';
     }
 
     final data = jsonDecode(response.body);

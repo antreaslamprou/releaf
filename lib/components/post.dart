@@ -168,7 +168,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return userData == null
-        ? SizedBox()
+        ? const CircularProgressIndicator()
         : Column(
             children: [
               Card(
