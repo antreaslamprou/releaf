@@ -893,6 +893,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.23.5"
+  widget_zoom_pro:
+    dependency: "direct main"
+    description:
+      name: widget_zoom_pro
+      sha256: d3bbf31f351dc98ea72f81e1e521d6db54dfcac1a70f99a9577c4094118b5b91
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   xdg_directories:
     dependency: transitive
     description:

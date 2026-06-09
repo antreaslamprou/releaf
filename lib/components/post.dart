@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:releaf/components/avatar_widget.dart';
 import 'package:releaf/components/bottom_modal.dart';
 import 'package:releaf/components/comments_section.dart';
@@ -15,6 +16,7 @@ import 'package:releaf/services/report_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:widget_zoom_pro/widget_zoom_pro.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key, required this.postData, this.isReportable = true});
@@ -202,7 +204,11 @@ class _PostState extends State<Post> {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  widget.postData['date'],
+                                  DateFormat.yMMMd().format(DateTime(
+                                      int.parse(widget.postData['date'].split("-")[0]),
+                                      int.parse(widget.postData['date'].split("-")[1]),
+                                      int.parse(widget.postData['date'].split("-")[2])
+                                  )),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey.shade600,
@@ -220,11 +226,14 @@ class _PostState extends State<Post> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      Image.memory(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.width,
-                        Conversions.baseToImage(widget.postData['image']),
-                        fit: BoxFit.contain,
+                      WidgetZoomPro(
+                        heroAnimationTag: 'post_image_${widget.postData['id']}',
+                        zoomWidget: Image.memory(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.width,
+                          Conversions.baseToImage(widget.postData['image']),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Row(

@@ -64,9 +64,9 @@ class _UserBadgesState extends State<UserBadges> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 15,
-              mainAxisSpacing: 10,
+              mainAxisSpacing: 1,
               childAspectRatio:
-                  0.7 / context.read<TextScaleProvider>().scaleFactor,
+                  0.75 / context.read<TextScaleProvider>().scaleFactor,
             ),
             itemBuilder: (context, index) {
               final item = badges[index];
