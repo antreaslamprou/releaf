@@ -85,16 +85,18 @@ class _BasePageState extends State<BasePage> {
           ],
         ),
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: navItems
-            .map(
-              (item) => Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                child: SizedBox.expand(child: item['page'] as Widget),
-              ),
-            )
-            .toList(),
+      body: SafeArea(
+        child: IndexedStack(
+          index: _currentIndex,
+          children: navItems
+              .map(
+                (item) => Padding(
+                  padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+                  child: SizedBox.expand(child: item['page'] as Widget),
+                ),
+              )
+              .toList(),
+        ),
       ),
       bottomNavigationBar: NavigationBar(
         height: 55,

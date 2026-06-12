@@ -5,6 +5,10 @@ import 'package:releaf/components/incoming_friend_requests.dart';
 import 'package:releaf/components/outgoing_friend_requests.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
+enum _FriendsView { list, add, requests }
+
+enum _RequestsTab { incoming, outgoing }
+
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
 
@@ -13,55 +17,100 @@ class FriendsPage extends StatefulWidget {
 }
 
 class _FriendsPageState extends State<FriendsPage> {
-  // Data holder
-  String _page = 'List';
+  _FriendsView _view = _FriendsView.list;
+  Set<_RequestsTab> _selectedTab = {_RequestsTab.incoming};
 
-  // Changes the visible widget
-  void setPage(String page) {
-    setState(() {
-      _page = page;
-    });
-  }
+  void _goTo(_FriendsView view) => setState(() => _view = view);
 
-  // Shows the friends page which consist of one active widget of the friends
-  // list, add friend, incoming and outgoing requests. The widget change is done
-  // using a local variable
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsGeometry.only(top: 10),
-      child: _page == 'List'
-          ? Column(
+      padding: const EdgeInsets.only(top: 10),
+      child: switch (_view) {
+        _FriendsView.list => Column(
+          children: [
+
+            Wrap(
               children: [
-                Row(
-                  children: [
-                    SizedBox(width: 5),
-                    Text('Friend List', style: context.text.titleSmall),
-                    SizedBox(width: 10),
-                    IconButton(
-                      onPressed: () => setPage('Add'),
-                      icon: Icon(Icons.add_circle_outline_outlined),
-                    ),
-                    IconButton(
-                      onPressed: () => setPage('In'),
-                      icon: Icon(Icons.arrow_circle_down),
-                    ),
-                    IconButton(
-                      onPressed: () => setPage('Out'),
-                      icon: Icon(Icons.arrow_circle_up),
-                    ),
-                  ],
+                OutlinedButton(
+                  onPressed: () => _goTo(_FriendsView.add),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.person_add_alt_1, size: 18),
+                      SizedBox(width: 6),
+                      Text('Add Friend'),
+                    ],
+                  ),
                 ),
-                Expanded(child: FriendList()),
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  onPressed: () => _goTo(_FriendsView.requests),
+                  icon: const Icon(Icons.mail_outline, size: 18),
+                  label: const Text('Requests'),
+                ),
               ],
-            )
-          : _page == 'Add'
-          ? AddFriend(backFunction: () => setPage('List'))
-          : _page == 'In'
-          ? IncomingFriendRequests(backFunction: () => setPage('List'))
-          : _page == 'Out'
-          ? OutgoingFriendRequests(backFunction: () => setPage('List'))
-          : Text('Something went wrong'),
+            ),
+
+            SizedBox(height: 20,),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Text('Friend List', style: context.text.titleSmall),
+            ),
+
+            const Expanded(child: FriendList()),
+
+          ],
+        ),
+
+        _FriendsView.add => AddFriend(
+          backFunction: () => _goTo(_FriendsView.list),
+        ),
+
+        _FriendsView.requests => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => _goTo(_FriendsView.list),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  const SizedBox(width: 8),
+                  SegmentedButton<_RequestsTab>(
+                    segments: const [
+                      ButtonSegment(
+                        value: _RequestsTab.incoming,
+                        label: Text('Incoming'),
+                        icon: Icon(Icons.mark_email_unread),
+                      ),
+                      ButtonSegment(
+                        value: _RequestsTab.outgoing,
+                        label: Text('Outgoing'),
+                        icon: Icon(Icons.outbox_outlined),
+                      ),
+                    ],
+                    selected: _selectedTab,
+                    onSelectionChanged: (selection) =>
+                        setState(() => _selectedTab = selection),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: _selectedTab.contains(_RequestsTab.incoming)
+                  ? IncomingFriendRequests(
+                backFunction: () => _goTo(_FriendsView.list),
+              )
+                  : OutgoingFriendRequests(
+                backFunction: () => _goTo(_FriendsView.list),
+              ),
+            ),
+          ],
+        ),
+      },
     );
   }
 }

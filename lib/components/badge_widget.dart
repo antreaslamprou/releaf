@@ -39,7 +39,7 @@ class BadgeWidget extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(7),
             child: Image.asset(
               'assets/images/sdg$number.png',
               width: 75,

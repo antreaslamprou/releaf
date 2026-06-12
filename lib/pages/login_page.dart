@@ -6,6 +6,8 @@ import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
+import '../utils/theme.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -19,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool isLoading = false;
+  bool _obscurePassword = true;
 
   // Initialize all text controllers
   @override
@@ -105,26 +108,39 @@ class _LoginPageState extends State<LoginPage> {
                           TextFormField(
                             controller: _emailController,
                             validator: Validators.validateEmail,
-                            decoration: InputDecoration(labelText: 'Email'),
+                            decoration: inputDecoration(label: "Email address", icon: Icons.email, hint: "Enter your email address"),
                           ),
                           SizedBox(height: 10),
                           TextFormField(
-                            obscureText: true,
+                            obscureText: _obscurePassword,
                             controller: _passwordController,
                             validator: Validators.validatePassword,
-                            decoration: InputDecoration(labelText: 'Password'),
+                            decoration: inputDecoration(label: "Password", icon: Icons.lock, hint: "Enter your password").copyWith(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
                           ),
                           SizedBox(height: 20),
                           FractionallySizedBox(
                             widthFactor: 1,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
                               onPressed: handleLogin,
-                              child: Text('LOGIN'),
+                              child: Text('LOG IN'),
                             ),
                           ),
                         ],
@@ -146,4 +162,5 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 }

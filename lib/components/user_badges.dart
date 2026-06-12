@@ -55,30 +55,31 @@ class _UserBadgesState extends State<UserBadges> {
   // Shows the user badges if available, otherwise a warning message
   @override
   Widget build(BuildContext context) {
+    final scaleFactor = context.watch<TextScaleProvider>().scaleFactor;
+
     return isLoading
         ? const Center(child: CircularProgressIndicator())
-        : GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-            shrinkWrap: true,
-            itemCount: badges.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 1,
-              childAspectRatio:
-                  0.75 / context.read<TextScaleProvider>().scaleFactor,
-            ),
-            itemBuilder: (context, index) {
-              final item = badges[index];
-              return Container(
-                alignment: Alignment.center,
-                child: BadgeWidget(
-                  number: index + 1,
-                  progress: item['progress'],
-                  title: item['title'],
+        : SafeArea(
+          child: GridView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                shrinkWrap: true,
+                // physics: const NeverScrollableScrollPhysics(),
+                itemCount: badges.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 15,
+          mainAxisExtent: 225 * scaleFactor,
                 ),
-              );
-            },
+                itemBuilder: (context, index) {
+          final item = badges[index];
+          return BadgeWidget(
+            number: index + 1,
+            progress: item['progress'],
+            title: item['title'],
           );
+                },
+              ),
+        );
   }
 }

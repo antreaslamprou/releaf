@@ -6,6 +6,7 @@ import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/sdgs_service.dart';
 import 'package:releaf/services/suggested_task_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/utils/theme.dart';
 import 'package:releaf/utils/web_link.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
@@ -123,102 +124,106 @@ class _SuggestTaskState extends State<SuggestTask> {
   // an error message, otherwise show the task page with the data
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-      child: Center(
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Text(
-                      'Complete the information below regarding your idea and get 10 points once your task is approved!',
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: _titleController,
-                      validator: Validators.validateNotEmpty,
-                      decoration: InputDecoration(
-                        labelText: 'Title',
-                        hintText: 'eg. Recycle a plastic bottle',
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      isExpanded: true,
-                      validator: Validators.validateNotEmpty,
-                      decoration: InputDecoration(
-                        labelText: 'Sustainable Development Goal',
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      initialValue: selectedSdg,
-                      items: dropdownOptions,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedSdg = value;
-                          selectedSdgError = null;
-                        });
-                      },
-                    ),
-                    if (selectedSdgError != null)
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+        child: Center(
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
                       Text(
-                        selectedSdgError!,
-                        style: TextStyle(color: Colors.red),
+                        'Complete the information below regarding your idea and get 10 points once your task is approved!',
+                        textAlign: TextAlign.center,
                       ),
-                    SizedBox(height: 20),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(
-                            text:
-                                'Want to learn more about the Sustainable Development Goals (SDGs)? Access all of them',
-                          ),
-                          TextSpan(
-                            text: ' here ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: context.read<ThemeProvider>().primaryColor,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => WebLink.open(
-                                context,
-                                'https://sdgs.un.org/goals',
-                              ),
-                          ),
-                          const TextSpan(text: 'or tap each one below!'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    SdgLinks(),
-                    TextFormField(
-                      controller: _descriptionController,
-                      validator: Validators.validateNotEmpty,
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        hintText:
-                            'eg. Take an image of you recycling a plastic bottle',
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    FractionallySizedBox(
-                      widthFactor: 1,
-                      child: ElevatedButton(
-                        onPressed: postTask,
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
+                      SizedBox(height: 15),
+                      TextFormField(
+                        controller: _titleController,
+                        validator: Validators.validateNotEmpty,
+                        decoration: inputDecoration(
+                          label: 'Title',
+                          hint: 'e.g., Recycle a plastic bottle',
                         ),
-                        child: Text('SUBMIT'),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 20),
+                      DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        validator: Validators.validateNotEmpty,
+                        decoration: inputDecoration(label: 'Sustainable Development Goal').copyWith(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                        ),
+                        initialValue: selectedSdg,
+                        items: dropdownOptions,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSdg = value;
+                            selectedSdgError = null;
+                          });
+                        },
+                      ),
+                      if (selectedSdgError != null)
+                        Text(
+                          selectedSdgError!,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      SizedBox(height: 20),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            const TextSpan(
+                              text:
+                                  'Want to learn more about the Sustainable Development Goals (SDGs)? Access all of them',
+                            ),
+                            TextSpan(
+                              text: ' here ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: context.read<ThemeProvider>().primaryColor,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => WebLink.open(
+                                  context,
+                                  'https://sdgs.un.org/goals',
+                                ),
+                            ),
+                            const TextSpan(text: 'or tap each one below!'),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      SdgLinks(),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller: _descriptionController,
+                        validator: Validators.validateNotEmpty,
+                        decoration: inputDecoration(
+                          label: 'Description',
+                          hint:
+                              'e.g., Take an image of you recycling a plastic bottle',
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      FractionallySizedBox(
+                        widthFactor: 1,
+                        child: ElevatedButton(
+                          onPressed: postTask,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Text('SUBMIT'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }

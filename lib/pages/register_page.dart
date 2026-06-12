@@ -6,6 +6,7 @@ import 'package:releaf/pages/splash_page.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/utils/theme.dart';
 import 'package:releaf/utils/validators.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -150,114 +151,114 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16),
-          child: isLoading
-              ? CircularProgressIndicator()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/logo.png',
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.cover,
-                    ),
-                    SizedBox(height: 20),
-                    Text('ReLeaf', style: context.text.titleMedium),
-                    SizedBox(height: 20),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _nameController,
-                            validator: Validators.validateName,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                              labelText: 'Full Name',
-                              errorMaxLines: 2,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            controller: _usernameController,
-                            validator: Validators.validateUsername,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            onChanged: (value) {
-                              if (Validators.validateUsername(value) == null) {
-                                checkUsername(value);
-                              }
-                            },
-                            decoration: InputDecoration(
-                              errorText: _usernameError,
-                              labelText: 'Username',
-                              errorMaxLines: 3,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            controller: _emailController,
-                            validator: Validators.validateEmail,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(labelText: 'Email'),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            obscureText: true,
-                            controller: _passwordController,
-                            validator: Validators.validatePassword,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(labelText: 'Password'),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            obscureText: true,
-                            controller: _confirmPasswordController,
-                            validator: (value) =>
-                                Validators.validateConfirmPassword(
-                                  value,
-                                  _passwordController.text,
-                                ),
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          FractionallySizedBox(
-                            widthFactor: 1,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16),
+            child: isLoading
+                ? CircularProgressIndicator()
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/logo.png',
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 20),
+                      Text('ReLeaf', style: context.text.titleMedium),
+                      SizedBox(height: 20),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _nameController,
+                              validator: Validators.validateName,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              decoration: inputDecoration(label: "Full Name", hint: "Enter your full name", icon: Icons.person).copyWith(
+                                errorMaxLines: 2,
                               ),
-                              onPressed: handleRegister,
-                              child: const Text('REGISTER'),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 10),
+                            TextFormField(
+                              controller: _usernameController,
+                              validator: Validators.validateUsername,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              onChanged: (value) {
+                                if (Validators.validateUsername(value) == null) {
+                                  checkUsername(value);
+                                }
+                              },
+                              decoration: inputDecoration(label: "Username", hint: "Enter your username", icon: Icons.supervised_user_circle).copyWith(
+                                errorText: _usernameError,
+                                errorMaxLines: 3,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              controller: _emailController,
+                              validator: Validators.validateEmail,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              decoration: inputDecoration(label: "Email address", icon: Icons.email, hint: "Enter your email address"),
+                            ),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              obscureText: true,
+                              controller: _passwordController,
+                              validator: Validators.validatePassword,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              decoration: inputDecoration(label: "Password", icon: Icons.lock, hint: "Enter your password"),
+                            ),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              obscureText: true,
+                              controller: _confirmPasswordController,
+                              validator: (value) =>
+                                  Validators.validateConfirmPassword(
+                                    value,
+                                    _passwordController.text,
+                                  ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              decoration: inputDecoration(label: "Confirm Password", icon: Icons.lock, hint: "Confirm your password"),
+                            ),
+                            SizedBox(height: 20),
+                            FractionallySizedBox(
+                              widthFactor: 1,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                                onPressed: handleRegister,
+                                child: const Text('REGISTER'),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => LoginPage()),
+                      SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => LoginPage()),
+                        ),
+                        child: Text(
+                          'Already a member? Log in here!',
+                          style: context.text.labelMedium,
+                        ),
                       ),
-                      child: Text(
-                        'Already a member? Log in here!',
-                        style: context.text.labelMedium,
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+          ),
         ),
       ),
     );

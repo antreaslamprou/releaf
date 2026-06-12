@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:releaf/services/friend_request_service.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/utils/theme.dart';
 import 'package:releaf/utils/validators.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
@@ -118,12 +119,11 @@ class _AddFriendState extends State<AddFriend> {
                 child: TextFormField(
                   controller: _usernameController,
                   validator: Validators.validateUsername,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
+                  decoration: inputDecoration(label: 'Username').copyWith(
                     errorMaxLines: 3,
                     suffixIcon: IconButton(
                       onPressed: createFriendRequest,
-                      icon: Icon(Icons.add, size: 30),
+                      icon: Icon(Icons.supervised_user_circle_sharp, size: 30),
                     ),
                   ),
                 ),

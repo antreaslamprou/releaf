@@ -38,7 +38,7 @@ class _TaskHomeState extends State<TaskHome> {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 15, bottom: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -86,7 +86,7 @@ class _TaskHomeState extends State<TaskHome> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        'Complete the daily challenge by capturing a photo associated with today\'s Sustainability Development Goal. Press the camera button below to get started.',
+                        'Complete the daily challenge by capturing a photo associated with today\'s Sustainability Development Goal before the countdown runs out. Press the camera button below to get started.',
                         style: context.text.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.blue.shade800
