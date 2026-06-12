@@ -95,9 +95,11 @@ class _CalendarPageState extends State<CalendarPage> {
                 availableGestures: AvailableGestures.horizontalSwipe,
                 availableCalendarFormats: const {CalendarFormat.month: 'Month'},
                 calendarFormat: CalendarFormat.month,
+                startingDayOfWeek: StartingDayOfWeek.monday,
                 firstDay: DateTime.utc(2025, 10, 1),
                 lastDay: DateTime.utc(now.year, now.month, now.day),
                 focusedDay: _focusedDay,
+                daysOfWeekHeight: 20,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(() {
@@ -130,10 +132,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   },
                 ),
               ),
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(vertical: 20),
-                child: Divider(),
-              ),
+              Divider(),
               PostTaskHome(
                 key: UniqueKey(),
                 date: Conversions.dateToString(_selectedDay),

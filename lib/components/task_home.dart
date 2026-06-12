@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/task.dart';
 import 'package:releaf/pages/template_single_page.dart';
@@ -7,11 +12,23 @@ import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
 
-class TaskHome extends StatelessWidget {
+import '../utils/user_image.dart';
+import 'countdown_timer.dart';
+
+class TaskHome extends StatefulWidget {
   const TaskHome({super.key, required this.task, this.isPosted = true});
 
   final Map<dynamic, dynamic> task;
   final bool isPosted;
+
+  @override
+  State<TaskHome> createState() => _TaskHomeState();
+}
+
+class _TaskHomeState extends State<TaskHome> {
+
+  final ImagePicker _picker = ImagePicker();
+  UserImage? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +55,7 @@ class TaskHome extends StatelessWidget {
                   ),
                 ),
                 Image.asset(
-                  'assets/images/${task['sdg_id']}.png',
+                  'assets/images/${widget.task['sdg_id']}.png',
                   width: 140,
                   height: 140,
                 ),
@@ -55,31 +72,31 @@ class TaskHome extends StatelessWidget {
             //   ),
             // ),
             // Conditional Instruction Banner
-            if (!isPosted)
+            if (!widget.isPosted)
               Container(
-                margin: const EdgeInsets.only(bottom: 24),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withValues(alpha: 0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                  border: Border.all(color: Colors.blue.withValues(alpha: 150)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.camera_alt_outlined, color: Colors.amber),
+                    const Icon(Icons.info, color: Colors.blue),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
                         style: context.text.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
+                          color: Colors.blue.shade800
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-            // const SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             // Task Detail Card
             Card(
@@ -115,7 +132,7 @@ class TaskHome extends StatelessWidget {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            task['title'],
+                            widget.task['title'],
                             style: context.text.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               height: 1.2,
@@ -126,77 +143,103 @@ class TaskHome extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    TextButton(
+                    TextButton.icon(
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => TemplateSinglePage(
                             title: 'Task ${Conversions.getNowString()}',
                             body: Task(
-                              taskTitle: task['title'],
+                              taskTitle: widget.task['title'],
                               date: Conversions.getNowString(),
                             ),
                           ),
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Text(
-                          'Learn more about this task & SDG',
-                          style: context.text.labelMedium?.copyWith(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
+                      icon: Icon(Icons.chevron_right, color: primaryColor),
+                      iconAlignment: IconAlignment.end,
+                      label: Text(
+                        'Learn more about this task & SDG',
+                        style: context.text.labelMedium?.copyWith(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+
+            CountdownTimer(),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(color: primaryColor.withValues(alpha: 0.3)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.black.withValues(alpha: 100)),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                    ),
+                    label: Text("Post your picture", style: TextStyle(fontSize: 20),),
+                    onPressed: _openCamera,
+                    icon: Icon(Icons.camera_alt, size: 30),
+                  ),
+                ),
+                Expanded(
+                  child: Divider(color: primaryColor.withValues(alpha: 0.3)),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 15),
+
+            Text(
+              'GROW RELEAF IMPACT',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+              ),
+            ),
+
+            SizedBox(height: 10),
+
 
             // Suggest Task CTA Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const TemplateSinglePage(
-                      title: 'Suggest a Task',
-                      body: SuggestTask(),
-                    ),
+            TextButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const TemplateSinglePage(
+                    title: 'Suggest a Task',
+                    body: SuggestTask(),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: isLight ? Colors.black : Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+              ),
+              iconAlignment: IconAlignment.end,
+              icon: Icon(Icons.add_a_photo_outlined),
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(
+                  fontSize: 12,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text(
-                      'GROW RELEAF IMPACT',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Suggest a new challenge!',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+              ),
+              label: Text(
+                'Suggest a new challenge!',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -204,5 +247,24 @@ class TaskHome extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Open Camera
+  Future<void> _openCamera() async {
+    final XFile? cameraImage = await _picker.pickImage(
+      source: ImageSource.camera,
+    );
+    if (cameraImage == null) return;
+
+    if (kIsWeb) {
+      final bytes = await cameraImage.readAsBytes();
+      setState(() {
+        _image = UserImage.web(bytes);
+      });
+    } else {
+      setState(() {
+        _image = UserImage.mobile(File(cameraImage.path));
+      });
+    }
   }
 }

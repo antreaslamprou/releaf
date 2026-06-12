@@ -95,12 +95,12 @@ class _PostTaskHomeState extends State<PostTaskHome> {
     return RefreshIndicator(
       onRefresh: init,
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 20),
+        // padding: EdgeInsets.only(top: 20),
         child: isLoading
             ? const CircularProgressIndicator()
             : Column(
                 children: [
-                  TaskHome(task: dailyTask!, isPosted: true),
+                  TaskHome(task: dailyTask!, isPosted: true,),
                   SizedBox(height: 15),
                   postData.isEmpty
                       ? Text('You have no post for this date!')

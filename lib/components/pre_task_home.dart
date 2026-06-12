@@ -198,20 +198,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               children: [
                 TaskHome(task: dailyTask!, isPosted: false),
                 SizedBox(height: 15),
-                CountdownTimer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                    ),
-                    onPressed: _openCamera,
-                    child: Icon(Icons.camera_alt, size: 30),
-                  ),
-                ),
+
               ],
             )
           : Column(
