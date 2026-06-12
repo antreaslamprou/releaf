@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:releaf/providers/user_details_provider.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/snackbar.dart';
+import 'package:releaf/utils/theme.dart';
 import 'package:releaf/utils/validators.dart';
 
 class EditData extends StatefulWidget {
@@ -156,12 +157,14 @@ class _EditDataState extends State<EditData> {
 
   Widget saveButton() {
     return Padding(
-      padding: const EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 25),
       child: FractionallySizedBox(
         widthFactor: 1,
         child: ElevatedButton(
           onPressed: isLoading ? null : handleSubmit,
           style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
@@ -193,7 +196,7 @@ class _EditDataState extends State<EditData> {
                   TextFormField(
                     controller: _firstFieldController,
                     validator: Validators.validateName,
-                    decoration: InputDecoration(labelText: 'Full Name'),
+                    decoration: inputDecoration(label: 'Full Name', icon: Icons.person, hint: 'Enter your full name'),
                   ),
                   saveButton(),
                 ],
@@ -208,9 +211,8 @@ class _EditDataState extends State<EditData> {
                     controller: _firstFieldController,
                     onChanged: checkUsername,
                     validator: Validators.validateUsername,
-                    decoration: InputDecoration(
+                    decoration: inputDecoration(label: 'Username', icon: Icons.supervised_user_circle_sharp).copyWith(
                       errorText: _usernameError,
-                      labelText: 'Username',
                       errorMaxLines: 3,
                     ),
                   ),
@@ -226,7 +228,7 @@ class _EditDataState extends State<EditData> {
                   TextFormField(
                     controller: _firstFieldController,
                     validator: Validators.validateEmail,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    decoration: inputDecoration(label: 'Email address', icon: Icons.email, hint: 'Enter your new email address'),
                   ),
                   emailMessage
                       ? Column(
@@ -251,14 +253,14 @@ class _EditDataState extends State<EditData> {
                     obscureText: true,
                     controller: _firstFieldController,
                     validator: Validators.validatePassword,
-                    decoration: InputDecoration(labelText: 'Current Password'),
+                    decoration: inputDecoration(label: 'Current Password', icon: Icons.lock, hint: 'Enter your current password'),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     obscureText: true,
                     controller: _secondFieldController,
                     validator: Validators.validatePassword,
-                    decoration: InputDecoration(labelText: 'New Password'),
+                    decoration: inputDecoration(label: 'New Password', icon: Icons.lock, hint: 'Enter your new password'),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
@@ -268,8 +270,10 @@ class _EditDataState extends State<EditData> {
                       value,
                       _secondFieldController.text,
                     ),
-                    decoration: InputDecoration(
-                      labelText: 'Confirm New Password',
+                    decoration: inputDecoration(
+                      label: 'Confirm New Password',
+                      icon: Icons.lock,
+                      hint: 'Confirm your new password',
                     ),
                   ),
                   saveButton(),

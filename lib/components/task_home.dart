@@ -47,8 +47,8 @@ class _TaskHomeState extends State<TaskHome> {
               alignment: Alignment.center,
               children: [
                 Container(
-                  width: 180,
-                  height: 180,
+                  width: 150,
+                  height: 150,
                   decoration: BoxDecoration(
                     color: primaryColor.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
@@ -56,8 +56,8 @@ class _TaskHomeState extends State<TaskHome> {
                 ),
                 Image.asset(
                   'assets/images/${widget.task['sdg_id']}.png',
-                  width: 140,
-                  height: 140,
+                  width: 100,
+                  height: 100,
                 ),
               ],
             ),
@@ -74,7 +74,7 @@ class _TaskHomeState extends State<TaskHome> {
             // Conditional Instruction Banner
             if (!widget.isPosted)
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
                   color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
@@ -86,7 +86,8 @@ class _TaskHomeState extends State<TaskHome> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        'Complete the daily challenge by capturing a photo associated with today\'s Sustainability Development Goal before the countdown runs out. Press the camera button below to get started.',
+                        'Complete the daily challenge by capturing a photo associated with today\'s Sustainability Development Goal before the countdown runs out.'
+                            ' Press the camera button below to get started.',
                         style: context.text.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.blue.shade800
@@ -101,11 +102,11 @@ class _TaskHomeState extends State<TaskHome> {
             // Task Detail Card
             Card(
               elevation: 0,
-              color: isLight ? Colors.grey[50] : Colors.white.withValues(alpha: 0.05),
+              color: isLight ? Colors.white : Colors.white.withValues(alpha: 0.05),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24),
                 side: BorderSide(
-                  color: isLight ? Colors.grey[200]! : Colors.white.withValues(alpha: 0.1),
+                  color: isLight ? Colors.green[200]! : Colors.white.withValues(alpha: 0.1),
                 ),
               ),
               child: Padding(
@@ -142,7 +143,7 @@ class _TaskHomeState extends State<TaskHome> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    // const SizedBox(height: 10),
                     TextButton.icon(
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
