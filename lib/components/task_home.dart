@@ -86,7 +86,7 @@ class _TaskHomeState extends State<TaskHome> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
+                        'Complete the daily challenge by capturing a photo associated with today\'s Sustainability Development Goal. Press the camera button below to get started.',
                         style: context.text.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.blue.shade800
@@ -251,8 +251,33 @@ class _TaskHomeState extends State<TaskHome> {
 
   // Open Camera
   Future<void> _openCamera() async {
+
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('Take Photo'),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choose from Gallery'),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null) {
+      return;
+    }
+
     final XFile? cameraImage = await _picker.pickImage(
-      source: ImageSource.camera,
+      source: source,
     );
     if (cameraImage == null) return;
 
