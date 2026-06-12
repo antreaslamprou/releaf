@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:releaf/pages/login_page.dart';
+import 'package:releaf/pages/splash_page.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/utils/snackbar.dart';
@@ -102,11 +103,16 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             });
 
+        // Authenticate user and send to home
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+
         if (!mounted) return;
-        Snackbar.show(context, 'Register Successful!');
         Navigator.of(
           context,
-        ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+        ).pushReplacement(MaterialPageRoute(builder: (_) => SplashPage()));
       } on FirebaseException catch (e) {
         Snackbar.show(context, 'Register Failed: ${e.message}');
       } finally {

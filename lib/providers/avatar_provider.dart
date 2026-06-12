@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttermoji/fluttermoji.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:releaf/classes/user_image.dart';
+import 'package:releaf/utils/user_image.dart';
 import 'package:releaf/services/user_service.dart';
 import 'package:releaf/utils/conversions.dart';
 

@@ -1,8 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:releaf/components/sdg_links.dart';
+import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/services/sdgs_service.dart';
 import 'package:releaf/services/suggested_task_service.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
+import 'package:releaf/utils/web_link.dart';
 import 'package:releaf/utils/snackbar.dart';
 import 'package:releaf/utils/validators.dart';
 
@@ -170,13 +174,21 @@ class _SuggestTaskState extends State<SuggestTask> {
                         children: [
                           const TextSpan(
                             text:
-                                'Want to learn more about each SDG? Access in browser ',
+                                'Want to learn more about the Sustainable Development Goals (SDGs)? Access all of them',
                           ),
                           TextSpan(
-                            text: 'https://sdgs.un.org/goals',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            text: ' here ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: context.read<ThemeProvider>().primaryColor,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => WebLink.open(
+                                context,
+                                'https://sdgs.un.org/goals',
+                              ),
                           ),
-                          const TextSpan(text: ' or tap on the links below!'),
+                          const TextSpan(text: 'or tap each one below!'),
                         ],
                       ),
                     ),
