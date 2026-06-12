@@ -45,16 +45,41 @@ class TaskHome extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            Text(
-              task['sdg'].toString().toUpperCase(),
-              textAlign: TextAlign.center,
-              style: context.text.titleSmall?.copyWith(
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.2,
-                color: primaryColor,
+            // Text(
+            //   task['sdg'].toString().toUpperCase(),
+            //   textAlign: TextAlign.center,
+            //   style: context.text.titleSmall?.copyWith(
+            //     fontWeight: FontWeight.w900,
+            //     letterSpacing: 1.2,
+            //     color: primaryColor,
+            //   ),
+            // ),
+            // Conditional Instruction Banner
+            if (!isPosted)
+              Container(
+                margin: const EdgeInsets.only(bottom: 24),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.camera_alt_outlined, color: Colors.amber),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
+                        style: context.text.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
+            // const SizedBox(height: 10),
 
             // Task Detail Card
             Card(
@@ -67,9 +92,21 @@ class TaskHome extends StatelessWidget {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
+
+                    Text(
+                      "TODAY'S CHALLENGE",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+
+                    SizedBox(height: 10,),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,32 +155,6 @@ class TaskHome extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Conditional Instruction Banner
-            if (!isPosted)
-              Container(
-                margin: const EdgeInsets.only(bottom: 24),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.camera_alt_outlined, color: Colors.amber),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        'Complete the daily task by capturing an image using the camera! Press the camera button below to get started.',
-                        style: context.text.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
             // Suggest Task CTA Button
             SizedBox(
