@@ -9,7 +9,12 @@ import 'package:releaf/extensions/text_theme_x.dart';
 import 'countdown_timer.dart';
 
 class TaskHome extends StatefulWidget {
-  const TaskHome({super.key, required this.task, this.isPosted = true, this.cameraCallback});
+  const TaskHome({
+    super.key,
+    required this.task,
+    this.isPosted = true,
+    this.cameraCallback,
+  });
 
   final Map<dynamic, dynamic> task;
   final bool isPosted;
@@ -174,41 +179,42 @@ class _TaskHomeState extends State<TaskHome> {
             const SizedBox(height: 10),
 
             CountdownTimer(),
-            Row(
-              children: [
-                Expanded(
-                  child: Divider(color: primaryColor.withValues(alpha: 0.3)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.black.withValues(alpha: 100),
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                    ),
-                    label: Text(
-                      "Post your picture",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: widget.cameraCallback,
-                    icon: Icon(Icons.camera_alt, size: 30),
+            if (!widget.isPosted)
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(color: primaryColor.withValues(alpha: 0.3)),
                   ),
-                ),
-                Expanded(
-                  child: Divider(color: primaryColor.withValues(alpha: 0.3)),
-                ),
-              ],
-            ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Colors.black.withValues(alpha: 100),
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                      ),
+                      label: Text(
+                        "Post your picture",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      onPressed: widget.cameraCallback,
+                      icon: Icon(Icons.camera_alt, size: 30),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(color: primaryColor.withValues(alpha: 0.3)),
+                  ),
+                ],
+              ),
 
             SizedBox(height: 15),
 
