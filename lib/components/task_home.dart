@@ -1,8 +1,4 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:releaf/components/task.dart';
 import 'package:releaf/pages/template_single_page.dart';
@@ -10,8 +6,6 @@ import 'package:releaf/components/suggest_task.dart';
 import 'package:releaf/providers/theme_provider.dart';
 import 'package:releaf/utils/conversions.dart';
 import 'package:releaf/extensions/text_theme_x.dart';
-
-import '../utils/user_image.dart';
 import 'countdown_timer.dart';
 
 class TaskHome extends StatefulWidget {
