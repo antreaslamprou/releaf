@@ -178,9 +178,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator: Validators.validateName,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              decoration: inputDecoration(label: "Full Name", hint: "Enter your full name", icon: Icons.person).copyWith(
-                                errorMaxLines: 2,
-                              ),
+                              decoration: inputDecoration(
+                                label: "Full Name",
+                                hint: "Enter your full name",
+                                icon: Icons.person,
+                              ).copyWith(filled: false, errorMaxLines: 2),
                             ),
                             SizedBox(height: 10),
                             TextFormField(
@@ -189,14 +191,21 @@ class _RegisterPageState extends State<RegisterPage> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               onChanged: (value) {
-                                if (Validators.validateUsername(value) == null) {
+                                if (Validators.validateUsername(value) ==
+                                    null) {
                                   checkUsername(value);
                                 }
                               },
-                              decoration: inputDecoration(label: "Username", hint: "Enter your username", icon: Icons.supervised_user_circle).copyWith(
-                                errorText: _usernameError,
-                                errorMaxLines: 3,
-                              ),
+                              decoration:
+                                  inputDecoration(
+                                    label: "Username",
+                                    hint: "Enter your username",
+                                    icon: Icons.supervised_user_circle,
+                                  ).copyWith(
+                                    filled: false,
+                                    errorText: _usernameError,
+                                    errorMaxLines: 3,
+                                  ),
                             ),
                             SizedBox(height: 10),
                             TextFormField(
@@ -204,7 +213,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator: Validators.validateEmail,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              decoration: inputDecoration(label: "Email address", icon: Icons.email, hint: "Enter your email address"),
+                              decoration: inputDecoration(
+                                label: "Email address",
+                                icon: Icons.email,
+                                hint: "Enter your email address",
+                              ).copyWith(filled: false),
                             ),
                             SizedBox(height: 10),
                             TextFormField(
@@ -213,7 +226,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator: Validators.validatePassword,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              decoration: inputDecoration(label: "Password", icon: Icons.lock, hint: "Enter your password"),
+                              decoration: inputDecoration(
+                                label: "Password",
+                                icon: Icons.lock,
+                                hint: "Enter your password",
+                              ).copyWith(filled: false),
                             ),
                             SizedBox(height: 10),
                             TextFormField(
@@ -226,7 +243,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              decoration: inputDecoration(label: "Confirm Password", icon: Icons.lock, hint: "Confirm your password"),
+                              decoration: inputDecoration(
+                                label: "Confirm Password",
+                                icon: Icons.lock,
+                                hint: "Confirm your password",
+                              ).copyWith(filled: false),
                             ),
                             SizedBox(height: 20),
                             FractionallySizedBox(

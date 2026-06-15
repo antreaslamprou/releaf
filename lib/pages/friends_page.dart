@@ -29,7 +29,6 @@ class _FriendsPageState extends State<FriendsPage> {
       child: switch (_view) {
         _FriendsView.list => Column(
           children: [
-
             Wrap(
               children: [
                 OutlinedButton(
@@ -52,7 +51,7 @@ class _FriendsPageState extends State<FriendsPage> {
               ],
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -60,7 +59,6 @@ class _FriendsPageState extends State<FriendsPage> {
             ),
 
             const Expanded(child: FriendList()),
-
           ],
         ),
 
@@ -70,43 +68,34 @@ class _FriendsPageState extends State<FriendsPage> {
 
         _FriendsView.requests => Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () => _goTo(_FriendsView.list),
-                    icon: const Icon(Icons.arrow_back),
+            Center(
+              child: SegmentedButton<_RequestsTab>(
+                segments: const [
+                  ButtonSegment(
+                    value: _RequestsTab.incoming,
+                    label: Text('Incoming'),
+                    icon: Icon(Icons.mark_email_unread),
                   ),
-                  const SizedBox(width: 8),
-                  SegmentedButton<_RequestsTab>(
-                    segments: const [
-                      ButtonSegment(
-                        value: _RequestsTab.incoming,
-                        label: Text('Incoming'),
-                        icon: Icon(Icons.mark_email_unread),
-                      ),
-                      ButtonSegment(
-                        value: _RequestsTab.outgoing,
-                        label: Text('Outgoing'),
-                        icon: Icon(Icons.outbox_outlined),
-                      ),
-                    ],
-                    selected: _selectedTab,
-                    onSelectionChanged: (selection) =>
-                        setState(() => _selectedTab = selection),
+                  ButtonSegment(
+                    value: _RequestsTab.outgoing,
+                    label: Text('Outgoing'),
+                    icon: Icon(Icons.outbox_outlined),
                   ),
                 ],
+                selected: _selectedTab,
+                onSelectionChanged: (selection) =>
+                    setState(() => _selectedTab = selection),
               ),
             ),
+            const SizedBox(height: 15),
             Expanded(
               child: _selectedTab.contains(_RequestsTab.incoming)
                   ? IncomingFriendRequests(
-                backFunction: () => _goTo(_FriendsView.list),
-              )
+                      backFunction: () => _goTo(_FriendsView.list),
+                    )
                   : OutgoingFriendRequests(
-                backFunction: () => _goTo(_FriendsView.list),
-              ),
+                      backFunction: () => _goTo(_FriendsView.list),
+                    ),
             ),
           ],
         ),

@@ -108,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                           TextFormField(
                             controller: _emailController,
                             validator: Validators.validateEmail,
-                            decoration: inputDecoration(label: "Email address", icon: Icons.email, hint: "Enter your email address"),
+                            decoration: inputDecoration(label: "Email address", icon: Icons.email, hint: "Enter your email address").copyWith(
+                              filled: false
+                            ),
                           ),
                           SizedBox(height: 10),
                           TextFormField(
@@ -116,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _passwordController,
                             validator: Validators.validatePassword,
                             decoration: inputDecoration(label: "Password", icon: Icons.lock, hint: "Enter your password").copyWith(
+                              filled: false,
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword ? Icons.visibility : Icons.visibility_off,

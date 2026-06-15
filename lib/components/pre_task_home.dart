@@ -65,7 +65,6 @@ class _PreTaskHomeState extends State<PreTaskHome> {
 
   // Open Camera
   Future<void> _openCamera() async {
-
     final ImageSource? source = await showModalBottomSheet<ImageSource>(
       context: context,
       builder: (context) => SafeArea(
@@ -90,9 +89,7 @@ class _PreTaskHomeState extends State<PreTaskHome> {
       return;
     }
 
-    final XFile? cameraImage = await _picker.pickImage(
-      source: source,
-    );
+    final XFile? cameraImage = await _picker.pickImage(source: source);
     if (cameraImage == null) return;
 
     if (kIsWeb) {
@@ -221,9 +218,12 @@ class _PreTaskHomeState extends State<PreTaskHome> {
               // Home page pre task with timer
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TaskHome(task: dailyTask!, isPosted: false),
+                TaskHome(
+                  task: dailyTask!,
+                  isPosted: false,
+                  cameraCallback: () => _openCamera(),
+                ),
                 SizedBox(height: 15),
-
               ],
             )
           : Column(

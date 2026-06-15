@@ -196,7 +196,9 @@ class _EditDataState extends State<EditData> {
                   TextFormField(
                     controller: _firstFieldController,
                     validator: Validators.validateName,
-                    decoration: inputDecoration(label: 'Full Name', icon: Icons.person, hint: 'Enter your full name'),
+                    decoration: inputDecoration(label: 'Full Name', icon: Icons.person, hint: 'Enter your full name').copyWith(
+                      filled: false
+                      ),
                   ),
                   saveButton(),
                 ],
@@ -212,6 +214,7 @@ class _EditDataState extends State<EditData> {
                     onChanged: checkUsername,
                     validator: Validators.validateUsername,
                     decoration: inputDecoration(label: 'Username', icon: Icons.supervised_user_circle_sharp).copyWith(
+                      filled: false,
                       errorText: _usernameError,
                       errorMaxLines: 3,
                     ),
@@ -228,7 +231,9 @@ class _EditDataState extends State<EditData> {
                   TextFormField(
                     controller: _firstFieldController,
                     validator: Validators.validateEmail,
-                    decoration: inputDecoration(label: 'Email address', icon: Icons.email, hint: 'Enter your new email address'),
+                    decoration: inputDecoration(label: 'Email address', icon: Icons.email, hint: 'Enter your new email address').copyWith(
+                      filled: false
+                      ),
                   ),
                   emailMessage
                       ? Column(
@@ -253,14 +258,18 @@ class _EditDataState extends State<EditData> {
                     obscureText: true,
                     controller: _firstFieldController,
                     validator: Validators.validatePassword,
-                    decoration: inputDecoration(label: 'Current Password', icon: Icons.lock, hint: 'Enter your current password'),
+                    decoration: inputDecoration(label: 'Current Password', icon: Icons.lock, hint: 'Enter your current password').copyWith(
+                      filled: false
+                      ),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     obscureText: true,
                     controller: _secondFieldController,
                     validator: Validators.validatePassword,
-                    decoration: inputDecoration(label: 'New Password', icon: Icons.lock, hint: 'Enter your new password'),
+                    decoration: inputDecoration(label: 'New Password', icon: Icons.lock, hint: 'Enter your new password').copyWith(
+                      filled: false
+                      ),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
@@ -274,7 +283,9 @@ class _EditDataState extends State<EditData> {
                       label: 'Confirm New Password',
                       icon: Icons.lock,
                       hint: 'Confirm your new password',
-                    ),
+                    ).copyWith(
+                      filled: false
+                      ),
                   ),
                   saveButton(),
                 ],

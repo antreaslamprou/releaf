@@ -145,13 +145,16 @@ class _SuggestTaskState extends State<SuggestTask> {
                         decoration: inputDecoration(
                           label: 'Title',
                           hint: 'e.g., Recycle a plastic bottle',
-                        ),
+                        ).copyWith(
+                          filled: false
+                          ),
                       ),
                       SizedBox(height: 20),
                       DropdownButtonFormField<String>(
                         isExpanded: true,
                         validator: Validators.validateNotEmpty,
                         decoration: inputDecoration(label: 'Sustainable Development Goal').copyWith(
+                          filled: false,
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                         ),
@@ -203,7 +206,9 @@ class _SuggestTaskState extends State<SuggestTask> {
                           label: 'Description',
                           hint:
                               'e.g., Take an image of you recycling a plastic bottle',
-                        ),
+                        ).copyWith(
+                          filled: false
+                          ),
                       ),
                       SizedBox(height: 20),
                       FractionallySizedBox(

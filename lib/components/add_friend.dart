@@ -120,6 +120,7 @@ class _AddFriendState extends State<AddFriend> {
                   controller: _usernameController,
                   validator: Validators.validateUsername,
                   decoration: inputDecoration(label: 'Username').copyWith(
+                    filled: false,
                     errorMaxLines: 3,
                     suffixIcon: IconButton(
                       onPressed: createFriendRequest,
