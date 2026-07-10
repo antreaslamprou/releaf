@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:97602229252:android:b98e9f67be600352a15151",
+        "mobilesdk_app_id": "1:97602229252:android:33dbb9d56592991da15151",
         "android_client_info": {
-          "package_name": "com.example.releaf"
+          "package_name": "com.alamprou1.releaf"
         }
       },
       "oauth_client": [
